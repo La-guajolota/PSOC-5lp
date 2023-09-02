@@ -1,0 +1,1211 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.main,"ax",%progbits
+  20              		.align	2
+  21              		.global	main
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	main, %function
+  25              	main:
+  26              	.LFB64:
+  27              		.file 1 "main.c"
+   1:main.c        **** 
+   2:main.c        **** #include "project.h"
+   3:main.c        **** #include <stdio.h>
+   4:main.c        **** 
+   5:main.c        **** int main(void)
+   6:main.c        ****  {
+  28              		.loc 1 6 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 40
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 30B5     		push	{r4, r5, lr}
+  33              		.cfi_def_cfa_offset 12
+  34              		.cfi_offset 4, -12
+  35              		.cfi_offset 5, -8
+  36              		.cfi_offset 14, -4
+  37 0002 8BB0     		sub	sp, sp, #44
+  38              		.cfi_def_cfa_offset 56
+   7:main.c        ****     CyGlobalIntEnable; /* Enable global interrupts. */
+  39              		.loc 1 7 0
+  40              		.syntax unified
+  41              	@ 7 "main.c" 1
+  42 0004 62B6     		CPSIE   i
+  43              	@ 0 "" 2
+  44              	.LVL0:
+   8:main.c        ****     
+   9:main.c        ****     //Variables para filtros
+  10:main.c        ****     int16 cont=0,ventana = 15;
+  11:main.c        ****     int16 suma = 0;
+  12:main.c        ****     
+  13:main.c        ****     //variables para el ADC
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 2
+
+
+  14:main.c        ****     int16 lec_binaria,lec_Volts;
+  15:main.c        ****     char8 Filtrado[4], NoFiltrado[4];//4 caracteres numéricos
+  16:main.c        ****     int16 array[ventana];//Inicializamos el array en 0
+  17:main.c        ****     
+  18:main.c        ****     UART_Start();
+  45              		.loc 1 18 0
+  46              		.thumb
+  47              		.syntax unified
+  48 0006 FFF7FEFF 		bl	UART_Start
+  49              	.LVL1:
+  19:main.c        ****     ADC_Start();
+  50              		.loc 1 19 0
+  51 000a FFF7FEFF 		bl	ADC_Start
+  52              	.LVL2:
+  20:main.c        ****     ADC_StartConvert();
+  53              		.loc 1 20 0
+  54 000e FFF7FEFF 		bl	ADC_StartConvert
+  55              	.LVL3:
+  10:main.c        ****     int16 suma = 0;
+  56              		.loc 1 10 0
+  57 0012 0024     		movs	r4, #0
+  58 0014 1DE0     		b	.L2
+  59              	.LVL4:
+  60              	.L4:
+  21:main.c        ****     
+  22:main.c        ****     for(;;)
+  23:main.c        ****     {
+  24:main.c        ****         
+  25:main.c        ****         while(cont<ventana){
+  26:main.c        ****             
+  27:main.c        ****             if(ADC_IsEndConversion(0x00u)){//Verifica que se haya terminado una converción
+  61              		.loc 1 27 0
+  62 0016 0020     		movs	r0, #0
+  63 0018 FFF7FEFF 		bl	ADC_IsEndConversion
+  64              	.LVL5:
+  65 001c C8B1     		cbz	r0, .L2
+  28:main.c        ****            
+  29:main.c        ****                 lec_binaria = ADC_GetResult16();//Recupera valor en el regisrtro del SAR
+  66              		.loc 1 29 0
+  67 001e FFF7FEFF 		bl	ADC_GetResult16
+  68              	.LVL6:
+  30:main.c        ****                 lec_Volts = ADC_CountsTo_mVolts(lec_binaria);//Hace converción a mV
+  69              		.loc 1 30 0
+  70 0022 FFF7FEFF 		bl	ADC_CountsTo_mVolts
+  71              	.LVL7:
+  72 0026 0546     		mov	r5, r0
+  73              	.LVL8:
+  31:main.c        ****                 
+  32:main.c        ****                 //Enviamos lectura con ruido
+  33:main.c        ****                 sprintf(NoFiltrado,"%d", lec_Volts);
+  74              		.loc 1 33 0
+  75 0028 0246     		mov	r2, r0
+  76 002a 1C49     		ldr	r1, .L8
+  77 002c 6846     		mov	r0, sp
+  78              	.LVL9:
+  79 002e FFF7FEFF 		bl	sprintf
+  80              	.LVL10:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 3
+
+
+  34:main.c        ****                 UART_PutChar('R');//Mandamos un espacio de caractier para separar
+  81              		.loc 1 34 0
+  82 0032 5220     		movs	r0, #82
+  83 0034 FFF7FEFF 		bl	UART_PutChar
+  84              	.LVL11:
+  35:main.c        ****                 UART_PutString(NoFiltrado);
+  85              		.loc 1 35 0
+  86 0038 6846     		mov	r0, sp
+  87 003a FFF7FEFF 		bl	UART_PutString
+  88              	.LVL12:
+  36:main.c        ****                 UART_PutChar('r');//Mandamos un espacio de caractier para separar
+  89              		.loc 1 36 0
+  90 003e 7220     		movs	r0, #114
+  91 0040 FFF7FEFF 		bl	UART_PutChar
+  92              	.LVL13:
+  37:main.c        ****                 
+  38:main.c        ****                 //Agregamos resultado al array
+  39:main.c        ****                 array[cont] = lec_Volts;
+  93              		.loc 1 39 0
+  94 0044 0AAB     		add	r3, sp, #40
+  95 0046 03EB4403 		add	r3, r3, r4, lsl #1
+  96 004a 23F8205C 		strh	r5, [r3, #-32]	@ movhi
+  40:main.c        **** 
+  41:main.c        ****                 //Sumamos al contador por cada dato que recuperemos
+  42:main.c        ****                 cont++;
+  97              		.loc 1 42 0
+  98 004e 0134     		adds	r4, r4, #1
+  99              	.LVL14:
+ 100 0050 24B2     		sxth	r4, r4
+ 101              	.LVL15:
+ 102              	.L2:
+  25:main.c        ****             
+ 103              		.loc 1 25 0
+ 104 0052 0E2C     		cmp	r4, #14
+ 105 0054 DFDD     		ble	.L4
+ 106 0056 0020     		movs	r0, #0
+ 107 0058 0246     		mov	r2, r0
+ 108 005a 0EE0     		b	.L5
+ 109              	.LVL16:
+ 110              	.L6:
+ 111              	.LBB2:
+  43:main.c        ****             }
+  44:main.c        ****             
+  45:main.c        ****         }cont=0;
+  46:main.c        ****         
+  47:main.c        ****         //Sacamos suma y promedio de la ventana. Aplicamos el filtro
+  48:main.c        ****         suma=0;  
+  49:main.c        ****         for(int i=0; i<ventana ;i++){
+  50:main.c        ****             suma += array[i]/ventana;
+ 112              		.loc 1 50 0 discriminator 3
+ 113 005c 0AAB     		add	r3, sp, #40
+ 114 005e 03EB4003 		add	r3, r3, r0, lsl #1
+ 115 0062 33F9203C 		ldrsh	r3, [r3, #-32]
+ 116 0066 0E49     		ldr	r1, .L8+4
+ 117 0068 81FB0341 		smull	r4, r1, r1, r3
+ 118 006c 1944     		add	r1, r1, r3
+ 119 006e DB17     		asrs	r3, r3, #31
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 4
+
+
+ 120 0070 C3EBE103 		rsb	r3, r3, r1, asr #3
+ 121 0074 1A44     		add	r2, r2, r3
+ 122              	.LVL17:
+ 123 0076 12B2     		sxth	r2, r2
+ 124              	.LVL18:
+  49:main.c        ****             suma += array[i]/ventana;
+ 125              		.loc 1 49 0 discriminator 3
+ 126 0078 0130     		adds	r0, r0, #1
+ 127              	.LVL19:
+ 128              	.L5:
+  49:main.c        ****             suma += array[i]/ventana;
+ 129              		.loc 1 49 0 is_stmt 0 discriminator 1
+ 130 007a 0E28     		cmp	r0, #14
+ 131 007c EEDD     		ble	.L6
+ 132              	.LBE2:
+  51:main.c        ****         }
+  52:main.c        ****         
+  53:main.c        ****         //Convertimos a char para ponerlo en un array de char
+  54:main.c        ****         sprintf(Filtrado,"%d",suma);
+ 133              		.loc 1 54 0 is_stmt 1
+ 134 007e 0749     		ldr	r1, .L8
+ 135 0080 01A8     		add	r0, sp, #4
+ 136              	.LVL20:
+ 137 0082 FFF7FEFF 		bl	sprintf
+ 138              	.LVL21:
+  55:main.c        ****         
+  56:main.c        ****         UART_PutChar('F');//Mandamos un F de caractier para separar
+ 139              		.loc 1 56 0
+ 140 0086 4620     		movs	r0, #70
+ 141 0088 FFF7FEFF 		bl	UART_PutChar
+ 142              	.LVL22:
+  57:main.c        ****         UART_PutString(Filtrado);//Mandamos la info ya filtrada     
+ 143              		.loc 1 57 0
+ 144 008c 01A8     		add	r0, sp, #4
+ 145 008e FFF7FEFF 		bl	UART_PutString
+ 146              	.LVL23:
+  58:main.c        ****         UART_PutString("f\r\n");//fin de la trama    
+ 147              		.loc 1 58 0
+ 148 0092 0448     		ldr	r0, .L8+8
+ 149 0094 FFF7FEFF 		bl	UART_PutString
+ 150              	.LVL24:
+  45:main.c        ****         
+ 151              		.loc 1 45 0
+ 152 0098 0024     		movs	r4, #0
+  59:main.c        ****     }    
+ 153              		.loc 1 59 0
+ 154 009a DAE7     		b	.L2
+ 155              	.L9:
+ 156              		.align	2
+ 157              	.L8:
+ 158 009c 00000000 		.word	.LC0
+ 159 00a0 89888888 		.word	-2004318071
+ 160 00a4 04000000 		.word	.LC1
+ 161              		.cfi_endproc
+ 162              	.LFE64:
+ 163              		.size	main, .-main
+ 164              		.section	.rodata.str1.4,"aMS",%progbits,1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 5
+
+
+ 165              		.align	2
+ 166              	.LC0:
+ 167 0000 256400   		.ascii	"%d\000"
+ 168 0003 00       		.space	1
+ 169              	.LC1:
+ 170 0004 660D0A00 		.ascii	"f\015\012\000"
+ 171              		.text
+ 172              	.Letext0:
+ 173              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 174              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 175              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 176              		.file 5 "Generated_Source\\PSoC5/UART.h"
+ 177              		.file 6 "Generated_Source\\PSoC5/ADC.h"
+ 178              		.file 7 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 179              		.file 8 "Generated_Source\\PSoC5/core_cm3.h"
+ 180              		.section	.debug_info,"",%progbits
+ 181              	.Ldebug_info0:
+ 182 0000 EC020000 		.4byte	0x2ec
+ 183 0004 0400     		.2byte	0x4
+ 184 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 185 000a 04       		.byte	0x4
+ 186 000b 01       		.uleb128 0x1
+ 187 000c 6E000000 		.4byte	.LASF35
+ 188 0010 0C       		.byte	0xc
+ 189 0011 12020000 		.4byte	.LASF36
+ 190 0015 25000000 		.4byte	.LASF37
+ 191 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 192 001d 00000000 		.4byte	0
+ 193 0021 00000000 		.4byte	.Ldebug_line0
+ 194 0025 02       		.uleb128 0x2
+ 195 0026 01       		.byte	0x1
+ 196 0027 06       		.byte	0x6
+ 197 0028 3E020000 		.4byte	.LASF0
+ 198 002c 02       		.uleb128 0x2
+ 199 002d 01       		.byte	0x1
+ 200 002e 08       		.byte	0x8
+ 201 002f 60000000 		.4byte	.LASF1
+ 202 0033 02       		.uleb128 0x2
+ 203 0034 02       		.byte	0x2
+ 204 0035 05       		.byte	0x5
+ 205 0036 26020000 		.4byte	.LASF2
+ 206 003a 02       		.uleb128 0x2
+ 207 003b 02       		.byte	0x2
+ 208 003c 07       		.byte	0x7
+ 209 003d 33010000 		.4byte	.LASF3
+ 210 0041 03       		.uleb128 0x3
+ 211 0042 00000000 		.4byte	.LASF9
+ 212 0046 02       		.byte	0x2
+ 213 0047 3F       		.byte	0x3f
+ 214 0048 4C000000 		.4byte	0x4c
+ 215 004c 02       		.uleb128 0x2
+ 216 004d 04       		.byte	0x4
+ 217 004e 05       		.byte	0x5
+ 218 004f 30020000 		.4byte	.LASF4
+ 219 0053 02       		.uleb128 0x2
+ 220 0054 04       		.byte	0x4
+ 221 0055 07       		.byte	0x7
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 6
+
+
+ 222 0056 97010000 		.4byte	.LASF5
+ 223 005a 02       		.uleb128 0x2
+ 224 005b 08       		.byte	0x8
+ 225 005c 05       		.byte	0x5
+ 226 005d 04020000 		.4byte	.LASF6
+ 227 0061 02       		.uleb128 0x2
+ 228 0062 08       		.byte	0x8
+ 229 0063 07       		.byte	0x7
+ 230 0064 BB010000 		.4byte	.LASF7
+ 231 0068 04       		.uleb128 0x4
+ 232 0069 04       		.byte	0x4
+ 233 006a 05       		.byte	0x5
+ 234 006b 696E7400 		.ascii	"int\000"
+ 235 006f 02       		.uleb128 0x2
+ 236 0070 04       		.byte	0x4
+ 237 0071 07       		.byte	0x7
+ 238 0072 A9010000 		.4byte	.LASF8
+ 239 0076 03       		.uleb128 0x3
+ 240 0077 52000000 		.4byte	.LASF10
+ 241 007b 03       		.byte	0x3
+ 242 007c 2C       		.byte	0x2c
+ 243 007d 41000000 		.4byte	0x41
+ 244 0081 05       		.uleb128 0x5
+ 245 0082 D2010000 		.4byte	.LASF11
+ 246 0086 04       		.byte	0x4
+ 247 0087 EC01     		.2byte	0x1ec
+ 248 0089 33000000 		.4byte	0x33
+ 249 008d 02       		.uleb128 0x2
+ 250 008e 04       		.byte	0x4
+ 251 008f 04       		.byte	0x4
+ 252 0090 5A000000 		.4byte	.LASF12
+ 253 0094 02       		.uleb128 0x2
+ 254 0095 08       		.byte	0x8
+ 255 0096 04       		.byte	0x4
+ 256 0097 1E000000 		.4byte	.LASF13
+ 257 009b 05       		.uleb128 0x5
+ 258 009c 0D010000 		.4byte	.LASF14
+ 259 00a0 04       		.byte	0x4
+ 260 00a1 F901     		.2byte	0x1f9
+ 261 00a3 A7000000 		.4byte	0xa7
+ 262 00a7 02       		.uleb128 0x2
+ 263 00a8 01       		.byte	0x1
+ 264 00a9 08       		.byte	0x8
+ 265 00aa 19020000 		.4byte	.LASF15
+ 266 00ae 02       		.uleb128 0x2
+ 267 00af 08       		.byte	0x8
+ 268 00b0 04       		.byte	0x4
+ 269 00b1 E2010000 		.4byte	.LASF16
+ 270 00b5 02       		.uleb128 0x2
+ 271 00b6 04       		.byte	0x4
+ 272 00b7 07       		.byte	0x7
+ 273 00b8 FB010000 		.4byte	.LASF17
+ 274 00bc 06       		.uleb128 0x6
+ 275 00bd 87010000 		.4byte	.LASF38
+ 276 00c1 01       		.byte	0x1
+ 277 00c2 05       		.byte	0x5
+ 278 00c3 68000000 		.4byte	0x68
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 7
+
+
+ 279 00c7 00000000 		.4byte	.LFB64
+ 280 00cb A8000000 		.4byte	.LFE64-.LFB64
+ 281 00cf 01       		.uleb128 0x1
+ 282 00d0 9C       		.byte	0x9c
+ 283 00d1 5A020000 		.4byte	0x25a
+ 284 00d5 07       		.uleb128 0x7
+ 285 00d6 39020000 		.4byte	.LASF18
+ 286 00da 01       		.byte	0x1
+ 287 00db 0A       		.byte	0xa
+ 288 00dc 81000000 		.4byte	0x81
+ 289 00e0 00000000 		.4byte	.LLST0
+ 290 00e4 08       		.uleb128 0x8
+ 291 00e5 1E020000 		.4byte	.LASF19
+ 292 00e9 01       		.byte	0x1
+ 293 00ea 0A       		.byte	0xa
+ 294 00eb 81000000 		.4byte	0x81
+ 295 00ef 0F       		.byte	0xf
+ 296 00f0 07       		.uleb128 0x7
+ 297 00f1 B6010000 		.4byte	.LASF20
+ 298 00f5 01       		.byte	0x1
+ 299 00f6 0B       		.byte	0xb
+ 300 00f7 81000000 		.4byte	0x81
+ 301 00fb 2A000000 		.4byte	.LLST1
+ 302 00ff 07       		.uleb128 0x7
+ 303 0100 13010000 		.4byte	.LASF21
+ 304 0104 01       		.byte	0x1
+ 305 0105 0E       		.byte	0xe
+ 306 0106 81000000 		.4byte	0x81
+ 307 010a 54000000 		.4byte	.LLST2
+ 308 010e 07       		.uleb128 0x7
+ 309 010f 74010000 		.4byte	.LASF22
+ 310 0113 01       		.byte	0x1
+ 311 0114 0E       		.byte	0xe
+ 312 0115 81000000 		.4byte	0x81
+ 313 0119 67000000 		.4byte	.LLST3
+ 314 011d 09       		.uleb128 0x9
+ 315 011e 7E010000 		.4byte	.LASF23
+ 316 0122 01       		.byte	0x1
+ 317 0123 0F       		.byte	0xf
+ 318 0124 5A020000 		.4byte	0x25a
+ 319 0128 02       		.uleb128 0x2
+ 320 0129 91       		.byte	0x91
+ 321 012a 4C       		.sleb128 -52
+ 322 012b 09       		.uleb128 0x9
+ 323 012c 8C010000 		.4byte	.LASF24
+ 324 0130 01       		.byte	0x1
+ 325 0131 0F       		.byte	0xf
+ 326 0132 5A020000 		.4byte	0x25a
+ 327 0136 02       		.uleb128 0x2
+ 328 0137 91       		.byte	0x91
+ 329 0138 48       		.sleb128 -56
+ 330 0139 09       		.uleb128 0x9
+ 331 013a 61010000 		.4byte	.LASF25
+ 332 013e 01       		.byte	0x1
+ 333 013f 10       		.byte	0x10
+ 334 0140 6A020000 		.4byte	0x26a
+ 335 0144 02       		.uleb128 0x2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 8
+
+
+ 336 0145 91       		.byte	0x91
+ 337 0146 50       		.sleb128 -48
+ 338 0147 0A       		.uleb128 0xa
+ 339 0148 5C000000 		.4byte	.LBB2
+ 340 014c 22000000 		.4byte	.LBE2-.LBB2
+ 341 0150 62010000 		.4byte	0x162
+ 342 0154 0B       		.uleb128 0xb
+ 343 0155 6900     		.ascii	"i\000"
+ 344 0157 01       		.byte	0x1
+ 345 0158 31       		.byte	0x31
+ 346 0159 68000000 		.4byte	0x68
+ 347 015d 7A000000 		.4byte	.LLST4
+ 348 0161 00       		.byte	0
+ 349 0162 0C       		.uleb128 0xc
+ 350 0163 0A000000 		.4byte	.LVL1
+ 351 0167 8C020000 		.4byte	0x28c
+ 352 016b 0C       		.uleb128 0xc
+ 353 016c 0E000000 		.4byte	.LVL2
+ 354 0170 97020000 		.4byte	0x297
+ 355 0174 0C       		.uleb128 0xc
+ 356 0175 12000000 		.4byte	.LVL3
+ 357 0179 A2020000 		.4byte	0x2a2
+ 358 017d 0D       		.uleb128 0xd
+ 359 017e 1C000000 		.4byte	.LVL5
+ 360 0182 AD020000 		.4byte	0x2ad
+ 361 0186 90010000 		.4byte	0x190
+ 362 018a 0E       		.uleb128 0xe
+ 363 018b 01       		.uleb128 0x1
+ 364 018c 50       		.byte	0x50
+ 365 018d 01       		.uleb128 0x1
+ 366 018e 30       		.byte	0x30
+ 367 018f 00       		.byte	0
+ 368 0190 0C       		.uleb128 0xc
+ 369 0191 22000000 		.4byte	.LVL6
+ 370 0195 B8020000 		.4byte	0x2b8
+ 371 0199 0C       		.uleb128 0xc
+ 372 019a 26000000 		.4byte	.LVL7
+ 373 019e C3020000 		.4byte	0x2c3
+ 374 01a2 0D       		.uleb128 0xd
+ 375 01a3 32000000 		.4byte	.LVL10
+ 376 01a7 CE020000 		.4byte	0x2ce
+ 377 01ab C5010000 		.4byte	0x1c5
+ 378 01af 0E       		.uleb128 0xe
+ 379 01b0 01       		.uleb128 0x1
+ 380 01b1 50       		.byte	0x50
+ 381 01b2 02       		.uleb128 0x2
+ 382 01b3 7D       		.byte	0x7d
+ 383 01b4 00       		.sleb128 0
+ 384 01b5 0E       		.uleb128 0xe
+ 385 01b6 01       		.uleb128 0x1
+ 386 01b7 51       		.byte	0x51
+ 387 01b8 05       		.uleb128 0x5
+ 388 01b9 03       		.byte	0x3
+ 389 01ba 00000000 		.4byte	.LC0
+ 390 01be 0E       		.uleb128 0xe
+ 391 01bf 01       		.uleb128 0x1
+ 392 01c0 52       		.byte	0x52
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 9
+
+
+ 393 01c1 02       		.uleb128 0x2
+ 394 01c2 75       		.byte	0x75
+ 395 01c3 00       		.sleb128 0
+ 396 01c4 00       		.byte	0
+ 397 01c5 0D       		.uleb128 0xd
+ 398 01c6 38000000 		.4byte	.LVL11
+ 399 01ca D9020000 		.4byte	0x2d9
+ 400 01ce D9010000 		.4byte	0x1d9
+ 401 01d2 0E       		.uleb128 0xe
+ 402 01d3 01       		.uleb128 0x1
+ 403 01d4 50       		.byte	0x50
+ 404 01d5 02       		.uleb128 0x2
+ 405 01d6 08       		.byte	0x8
+ 406 01d7 52       		.byte	0x52
+ 407 01d8 00       		.byte	0
+ 408 01d9 0D       		.uleb128 0xd
+ 409 01da 3E000000 		.4byte	.LVL12
+ 410 01de E4020000 		.4byte	0x2e4
+ 411 01e2 ED010000 		.4byte	0x1ed
+ 412 01e6 0E       		.uleb128 0xe
+ 413 01e7 01       		.uleb128 0x1
+ 414 01e8 50       		.byte	0x50
+ 415 01e9 02       		.uleb128 0x2
+ 416 01ea 7D       		.byte	0x7d
+ 417 01eb 00       		.sleb128 0
+ 418 01ec 00       		.byte	0
+ 419 01ed 0D       		.uleb128 0xd
+ 420 01ee 44000000 		.4byte	.LVL13
+ 421 01f2 D9020000 		.4byte	0x2d9
+ 422 01f6 01020000 		.4byte	0x201
+ 423 01fa 0E       		.uleb128 0xe
+ 424 01fb 01       		.uleb128 0x1
+ 425 01fc 50       		.byte	0x50
+ 426 01fd 02       		.uleb128 0x2
+ 427 01fe 08       		.byte	0x8
+ 428 01ff 72       		.byte	0x72
+ 429 0200 00       		.byte	0
+ 430 0201 0D       		.uleb128 0xd
+ 431 0202 86000000 		.4byte	.LVL21
+ 432 0206 CE020000 		.4byte	0x2ce
+ 433 020a 1E020000 		.4byte	0x21e
+ 434 020e 0E       		.uleb128 0xe
+ 435 020f 01       		.uleb128 0x1
+ 436 0210 50       		.byte	0x50
+ 437 0211 02       		.uleb128 0x2
+ 438 0212 91       		.byte	0x91
+ 439 0213 4C       		.sleb128 -52
+ 440 0214 0E       		.uleb128 0xe
+ 441 0215 01       		.uleb128 0x1
+ 442 0216 51       		.byte	0x51
+ 443 0217 05       		.uleb128 0x5
+ 444 0218 03       		.byte	0x3
+ 445 0219 00000000 		.4byte	.LC0
+ 446 021d 00       		.byte	0
+ 447 021e 0D       		.uleb128 0xd
+ 448 021f 8C000000 		.4byte	.LVL22
+ 449 0223 D9020000 		.4byte	0x2d9
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 10
+
+
+ 450 0227 32020000 		.4byte	0x232
+ 451 022b 0E       		.uleb128 0xe
+ 452 022c 01       		.uleb128 0x1
+ 453 022d 50       		.byte	0x50
+ 454 022e 02       		.uleb128 0x2
+ 455 022f 08       		.byte	0x8
+ 456 0230 46       		.byte	0x46
+ 457 0231 00       		.byte	0
+ 458 0232 0D       		.uleb128 0xd
+ 459 0233 92000000 		.4byte	.LVL23
+ 460 0237 E4020000 		.4byte	0x2e4
+ 461 023b 46020000 		.4byte	0x246
+ 462 023f 0E       		.uleb128 0xe
+ 463 0240 01       		.uleb128 0x1
+ 464 0241 50       		.byte	0x50
+ 465 0242 02       		.uleb128 0x2
+ 466 0243 91       		.byte	0x91
+ 467 0244 4C       		.sleb128 -52
+ 468 0245 00       		.byte	0
+ 469 0246 0F       		.uleb128 0xf
+ 470 0247 98000000 		.4byte	.LVL24
+ 471 024b E4020000 		.4byte	0x2e4
+ 472 024f 0E       		.uleb128 0xe
+ 473 0250 01       		.uleb128 0x1
+ 474 0251 50       		.byte	0x50
+ 475 0252 05       		.uleb128 0x5
+ 476 0253 03       		.byte	0x3
+ 477 0254 04000000 		.4byte	.LC1
+ 478 0258 00       		.byte	0
+ 479 0259 00       		.byte	0
+ 480 025a 10       		.uleb128 0x10
+ 481 025b 9B000000 		.4byte	0x9b
+ 482 025f 6A020000 		.4byte	0x26a
+ 483 0263 11       		.uleb128 0x11
+ 484 0264 B5000000 		.4byte	0xb5
+ 485 0268 03       		.byte	0x3
+ 486 0269 00       		.byte	0
+ 487 026a 10       		.uleb128 0x10
+ 488 026b 81000000 		.4byte	0x81
+ 489 026f 7B020000 		.4byte	0x27b
+ 490 0273 12       		.uleb128 0x12
+ 491 0274 B5000000 		.4byte	0xb5
+ 492 0278 01       		.uleb128 0x1
+ 493 0279 3E       		.byte	0x3e
+ 494 027a 00       		.byte	0
+ 495 027b 13       		.uleb128 0x13
+ 496 027c 67010000 		.4byte	.LASF39
+ 497 0280 08       		.byte	0x8
+ 498 0281 1207     		.2byte	0x712
+ 499 0283 87020000 		.4byte	0x287
+ 500 0287 14       		.uleb128 0x14
+ 501 0288 76000000 		.4byte	0x76
+ 502 028c 15       		.uleb128 0x15
+ 503 028d 46010000 		.4byte	.LASF26
+ 504 0291 46010000 		.4byte	.LASF26
+ 505 0295 05       		.byte	0x5
+ 506 0296 54       		.byte	0x54
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 11
+
+
+ 507 0297 15       		.uleb128 0x15
+ 508 0298 D8010000 		.4byte	.LASF27
+ 509 029c D8010000 		.4byte	.LASF27
+ 510 02a0 06       		.byte	0x6
+ 511 02a1 34       		.byte	0x34
+ 512 02a2 15       		.uleb128 0x15
+ 513 02a3 FC000000 		.4byte	.LASF28
+ 514 02a7 FC000000 		.4byte	.LASF28
+ 515 02ab 06       		.byte	0x6
+ 516 02ac D1       		.byte	0xd1
+ 517 02ad 15       		.uleb128 0x15
+ 518 02ae 1F010000 		.4byte	.LASF29
+ 519 02b2 1F010000 		.4byte	.LASF29
+ 520 02b6 06       		.byte	0x6
+ 521 02b7 39       		.byte	0x39
+ 522 02b8 15       		.uleb128 0x15
+ 523 02b9 51010000 		.4byte	.LASF30
+ 524 02bd 51010000 		.4byte	.LASF30
+ 525 02c1 06       		.byte	0x6
+ 526 02c2 3B       		.byte	0x3b
+ 527 02c3 15       		.uleb128 0x15
+ 528 02c4 0A000000 		.4byte	.LASF31
+ 529 02c8 0A000000 		.4byte	.LASF31
+ 530 02cc 06       		.byte	0x6
+ 531 02cd 3F       		.byte	0x3f
+ 532 02ce 15       		.uleb128 0x15
+ 533 02cf 59020000 		.4byte	.LASF32
+ 534 02d3 59020000 		.4byte	.LASF32
+ 535 02d7 07       		.byte	0x7
+ 536 02d8 E7       		.byte	0xe7
+ 537 02d9 15       		.uleb128 0x15
+ 538 02da EE010000 		.4byte	.LASF33
+ 539 02de EE010000 		.4byte	.LASF33
+ 540 02e2 05       		.byte	0x5
+ 541 02e3 8A       		.byte	0x8a
+ 542 02e4 15       		.uleb128 0x15
+ 543 02e5 4A020000 		.4byte	.LASF34
+ 544 02e9 4A020000 		.4byte	.LASF34
+ 545 02ed 05       		.byte	0x5
+ 546 02ee 8B       		.byte	0x8b
+ 547 02ef 00       		.byte	0
+ 548              		.section	.debug_abbrev,"",%progbits
+ 549              	.Ldebug_abbrev0:
+ 550 0000 01       		.uleb128 0x1
+ 551 0001 11       		.uleb128 0x11
+ 552 0002 01       		.byte	0x1
+ 553 0003 25       		.uleb128 0x25
+ 554 0004 0E       		.uleb128 0xe
+ 555 0005 13       		.uleb128 0x13
+ 556 0006 0B       		.uleb128 0xb
+ 557 0007 03       		.uleb128 0x3
+ 558 0008 0E       		.uleb128 0xe
+ 559 0009 1B       		.uleb128 0x1b
+ 560 000a 0E       		.uleb128 0xe
+ 561 000b 55       		.uleb128 0x55
+ 562 000c 17       		.uleb128 0x17
+ 563 000d 11       		.uleb128 0x11
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 12
+
+
+ 564 000e 01       		.uleb128 0x1
+ 565 000f 10       		.uleb128 0x10
+ 566 0010 17       		.uleb128 0x17
+ 567 0011 00       		.byte	0
+ 568 0012 00       		.byte	0
+ 569 0013 02       		.uleb128 0x2
+ 570 0014 24       		.uleb128 0x24
+ 571 0015 00       		.byte	0
+ 572 0016 0B       		.uleb128 0xb
+ 573 0017 0B       		.uleb128 0xb
+ 574 0018 3E       		.uleb128 0x3e
+ 575 0019 0B       		.uleb128 0xb
+ 576 001a 03       		.uleb128 0x3
+ 577 001b 0E       		.uleb128 0xe
+ 578 001c 00       		.byte	0
+ 579 001d 00       		.byte	0
+ 580 001e 03       		.uleb128 0x3
+ 581 001f 16       		.uleb128 0x16
+ 582 0020 00       		.byte	0
+ 583 0021 03       		.uleb128 0x3
+ 584 0022 0E       		.uleb128 0xe
+ 585 0023 3A       		.uleb128 0x3a
+ 586 0024 0B       		.uleb128 0xb
+ 587 0025 3B       		.uleb128 0x3b
+ 588 0026 0B       		.uleb128 0xb
+ 589 0027 49       		.uleb128 0x49
+ 590 0028 13       		.uleb128 0x13
+ 591 0029 00       		.byte	0
+ 592 002a 00       		.byte	0
+ 593 002b 04       		.uleb128 0x4
+ 594 002c 24       		.uleb128 0x24
+ 595 002d 00       		.byte	0
+ 596 002e 0B       		.uleb128 0xb
+ 597 002f 0B       		.uleb128 0xb
+ 598 0030 3E       		.uleb128 0x3e
+ 599 0031 0B       		.uleb128 0xb
+ 600 0032 03       		.uleb128 0x3
+ 601 0033 08       		.uleb128 0x8
+ 602 0034 00       		.byte	0
+ 603 0035 00       		.byte	0
+ 604 0036 05       		.uleb128 0x5
+ 605 0037 16       		.uleb128 0x16
+ 606 0038 00       		.byte	0
+ 607 0039 03       		.uleb128 0x3
+ 608 003a 0E       		.uleb128 0xe
+ 609 003b 3A       		.uleb128 0x3a
+ 610 003c 0B       		.uleb128 0xb
+ 611 003d 3B       		.uleb128 0x3b
+ 612 003e 05       		.uleb128 0x5
+ 613 003f 49       		.uleb128 0x49
+ 614 0040 13       		.uleb128 0x13
+ 615 0041 00       		.byte	0
+ 616 0042 00       		.byte	0
+ 617 0043 06       		.uleb128 0x6
+ 618 0044 2E       		.uleb128 0x2e
+ 619 0045 01       		.byte	0x1
+ 620 0046 3F       		.uleb128 0x3f
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 13
+
+
+ 621 0047 19       		.uleb128 0x19
+ 622 0048 03       		.uleb128 0x3
+ 623 0049 0E       		.uleb128 0xe
+ 624 004a 3A       		.uleb128 0x3a
+ 625 004b 0B       		.uleb128 0xb
+ 626 004c 3B       		.uleb128 0x3b
+ 627 004d 0B       		.uleb128 0xb
+ 628 004e 27       		.uleb128 0x27
+ 629 004f 19       		.uleb128 0x19
+ 630 0050 49       		.uleb128 0x49
+ 631 0051 13       		.uleb128 0x13
+ 632 0052 8701     		.uleb128 0x87
+ 633 0054 19       		.uleb128 0x19
+ 634 0055 11       		.uleb128 0x11
+ 635 0056 01       		.uleb128 0x1
+ 636 0057 12       		.uleb128 0x12
+ 637 0058 06       		.uleb128 0x6
+ 638 0059 40       		.uleb128 0x40
+ 639 005a 18       		.uleb128 0x18
+ 640 005b 9742     		.uleb128 0x2117
+ 641 005d 19       		.uleb128 0x19
+ 642 005e 01       		.uleb128 0x1
+ 643 005f 13       		.uleb128 0x13
+ 644 0060 00       		.byte	0
+ 645 0061 00       		.byte	0
+ 646 0062 07       		.uleb128 0x7
+ 647 0063 34       		.uleb128 0x34
+ 648 0064 00       		.byte	0
+ 649 0065 03       		.uleb128 0x3
+ 650 0066 0E       		.uleb128 0xe
+ 651 0067 3A       		.uleb128 0x3a
+ 652 0068 0B       		.uleb128 0xb
+ 653 0069 3B       		.uleb128 0x3b
+ 654 006a 0B       		.uleb128 0xb
+ 655 006b 49       		.uleb128 0x49
+ 656 006c 13       		.uleb128 0x13
+ 657 006d 02       		.uleb128 0x2
+ 658 006e 17       		.uleb128 0x17
+ 659 006f 00       		.byte	0
+ 660 0070 00       		.byte	0
+ 661 0071 08       		.uleb128 0x8
+ 662 0072 34       		.uleb128 0x34
+ 663 0073 00       		.byte	0
+ 664 0074 03       		.uleb128 0x3
+ 665 0075 0E       		.uleb128 0xe
+ 666 0076 3A       		.uleb128 0x3a
+ 667 0077 0B       		.uleb128 0xb
+ 668 0078 3B       		.uleb128 0x3b
+ 669 0079 0B       		.uleb128 0xb
+ 670 007a 49       		.uleb128 0x49
+ 671 007b 13       		.uleb128 0x13
+ 672 007c 1C       		.uleb128 0x1c
+ 673 007d 0B       		.uleb128 0xb
+ 674 007e 00       		.byte	0
+ 675 007f 00       		.byte	0
+ 676 0080 09       		.uleb128 0x9
+ 677 0081 34       		.uleb128 0x34
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 14
+
+
+ 678 0082 00       		.byte	0
+ 679 0083 03       		.uleb128 0x3
+ 680 0084 0E       		.uleb128 0xe
+ 681 0085 3A       		.uleb128 0x3a
+ 682 0086 0B       		.uleb128 0xb
+ 683 0087 3B       		.uleb128 0x3b
+ 684 0088 0B       		.uleb128 0xb
+ 685 0089 49       		.uleb128 0x49
+ 686 008a 13       		.uleb128 0x13
+ 687 008b 02       		.uleb128 0x2
+ 688 008c 18       		.uleb128 0x18
+ 689 008d 00       		.byte	0
+ 690 008e 00       		.byte	0
+ 691 008f 0A       		.uleb128 0xa
+ 692 0090 0B       		.uleb128 0xb
+ 693 0091 01       		.byte	0x1
+ 694 0092 11       		.uleb128 0x11
+ 695 0093 01       		.uleb128 0x1
+ 696 0094 12       		.uleb128 0x12
+ 697 0095 06       		.uleb128 0x6
+ 698 0096 01       		.uleb128 0x1
+ 699 0097 13       		.uleb128 0x13
+ 700 0098 00       		.byte	0
+ 701 0099 00       		.byte	0
+ 702 009a 0B       		.uleb128 0xb
+ 703 009b 34       		.uleb128 0x34
+ 704 009c 00       		.byte	0
+ 705 009d 03       		.uleb128 0x3
+ 706 009e 08       		.uleb128 0x8
+ 707 009f 3A       		.uleb128 0x3a
+ 708 00a0 0B       		.uleb128 0xb
+ 709 00a1 3B       		.uleb128 0x3b
+ 710 00a2 0B       		.uleb128 0xb
+ 711 00a3 49       		.uleb128 0x49
+ 712 00a4 13       		.uleb128 0x13
+ 713 00a5 02       		.uleb128 0x2
+ 714 00a6 17       		.uleb128 0x17
+ 715 00a7 00       		.byte	0
+ 716 00a8 00       		.byte	0
+ 717 00a9 0C       		.uleb128 0xc
+ 718 00aa 898201   		.uleb128 0x4109
+ 719 00ad 00       		.byte	0
+ 720 00ae 11       		.uleb128 0x11
+ 721 00af 01       		.uleb128 0x1
+ 722 00b0 31       		.uleb128 0x31
+ 723 00b1 13       		.uleb128 0x13
+ 724 00b2 00       		.byte	0
+ 725 00b3 00       		.byte	0
+ 726 00b4 0D       		.uleb128 0xd
+ 727 00b5 898201   		.uleb128 0x4109
+ 728 00b8 01       		.byte	0x1
+ 729 00b9 11       		.uleb128 0x11
+ 730 00ba 01       		.uleb128 0x1
+ 731 00bb 31       		.uleb128 0x31
+ 732 00bc 13       		.uleb128 0x13
+ 733 00bd 01       		.uleb128 0x1
+ 734 00be 13       		.uleb128 0x13
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 15
+
+
+ 735 00bf 00       		.byte	0
+ 736 00c0 00       		.byte	0
+ 737 00c1 0E       		.uleb128 0xe
+ 738 00c2 8A8201   		.uleb128 0x410a
+ 739 00c5 00       		.byte	0
+ 740 00c6 02       		.uleb128 0x2
+ 741 00c7 18       		.uleb128 0x18
+ 742 00c8 9142     		.uleb128 0x2111
+ 743 00ca 18       		.uleb128 0x18
+ 744 00cb 00       		.byte	0
+ 745 00cc 00       		.byte	0
+ 746 00cd 0F       		.uleb128 0xf
+ 747 00ce 898201   		.uleb128 0x4109
+ 748 00d1 01       		.byte	0x1
+ 749 00d2 11       		.uleb128 0x11
+ 750 00d3 01       		.uleb128 0x1
+ 751 00d4 31       		.uleb128 0x31
+ 752 00d5 13       		.uleb128 0x13
+ 753 00d6 00       		.byte	0
+ 754 00d7 00       		.byte	0
+ 755 00d8 10       		.uleb128 0x10
+ 756 00d9 01       		.uleb128 0x1
+ 757 00da 01       		.byte	0x1
+ 758 00db 49       		.uleb128 0x49
+ 759 00dc 13       		.uleb128 0x13
+ 760 00dd 01       		.uleb128 0x1
+ 761 00de 13       		.uleb128 0x13
+ 762 00df 00       		.byte	0
+ 763 00e0 00       		.byte	0
+ 764 00e1 11       		.uleb128 0x11
+ 765 00e2 21       		.uleb128 0x21
+ 766 00e3 00       		.byte	0
+ 767 00e4 49       		.uleb128 0x49
+ 768 00e5 13       		.uleb128 0x13
+ 769 00e6 2F       		.uleb128 0x2f
+ 770 00e7 0B       		.uleb128 0xb
+ 771 00e8 00       		.byte	0
+ 772 00e9 00       		.byte	0
+ 773 00ea 12       		.uleb128 0x12
+ 774 00eb 21       		.uleb128 0x21
+ 775 00ec 00       		.byte	0
+ 776 00ed 49       		.uleb128 0x49
+ 777 00ee 13       		.uleb128 0x13
+ 778 00ef 2F       		.uleb128 0x2f
+ 779 00f0 18       		.uleb128 0x18
+ 780 00f1 00       		.byte	0
+ 781 00f2 00       		.byte	0
+ 782 00f3 13       		.uleb128 0x13
+ 783 00f4 34       		.uleb128 0x34
+ 784 00f5 00       		.byte	0
+ 785 00f6 03       		.uleb128 0x3
+ 786 00f7 0E       		.uleb128 0xe
+ 787 00f8 3A       		.uleb128 0x3a
+ 788 00f9 0B       		.uleb128 0xb
+ 789 00fa 3B       		.uleb128 0x3b
+ 790 00fb 05       		.uleb128 0x5
+ 791 00fc 49       		.uleb128 0x49
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 16
+
+
+ 792 00fd 13       		.uleb128 0x13
+ 793 00fe 3F       		.uleb128 0x3f
+ 794 00ff 19       		.uleb128 0x19
+ 795 0100 3C       		.uleb128 0x3c
+ 796 0101 19       		.uleb128 0x19
+ 797 0102 00       		.byte	0
+ 798 0103 00       		.byte	0
+ 799 0104 14       		.uleb128 0x14
+ 800 0105 35       		.uleb128 0x35
+ 801 0106 00       		.byte	0
+ 802 0107 49       		.uleb128 0x49
+ 803 0108 13       		.uleb128 0x13
+ 804 0109 00       		.byte	0
+ 805 010a 00       		.byte	0
+ 806 010b 15       		.uleb128 0x15
+ 807 010c 2E       		.uleb128 0x2e
+ 808 010d 00       		.byte	0
+ 809 010e 3F       		.uleb128 0x3f
+ 810 010f 19       		.uleb128 0x19
+ 811 0110 3C       		.uleb128 0x3c
+ 812 0111 19       		.uleb128 0x19
+ 813 0112 6E       		.uleb128 0x6e
+ 814 0113 0E       		.uleb128 0xe
+ 815 0114 03       		.uleb128 0x3
+ 816 0115 0E       		.uleb128 0xe
+ 817 0116 3A       		.uleb128 0x3a
+ 818 0117 0B       		.uleb128 0xb
+ 819 0118 3B       		.uleb128 0x3b
+ 820 0119 0B       		.uleb128 0xb
+ 821 011a 00       		.byte	0
+ 822 011b 00       		.byte	0
+ 823 011c 00       		.byte	0
+ 824              		.section	.debug_loc,"",%progbits
+ 825              	.Ldebug_loc0:
+ 826              	.LLST0:
+ 827 0000 06000000 		.4byte	.LVL0
+ 828 0004 16000000 		.4byte	.LVL4
+ 829 0008 0200     		.2byte	0x2
+ 830 000a 30       		.byte	0x30
+ 831 000b 9F       		.byte	0x9f
+ 832 000c 16000000 		.4byte	.LVL4
+ 833 0010 50000000 		.4byte	.LVL14
+ 834 0014 0100     		.2byte	0x1
+ 835 0016 54       		.byte	0x54
+ 836 0017 52000000 		.4byte	.LVL15
+ 837 001b 5C000000 		.4byte	.LVL16
+ 838 001f 0100     		.2byte	0x1
+ 839 0021 54       		.byte	0x54
+ 840 0022 00000000 		.4byte	0
+ 841 0026 00000000 		.4byte	0
+ 842              	.LLST1:
+ 843 002a 06000000 		.4byte	.LVL0
+ 844 002e 16000000 		.4byte	.LVL4
+ 845 0032 0200     		.2byte	0x2
+ 846 0034 30       		.byte	0x30
+ 847 0035 9F       		.byte	0x9f
+ 848 0036 5C000000 		.4byte	.LVL16
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 17
+
+
+ 849 003a 76000000 		.4byte	.LVL17
+ 850 003e 0100     		.2byte	0x1
+ 851 0040 52       		.byte	0x52
+ 852 0041 78000000 		.4byte	.LVL18
+ 853 0045 85000000 		.4byte	.LVL21-1
+ 854 0049 0100     		.2byte	0x1
+ 855 004b 52       		.byte	0x52
+ 856 004c 00000000 		.4byte	0
+ 857 0050 00000000 		.4byte	0
+ 858              	.LLST2:
+ 859 0054 22000000 		.4byte	.LVL6
+ 860 0058 25000000 		.4byte	.LVL7-1
+ 861 005c 0100     		.2byte	0x1
+ 862 005e 50       		.byte	0x50
+ 863 005f 00000000 		.4byte	0
+ 864 0063 00000000 		.4byte	0
+ 865              	.LLST3:
+ 866 0067 28000000 		.4byte	.LVL8
+ 867 006b 2E000000 		.4byte	.LVL9
+ 868 006f 0100     		.2byte	0x1
+ 869 0071 50       		.byte	0x50
+ 870 0072 00000000 		.4byte	0
+ 871 0076 00000000 		.4byte	0
+ 872              	.LLST4:
+ 873 007a 5C000000 		.4byte	.LVL16
+ 874 007e 82000000 		.4byte	.LVL20
+ 875 0082 0100     		.2byte	0x1
+ 876 0084 50       		.byte	0x50
+ 877 0085 00000000 		.4byte	0
+ 878 0089 00000000 		.4byte	0
+ 879              		.section	.debug_aranges,"",%progbits
+ 880 0000 1C000000 		.4byte	0x1c
+ 881 0004 0200     		.2byte	0x2
+ 882 0006 00000000 		.4byte	.Ldebug_info0
+ 883 000a 04       		.byte	0x4
+ 884 000b 00       		.byte	0
+ 885 000c 0000     		.2byte	0
+ 886 000e 0000     		.2byte	0
+ 887 0010 00000000 		.4byte	.LFB64
+ 888 0014 A8000000 		.4byte	.LFE64-.LFB64
+ 889 0018 00000000 		.4byte	0
+ 890 001c 00000000 		.4byte	0
+ 891              		.section	.debug_ranges,"",%progbits
+ 892              	.Ldebug_ranges0:
+ 893 0000 00000000 		.4byte	.LFB64
+ 894 0004 A8000000 		.4byte	.LFE64
+ 895 0008 00000000 		.4byte	0
+ 896 000c 00000000 		.4byte	0
+ 897              		.section	.debug_line,"",%progbits
+ 898              	.Ldebug_line0:
+ 899 0000 19020000 		.section	.debug_str,"MS",%progbits,1
+ 899      0200D201 
+ 899      00000201 
+ 899      FB0E0D00 
+ 899      01010101 
+ 900              	.LASF9:
+ 901 0000 5F5F696E 		.ascii	"__int32_t\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 18
+
+
+ 901      7433325F 
+ 901      7400
+ 902              	.LASF31:
+ 903 000a 4144435F 		.ascii	"ADC_CountsTo_mVolts\000"
+ 903      436F756E 
+ 903      7473546F 
+ 903      5F6D566F 
+ 903      6C747300 
+ 904              	.LASF13:
+ 905 001e 646F7562 		.ascii	"double\000"
+ 905      6C6500
+ 906              	.LASF37:
+ 907 0025 443A5C43 		.ascii	"D:\\Control digital\\Filtros_FIR\\Filtros.cydsn\000"
+ 907      6F6E7472 
+ 907      6F6C2064 
+ 907      69676974 
+ 907      616C5C46 
+ 908              	.LASF10:
+ 909 0052 696E7433 		.ascii	"int32_t\000"
+ 909      325F7400 
+ 910              	.LASF12:
+ 911 005a 666C6F61 		.ascii	"float\000"
+ 911      7400
+ 912              	.LASF1:
+ 913 0060 756E7369 		.ascii	"unsigned char\000"
+ 913      676E6564 
+ 913      20636861 
+ 913      7200
+ 914              	.LASF35:
+ 915 006e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 915      43313120 
+ 915      352E342E 
+ 915      31203230 
+ 915      31363036 
+ 916 00a1 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 916      20726576 
+ 916      6973696F 
+ 916      6E203233 
+ 916      37373135 
+ 917 00d4 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 917      66756E63 
+ 917      74696F6E 
+ 917      2D736563 
+ 917      74696F6E 
+ 918              	.LASF28:
+ 919 00fc 4144435F 		.ascii	"ADC_StartConvert\000"
+ 919      53746172 
+ 919      74436F6E 
+ 919      76657274 
+ 919      00
+ 920              	.LASF14:
+ 921 010d 63686172 		.ascii	"char8\000"
+ 921      3800
+ 922              	.LASF21:
+ 923 0113 6C65635F 		.ascii	"lec_binaria\000"
+ 923      62696E61 
+ 923      72696100 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 19
+
+
+ 924              	.LASF29:
+ 925 011f 4144435F 		.ascii	"ADC_IsEndConversion\000"
+ 925      4973456E 
+ 925      64436F6E 
+ 925      76657273 
+ 925      696F6E00 
+ 926              	.LASF3:
+ 927 0133 73686F72 		.ascii	"short unsigned int\000"
+ 927      7420756E 
+ 927      7369676E 
+ 927      65642069 
+ 927      6E7400
+ 928              	.LASF26:
+ 929 0146 55415254 		.ascii	"UART_Start\000"
+ 929      5F537461 
+ 929      727400
+ 930              	.LASF30:
+ 931 0151 4144435F 		.ascii	"ADC_GetResult16\000"
+ 931      47657452 
+ 931      6573756C 
+ 931      74313600 
+ 932              	.LASF25:
+ 933 0161 61727261 		.ascii	"array\000"
+ 933      7900
+ 934              	.LASF39:
+ 935 0167 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 935      52784275 
+ 935      66666572 
+ 935      00
+ 936              	.LASF22:
+ 937 0174 6C65635F 		.ascii	"lec_Volts\000"
+ 937      566F6C74 
+ 937      7300
+ 938              	.LASF23:
+ 939 017e 46696C74 		.ascii	"Filtrado\000"
+ 939      7261646F 
+ 939      00
+ 940              	.LASF38:
+ 941 0187 6D61696E 		.ascii	"main\000"
+ 941      00
+ 942              	.LASF24:
+ 943 018c 4E6F4669 		.ascii	"NoFiltrado\000"
+ 943      6C747261 
+ 943      646F00
+ 944              	.LASF5:
+ 945 0197 6C6F6E67 		.ascii	"long unsigned int\000"
+ 945      20756E73 
+ 945      69676E65 
+ 945      6420696E 
+ 945      7400
+ 946              	.LASF8:
+ 947 01a9 756E7369 		.ascii	"unsigned int\000"
+ 947      676E6564 
+ 947      20696E74 
+ 947      00
+ 948              	.LASF20:
+ 949 01b6 73756D61 		.ascii	"suma\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 20
+
+
+ 949      00
+ 950              	.LASF7:
+ 951 01bb 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 951      206C6F6E 
+ 951      6720756E 
+ 951      7369676E 
+ 951      65642069 
+ 952              	.LASF11:
+ 953 01d2 696E7431 		.ascii	"int16\000"
+ 953      3600
+ 954              	.LASF27:
+ 955 01d8 4144435F 		.ascii	"ADC_Start\000"
+ 955      53746172 
+ 955      7400
+ 956              	.LASF16:
+ 957 01e2 6C6F6E67 		.ascii	"long double\000"
+ 957      20646F75 
+ 957      626C6500 
+ 958              	.LASF33:
+ 959 01ee 55415254 		.ascii	"UART_PutChar\000"
+ 959      5F507574 
+ 959      43686172 
+ 959      00
+ 960              	.LASF17:
+ 961 01fb 73697A65 		.ascii	"sizetype\000"
+ 961      74797065 
+ 961      00
+ 962              	.LASF6:
+ 963 0204 6C6F6E67 		.ascii	"long long int\000"
+ 963      206C6F6E 
+ 963      6720696E 
+ 963      7400
+ 964              	.LASF36:
+ 965 0212 6D61696E 		.ascii	"main.c\000"
+ 965      2E6300
+ 966              	.LASF15:
+ 967 0219 63686172 		.ascii	"char\000"
+ 967      00
+ 968              	.LASF19:
+ 969 021e 76656E74 		.ascii	"ventana\000"
+ 969      616E6100 
+ 970              	.LASF2:
+ 971 0226 73686F72 		.ascii	"short int\000"
+ 971      7420696E 
+ 971      7400
+ 972              	.LASF4:
+ 973 0230 6C6F6E67 		.ascii	"long int\000"
+ 973      20696E74 
+ 973      00
+ 974              	.LASF18:
+ 975 0239 636F6E74 		.ascii	"cont\000"
+ 975      00
+ 976              	.LASF0:
+ 977 023e 7369676E 		.ascii	"signed char\000"
+ 977      65642063 
+ 977      68617200 
+ 978              	.LASF34:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccvNNUda.s 			page 21
+
+
+ 979 024a 55415254 		.ascii	"UART_PutString\000"
+ 979      5F507574 
+ 979      53747269 
+ 979      6E6700
+ 980              	.LASF32:
+ 981 0259 73707269 		.ascii	"sprintf\000"
+ 981      6E746600 
+ 982              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
