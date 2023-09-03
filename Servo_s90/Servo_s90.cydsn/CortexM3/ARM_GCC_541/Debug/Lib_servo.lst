@@ -1,0 +1,478 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Lib_servo.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.Ang_Per,"ax",%progbits
+  20              		.align	2
+  21              		.global	Ang_Per
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	Ang_Per, %function
+  25              	Ang_Per:
+  26              	.LFB0:
+  27              		.file 1 "Lib_servo.c"
+   1:Lib_servo.c   **** /*
+   2:Lib_servo.c   ****     Funciones para el control de un servo de 0 a 180 grados de libertad
+   3:Lib_servo.c   ****     por medio de dos botones, uno para aumentar y otro para disminuir la
+   4:Lib_servo.c   ****     posición del bastago 
+   5:Lib_servo.c   **** */
+   6:Lib_servo.c   **** 
+   7:Lib_servo.c   **** #include <stdint.h>
+   8:Lib_servo.c   **** #include "Lib_servo.h"
+   9:Lib_servo.c   **** 
+  10:Lib_servo.c   **** //Convierte del angulo solicitado a el duty cycle necesario de 1ms-2ms
+  11:Lib_servo.c   **** uint8_t Ang_Per(uint8_t angulo){
+  28              		.loc 1 11 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33              	.LVL0:
+  12:Lib_servo.c   ****      
+  13:Lib_servo.c   ****     //Hacemos primero la converción de angulo a periodo
+  14:Lib_servo.c   ****     /*
+  15:Lib_servo.c   ****      Periodo      Angulo  |  representacion en tipo de dato uint8_t
+  16:Lib_servo.c   ****         1ms   -->    0    |  100
+  17:Lib_servo.c   ****         1.5ms -->   90    |  150
+  18:Lib_servo.c   ****         2ms   -->  180    |  200
+  19:Lib_servo.c   ****     */
+  20:Lib_servo.c   ****     uint8_t periodo = 100*((angulo/180)+1); 
+  21:Lib_servo.c   ****     
+  22:Lib_servo.c   ****     //Hacemos la convercion ahora al valor de coparación para el pwm
+  23:Lib_servo.c   ****     /*
+  24:Lib_servo.c   ****         El servo funciona a una definicion de 8 bits a 50hz aprox
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 2
+
+
+  25:Lib_servo.c   ****         Por lo que hay un conteo posible de 0 a 255 cada 5.1 segundos
+  26:Lib_servo.c   ****         
+  27:Lib_servo.c   ****         Periodo       Duty Cycle   |  representacion en tipo de dato uint8_t
+  28:Lib_servo.c   ****             1ms   -->      5%      |  12.75/255  redondeado a 13/255
+  29:Lib_servo.c   ****             1.5ms -->      7.5%    |  19.125/255 redondeado a 19/255
+  30:Lib_servo.c   ****             2ms   -->      10%     |  25.5/255   redondeado a 25/255
+  31:Lib_servo.c   ****     */
+  32:Lib_servo.c   ****     uint8_t ccp = (12/100)*periodo + 1;
+  33:Lib_servo.c   ****     
+  34:Lib_servo.c   ****     return ccp;
+  35:Lib_servo.c   **** }...
+  34              		.loc 1 35 0
+  35 0000 0120     		movs	r0, #1
+  36              	.LVL1:
+  37 0002 7047     		bx	lr
+  38              		.cfi_endproc
+  39              	.LFE0:
+  40              		.size	Ang_Per, .-Ang_Per
+  41              		.text
+  42              	.Letext0:
+  43              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+  44              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+  45              		.section	.debug_info,"",%progbits
+  46              	.Ldebug_info0:
+  47 0000 D0000000 		.4byte	0xd0
+  48 0004 0400     		.2byte	0x4
+  49 0006 00000000 		.4byte	.Ldebug_abbrev0
+  50 000a 04       		.byte	0x4
+  51 000b 01       		.uleb128 0x1
+  52 000c 20000000 		.4byte	.LASF12
+  53 0010 0C       		.byte	0xc
+  54 0011 FF000000 		.4byte	.LASF13
+  55 0015 19010000 		.4byte	.LASF14
+  56 0019 00000000 		.4byte	.Ldebug_ranges0+0
+  57 001d 00000000 		.4byte	0
+  58 0021 00000000 		.4byte	.Ldebug_line0
+  59 0025 02       		.uleb128 0x2
+  60 0026 01       		.byte	0x1
+  61 0027 08       		.byte	0x8
+  62 0028 12000000 		.4byte	.LASF0
+  63 002c 02       		.uleb128 0x2
+  64 002d 01       		.byte	0x1
+  65 002e 06       		.byte	0x6
+  66 002f 75010000 		.4byte	.LASF1
+  67 0033 03       		.uleb128 0x3
+  68 0034 00000000 		.4byte	.LASF9
+  69 0038 02       		.byte	0x2
+  70 0039 1D       		.byte	0x1d
+  71 003a 25000000 		.4byte	0x25
+  72 003e 02       		.uleb128 0x2
+  73 003f 02       		.byte	0x2
+  74 0040 05       		.byte	0x5
+  75 0041 5A010000 		.4byte	.LASF2
+  76 0045 02       		.uleb128 0x2
+  77 0046 02       		.byte	0x2
+  78 0047 07       		.byte	0x7
+  79 0048 C0000000 		.4byte	.LASF3
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 3
+
+
+  80 004c 02       		.uleb128 0x2
+  81 004d 04       		.byte	0x4
+  82 004e 05       		.byte	0x5
+  83 004f 64010000 		.4byte	.LASF4
+  84 0053 02       		.uleb128 0x2
+  85 0054 04       		.byte	0x4
+  86 0055 07       		.byte	0x7
+  87 0056 AE000000 		.4byte	.LASF5
+  88 005a 02       		.uleb128 0x2
+  89 005b 08       		.byte	0x8
+  90 005c 05       		.byte	0x5
+  91 005d 0B010000 		.4byte	.LASF6
+  92 0061 02       		.uleb128 0x2
+  93 0062 08       		.byte	0x8
+  94 0063 07       		.byte	0x7
+  95 0064 E0000000 		.4byte	.LASF7
+  96 0068 04       		.uleb128 0x4
+  97 0069 04       		.byte	0x4
+  98 006a 05       		.byte	0x5
+  99 006b 696E7400 		.ascii	"int\000"
+ 100 006f 02       		.uleb128 0x2
+ 101 0070 04       		.byte	0x4
+ 102 0071 07       		.byte	0x7
+ 103 0072 D3000000 		.4byte	.LASF8
+ 104 0076 03       		.uleb128 0x3
+ 105 0077 F7000000 		.4byte	.LASF10
+ 106 007b 03       		.byte	0x3
+ 107 007c 18       		.byte	0x18
+ 108 007d 33000000 		.4byte	0x33
+ 109 0081 05       		.uleb128 0x5
+ 110 0082 6D010000 		.4byte	.LASF15
+ 111 0086 01       		.byte	0x1
+ 112 0087 0B       		.byte	0xb
+ 113 0088 76000000 		.4byte	0x76
+ 114 008c 00000000 		.4byte	.LFB0
+ 115 0090 04000000 		.4byte	.LFE0-.LFB0
+ 116 0094 01       		.uleb128 0x1
+ 117 0095 9C       		.byte	0x9c
+ 118 0096 06       		.uleb128 0x6
+ 119 0097 81010000 		.4byte	.LASF16
+ 120 009b 01       		.byte	0x1
+ 121 009c 0B       		.byte	0xb
+ 122 009d 76000000 		.4byte	0x76
+ 123 00a1 00000000 		.4byte	.LLST0
+ 124 00a5 07       		.uleb128 0x7
+ 125 00a6 0A000000 		.4byte	.LASF11
+ 126 00aa 01       		.byte	0x1
+ 127 00ab 14       		.byte	0x14
+ 128 00ac 76000000 		.4byte	0x76
+ 129 00b0 15       		.uleb128 0x15
+ 130 00b1 F3       		.byte	0xf3
+ 131 00b2 01       		.uleb128 0x1
+ 132 00b3 50       		.byte	0x50
+ 133 00b4 F7       		.byte	0xf7
+ 134 00b5 25       		.uleb128 0x25
+ 135 00b6 09       		.byte	0x9
+ 136 00b7 B4       		.byte	0xb4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 4
+
+
+ 137 00b8 F7       		.byte	0xf7
+ 138 00b9 25       		.uleb128 0x25
+ 139 00ba 1B       		.byte	0x1b
+ 140 00bb F7       		.byte	0xf7
+ 141 00bc 00       		.uleb128 0
+ 142 00bd 08       		.byte	0x8
+ 143 00be FF       		.byte	0xff
+ 144 00bf 1A       		.byte	0x1a
+ 145 00c0 23       		.byte	0x23
+ 146 00c1 01       		.uleb128 0x1
+ 147 00c2 08       		.byte	0x8
+ 148 00c3 64       		.byte	0x64
+ 149 00c4 1E       		.byte	0x1e
+ 150 00c5 9F       		.byte	0x9f
+ 151 00c6 08       		.uleb128 0x8
+ 152 00c7 63637000 		.ascii	"ccp\000"
+ 153 00cb 01       		.byte	0x1
+ 154 00cc 20       		.byte	0x20
+ 155 00cd 76000000 		.4byte	0x76
+ 156 00d1 01       		.byte	0x1
+ 157 00d2 00       		.byte	0
+ 158 00d3 00       		.byte	0
+ 159              		.section	.debug_abbrev,"",%progbits
+ 160              	.Ldebug_abbrev0:
+ 161 0000 01       		.uleb128 0x1
+ 162 0001 11       		.uleb128 0x11
+ 163 0002 01       		.byte	0x1
+ 164 0003 25       		.uleb128 0x25
+ 165 0004 0E       		.uleb128 0xe
+ 166 0005 13       		.uleb128 0x13
+ 167 0006 0B       		.uleb128 0xb
+ 168 0007 03       		.uleb128 0x3
+ 169 0008 0E       		.uleb128 0xe
+ 170 0009 1B       		.uleb128 0x1b
+ 171 000a 0E       		.uleb128 0xe
+ 172 000b 55       		.uleb128 0x55
+ 173 000c 17       		.uleb128 0x17
+ 174 000d 11       		.uleb128 0x11
+ 175 000e 01       		.uleb128 0x1
+ 176 000f 10       		.uleb128 0x10
+ 177 0010 17       		.uleb128 0x17
+ 178 0011 00       		.byte	0
+ 179 0012 00       		.byte	0
+ 180 0013 02       		.uleb128 0x2
+ 181 0014 24       		.uleb128 0x24
+ 182 0015 00       		.byte	0
+ 183 0016 0B       		.uleb128 0xb
+ 184 0017 0B       		.uleb128 0xb
+ 185 0018 3E       		.uleb128 0x3e
+ 186 0019 0B       		.uleb128 0xb
+ 187 001a 03       		.uleb128 0x3
+ 188 001b 0E       		.uleb128 0xe
+ 189 001c 00       		.byte	0
+ 190 001d 00       		.byte	0
+ 191 001e 03       		.uleb128 0x3
+ 192 001f 16       		.uleb128 0x16
+ 193 0020 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 5
+
+
+ 194 0021 03       		.uleb128 0x3
+ 195 0022 0E       		.uleb128 0xe
+ 196 0023 3A       		.uleb128 0x3a
+ 197 0024 0B       		.uleb128 0xb
+ 198 0025 3B       		.uleb128 0x3b
+ 199 0026 0B       		.uleb128 0xb
+ 200 0027 49       		.uleb128 0x49
+ 201 0028 13       		.uleb128 0x13
+ 202 0029 00       		.byte	0
+ 203 002a 00       		.byte	0
+ 204 002b 04       		.uleb128 0x4
+ 205 002c 24       		.uleb128 0x24
+ 206 002d 00       		.byte	0
+ 207 002e 0B       		.uleb128 0xb
+ 208 002f 0B       		.uleb128 0xb
+ 209 0030 3E       		.uleb128 0x3e
+ 210 0031 0B       		.uleb128 0xb
+ 211 0032 03       		.uleb128 0x3
+ 212 0033 08       		.uleb128 0x8
+ 213 0034 00       		.byte	0
+ 214 0035 00       		.byte	0
+ 215 0036 05       		.uleb128 0x5
+ 216 0037 2E       		.uleb128 0x2e
+ 217 0038 01       		.byte	0x1
+ 218 0039 3F       		.uleb128 0x3f
+ 219 003a 19       		.uleb128 0x19
+ 220 003b 03       		.uleb128 0x3
+ 221 003c 0E       		.uleb128 0xe
+ 222 003d 3A       		.uleb128 0x3a
+ 223 003e 0B       		.uleb128 0xb
+ 224 003f 3B       		.uleb128 0x3b
+ 225 0040 0B       		.uleb128 0xb
+ 226 0041 27       		.uleb128 0x27
+ 227 0042 19       		.uleb128 0x19
+ 228 0043 49       		.uleb128 0x49
+ 229 0044 13       		.uleb128 0x13
+ 230 0045 11       		.uleb128 0x11
+ 231 0046 01       		.uleb128 0x1
+ 232 0047 12       		.uleb128 0x12
+ 233 0048 06       		.uleb128 0x6
+ 234 0049 40       		.uleb128 0x40
+ 235 004a 18       		.uleb128 0x18
+ 236 004b 9742     		.uleb128 0x2117
+ 237 004d 19       		.uleb128 0x19
+ 238 004e 00       		.byte	0
+ 239 004f 00       		.byte	0
+ 240 0050 06       		.uleb128 0x6
+ 241 0051 05       		.uleb128 0x5
+ 242 0052 00       		.byte	0
+ 243 0053 03       		.uleb128 0x3
+ 244 0054 0E       		.uleb128 0xe
+ 245 0055 3A       		.uleb128 0x3a
+ 246 0056 0B       		.uleb128 0xb
+ 247 0057 3B       		.uleb128 0x3b
+ 248 0058 0B       		.uleb128 0xb
+ 249 0059 49       		.uleb128 0x49
+ 250 005a 13       		.uleb128 0x13
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 6
+
+
+ 251 005b 02       		.uleb128 0x2
+ 252 005c 17       		.uleb128 0x17
+ 253 005d 00       		.byte	0
+ 254 005e 00       		.byte	0
+ 255 005f 07       		.uleb128 0x7
+ 256 0060 34       		.uleb128 0x34
+ 257 0061 00       		.byte	0
+ 258 0062 03       		.uleb128 0x3
+ 259 0063 0E       		.uleb128 0xe
+ 260 0064 3A       		.uleb128 0x3a
+ 261 0065 0B       		.uleb128 0xb
+ 262 0066 3B       		.uleb128 0x3b
+ 263 0067 0B       		.uleb128 0xb
+ 264 0068 49       		.uleb128 0x49
+ 265 0069 13       		.uleb128 0x13
+ 266 006a 02       		.uleb128 0x2
+ 267 006b 18       		.uleb128 0x18
+ 268 006c 00       		.byte	0
+ 269 006d 00       		.byte	0
+ 270 006e 08       		.uleb128 0x8
+ 271 006f 34       		.uleb128 0x34
+ 272 0070 00       		.byte	0
+ 273 0071 03       		.uleb128 0x3
+ 274 0072 08       		.uleb128 0x8
+ 275 0073 3A       		.uleb128 0x3a
+ 276 0074 0B       		.uleb128 0xb
+ 277 0075 3B       		.uleb128 0x3b
+ 278 0076 0B       		.uleb128 0xb
+ 279 0077 49       		.uleb128 0x49
+ 280 0078 13       		.uleb128 0x13
+ 281 0079 1C       		.uleb128 0x1c
+ 282 007a 0B       		.uleb128 0xb
+ 283 007b 00       		.byte	0
+ 284 007c 00       		.byte	0
+ 285 007d 00       		.byte	0
+ 286              		.section	.debug_loc,"",%progbits
+ 287              	.Ldebug_loc0:
+ 288              	.LLST0:
+ 289 0000 00000000 		.4byte	.LVL0
+ 290 0004 02000000 		.4byte	.LVL1
+ 291 0008 0100     		.2byte	0x1
+ 292 000a 50       		.byte	0x50
+ 293 000b 02000000 		.4byte	.LVL1
+ 294 000f 04000000 		.4byte	.LFE0
+ 295 0013 0400     		.2byte	0x4
+ 296 0015 F3       		.byte	0xf3
+ 297 0016 01       		.uleb128 0x1
+ 298 0017 50       		.byte	0x50
+ 299 0018 9F       		.byte	0x9f
+ 300 0019 00000000 		.4byte	0
+ 301 001d 00000000 		.4byte	0
+ 302              		.section	.debug_aranges,"",%progbits
+ 303 0000 1C000000 		.4byte	0x1c
+ 304 0004 0200     		.2byte	0x2
+ 305 0006 00000000 		.4byte	.Ldebug_info0
+ 306 000a 04       		.byte	0x4
+ 307 000b 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 7
+
+
+ 308 000c 0000     		.2byte	0
+ 309 000e 0000     		.2byte	0
+ 310 0010 00000000 		.4byte	.LFB0
+ 311 0014 04000000 		.4byte	.LFE0-.LFB0
+ 312 0018 00000000 		.4byte	0
+ 313 001c 00000000 		.4byte	0
+ 314              		.section	.debug_ranges,"",%progbits
+ 315              	.Ldebug_ranges0:
+ 316 0000 00000000 		.4byte	.LFB0
+ 317 0004 04000000 		.4byte	.LFE0
+ 318 0008 00000000 		.4byte	0
+ 319 000c 00000000 		.4byte	0
+ 320              		.section	.debug_line,"",%progbits
+ 321              	.Ldebug_line0:
+ 322 0000 37010000 		.section	.debug_str,"MS",%progbits,1
+ 322      02001F01 
+ 322      00000201 
+ 322      FB0E0D00 
+ 322      01010101 
+ 323              	.LASF9:
+ 324 0000 5F5F7569 		.ascii	"__uint8_t\000"
+ 324      6E74385F 
+ 324      7400
+ 325              	.LASF11:
+ 326 000a 70657269 		.ascii	"periodo\000"
+ 326      6F646F00 
+ 327              	.LASF0:
+ 328 0012 756E7369 		.ascii	"unsigned char\000"
+ 328      676E6564 
+ 328      20636861 
+ 328      7200
+ 329              	.LASF12:
+ 330 0020 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 330      43313120 
+ 330      352E342E 
+ 330      31203230 
+ 330      31363036 
+ 331 0053 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 331      20726576 
+ 331      6973696F 
+ 331      6E203233 
+ 331      37373135 
+ 332 0086 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 332      66756E63 
+ 332      74696F6E 
+ 332      2D736563 
+ 332      74696F6E 
+ 333              	.LASF5:
+ 334 00ae 6C6F6E67 		.ascii	"long unsigned int\000"
+ 334      20756E73 
+ 334      69676E65 
+ 334      6420696E 
+ 334      7400
+ 335              	.LASF3:
+ 336 00c0 73686F72 		.ascii	"short unsigned int\000"
+ 336      7420756E 
+ 336      7369676E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccWslm5M.s 			page 8
+
+
+ 336      65642069 
+ 336      6E7400
+ 337              	.LASF8:
+ 338 00d3 756E7369 		.ascii	"unsigned int\000"
+ 338      676E6564 
+ 338      20696E74 
+ 338      00
+ 339              	.LASF7:
+ 340 00e0 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 340      206C6F6E 
+ 340      6720756E 
+ 340      7369676E 
+ 340      65642069 
+ 341              	.LASF10:
+ 342 00f7 75696E74 		.ascii	"uint8_t\000"
+ 342      385F7400 
+ 343              	.LASF13:
+ 344 00ff 4C69625F 		.ascii	"Lib_servo.c\000"
+ 344      73657276 
+ 344      6F2E6300 
+ 345              	.LASF6:
+ 346 010b 6C6F6E67 		.ascii	"long long int\000"
+ 346      206C6F6E 
+ 346      6720696E 
+ 346      7400
+ 347              	.LASF14:
+ 348 0119 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\Servo_"
+ 348      73657273 
+ 348      5C616472 
+ 348      69615C4F 
+ 348      6E654472 
+ 349 0146 7339305C 		.ascii	"s90\\Servo_s90.cydsn\000"
+ 349      53657276 
+ 349      6F5F7339 
+ 349      302E6379 
+ 349      64736E00 
+ 350              	.LASF2:
+ 351 015a 73686F72 		.ascii	"short int\000"
+ 351      7420696E 
+ 351      7400
+ 352              	.LASF4:
+ 353 0164 6C6F6E67 		.ascii	"long int\000"
+ 353      20696E74 
+ 353      00
+ 354              	.LASF15:
+ 355 016d 416E675F 		.ascii	"Ang_Per\000"
+ 355      50657200 
+ 356              	.LASF1:
+ 357 0175 7369676E 		.ascii	"signed char\000"
+ 357      65642063 
+ 357      68617200 
+ 358              	.LASF16:
+ 359 0181 616E6775 		.ascii	"angulo\000"
+ 359      6C6F00
+ 360              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
