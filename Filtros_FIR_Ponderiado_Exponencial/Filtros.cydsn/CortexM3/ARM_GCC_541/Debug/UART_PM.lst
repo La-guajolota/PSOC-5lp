@@ -1,0 +1,932 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"UART_PM.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.UART_SaveConfig,"ax",%progbits
+  20              		.align	2
+  21              		.global	UART_SaveConfig
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	UART_SaveConfig, %function
+  25              	UART_SaveConfig:
+  26              	.LFB0:
+  27              		.file 1 "Generated_Source\\PSoC5\\UART_PM.c"
+   1:Generated_Source\PSoC5/UART_PM.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/UART_PM.c **** * File Name: UART_PM.c
+   3:Generated_Source\PSoC5/UART_PM.c **** * Version 2.50
+   4:Generated_Source\PSoC5/UART_PM.c **** *
+   5:Generated_Source\PSoC5/UART_PM.c **** * Description:
+   6:Generated_Source\PSoC5/UART_PM.c **** *  This file provides Sleep/WakeUp APIs functionality.
+   7:Generated_Source\PSoC5/UART_PM.c **** *
+   8:Generated_Source\PSoC5/UART_PM.c **** * Note:
+   9:Generated_Source\PSoC5/UART_PM.c **** *
+  10:Generated_Source\PSoC5/UART_PM.c **** ********************************************************************************
+  11:Generated_Source\PSoC5/UART_PM.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  12:Generated_Source\PSoC5/UART_PM.c **** * You may use this file only in accordance with the license, terms, conditions,
+  13:Generated_Source\PSoC5/UART_PM.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  14:Generated_Source\PSoC5/UART_PM.c **** * the software package with which this file was provided.
+  15:Generated_Source\PSoC5/UART_PM.c **** *******************************************************************************/
+  16:Generated_Source\PSoC5/UART_PM.c **** 
+  17:Generated_Source\PSoC5/UART_PM.c **** #include "UART.h"
+  18:Generated_Source\PSoC5/UART_PM.c **** 
+  19:Generated_Source\PSoC5/UART_PM.c **** 
+  20:Generated_Source\PSoC5/UART_PM.c **** /***************************************
+  21:Generated_Source\PSoC5/UART_PM.c **** * Local data allocation
+  22:Generated_Source\PSoC5/UART_PM.c **** ***************************************/
+  23:Generated_Source\PSoC5/UART_PM.c **** 
+  24:Generated_Source\PSoC5/UART_PM.c **** static UART_BACKUP_STRUCT  UART_backup =
+  25:Generated_Source\PSoC5/UART_PM.c **** {
+  26:Generated_Source\PSoC5/UART_PM.c ****     /* enableState - disabled */
+  27:Generated_Source\PSoC5/UART_PM.c ****     0u,
+  28:Generated_Source\PSoC5/UART_PM.c **** };
+  29:Generated_Source\PSoC5/UART_PM.c **** 
+  30:Generated_Source\PSoC5/UART_PM.c **** 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 2
+
+
+  31:Generated_Source\PSoC5/UART_PM.c **** 
+  32:Generated_Source\PSoC5/UART_PM.c **** /*******************************************************************************
+  33:Generated_Source\PSoC5/UART_PM.c **** * Function Name: UART_SaveConfig
+  34:Generated_Source\PSoC5/UART_PM.c **** ********************************************************************************
+  35:Generated_Source\PSoC5/UART_PM.c **** *
+  36:Generated_Source\PSoC5/UART_PM.c **** * Summary:
+  37:Generated_Source\PSoC5/UART_PM.c **** *  This function saves the component nonretention control register.
+  38:Generated_Source\PSoC5/UART_PM.c **** *  Does not save the FIFO which is a set of nonretention registers.
+  39:Generated_Source\PSoC5/UART_PM.c **** *  This function is called by the UART_Sleep() function.
+  40:Generated_Source\PSoC5/UART_PM.c **** *
+  41:Generated_Source\PSoC5/UART_PM.c **** * Parameters:
+  42:Generated_Source\PSoC5/UART_PM.c **** *  None.
+  43:Generated_Source\PSoC5/UART_PM.c **** *
+  44:Generated_Source\PSoC5/UART_PM.c **** * Return:
+  45:Generated_Source\PSoC5/UART_PM.c **** *  None.
+  46:Generated_Source\PSoC5/UART_PM.c **** *
+  47:Generated_Source\PSoC5/UART_PM.c **** * Global Variables:
+  48:Generated_Source\PSoC5/UART_PM.c **** *  UART_backup - modified when non-retention registers are saved.
+  49:Generated_Source\PSoC5/UART_PM.c **** *
+  50:Generated_Source\PSoC5/UART_PM.c **** * Reentrant:
+  51:Generated_Source\PSoC5/UART_PM.c **** *  No.
+  52:Generated_Source\PSoC5/UART_PM.c **** *
+  53:Generated_Source\PSoC5/UART_PM.c **** *******************************************************************************/
+  54:Generated_Source\PSoC5/UART_PM.c **** void UART_SaveConfig(void)
+  55:Generated_Source\PSoC5/UART_PM.c **** {
+  28              		.loc 1 55 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 7047     		bx	lr
+  34              		.cfi_endproc
+  35              	.LFE0:
+  36              		.size	UART_SaveConfig, .-UART_SaveConfig
+  37 0002 00BF     		.section	.text.UART_RestoreConfig,"ax",%progbits
+  38              		.align	2
+  39              		.global	UART_RestoreConfig
+  40              		.thumb
+  41              		.thumb_func
+  42              		.type	UART_RestoreConfig, %function
+  43              	UART_RestoreConfig:
+  44              	.LFB1:
+  56:Generated_Source\PSoC5/UART_PM.c ****     #if(UART_CONTROL_REG_REMOVED == 0u)
+  57:Generated_Source\PSoC5/UART_PM.c ****         UART_backup.cr = UART_CONTROL_REG;
+  58:Generated_Source\PSoC5/UART_PM.c ****     #endif /* End UART_CONTROL_REG_REMOVED */
+  59:Generated_Source\PSoC5/UART_PM.c **** }
+  60:Generated_Source\PSoC5/UART_PM.c **** 
+  61:Generated_Source\PSoC5/UART_PM.c **** 
+  62:Generated_Source\PSoC5/UART_PM.c **** /*******************************************************************************
+  63:Generated_Source\PSoC5/UART_PM.c **** * Function Name: UART_RestoreConfig
+  64:Generated_Source\PSoC5/UART_PM.c **** ********************************************************************************
+  65:Generated_Source\PSoC5/UART_PM.c **** *
+  66:Generated_Source\PSoC5/UART_PM.c **** * Summary:
+  67:Generated_Source\PSoC5/UART_PM.c **** *  Restores the nonretention control register except FIFO.
+  68:Generated_Source\PSoC5/UART_PM.c **** *  Does not restore the FIFO which is a set of nonretention registers.
+  69:Generated_Source\PSoC5/UART_PM.c **** *
+  70:Generated_Source\PSoC5/UART_PM.c **** * Parameters:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 3
+
+
+  71:Generated_Source\PSoC5/UART_PM.c **** *  None.
+  72:Generated_Source\PSoC5/UART_PM.c **** *
+  73:Generated_Source\PSoC5/UART_PM.c **** * Return:
+  74:Generated_Source\PSoC5/UART_PM.c **** *  None.
+  75:Generated_Source\PSoC5/UART_PM.c **** *
+  76:Generated_Source\PSoC5/UART_PM.c **** * Global Variables:
+  77:Generated_Source\PSoC5/UART_PM.c **** *  UART_backup - used when non-retention registers are restored.
+  78:Generated_Source\PSoC5/UART_PM.c **** *
+  79:Generated_Source\PSoC5/UART_PM.c **** * Reentrant:
+  80:Generated_Source\PSoC5/UART_PM.c **** *  No.
+  81:Generated_Source\PSoC5/UART_PM.c **** *
+  82:Generated_Source\PSoC5/UART_PM.c **** * Notes:
+  83:Generated_Source\PSoC5/UART_PM.c **** *  If this function is called without calling UART_SaveConfig() 
+  84:Generated_Source\PSoC5/UART_PM.c **** *  first, the data loaded may be incorrect.
+  85:Generated_Source\PSoC5/UART_PM.c **** *
+  86:Generated_Source\PSoC5/UART_PM.c **** *******************************************************************************/
+  87:Generated_Source\PSoC5/UART_PM.c **** void UART_RestoreConfig(void)
+  88:Generated_Source\PSoC5/UART_PM.c **** {
+  45              		.loc 1 88 0
+  46              		.cfi_startproc
+  47              		@ args = 0, pretend = 0, frame = 0
+  48              		@ frame_needed = 0, uses_anonymous_args = 0
+  49              		@ link register save eliminated.
+  50 0000 7047     		bx	lr
+  51              		.cfi_endproc
+  52              	.LFE1:
+  53              		.size	UART_RestoreConfig, .-UART_RestoreConfig
+  54 0002 00BF     		.section	.text.UART_Sleep,"ax",%progbits
+  55              		.align	2
+  56              		.global	UART_Sleep
+  57              		.thumb
+  58              		.thumb_func
+  59              		.type	UART_Sleep, %function
+  60              	UART_Sleep:
+  61              	.LFB2:
+  89:Generated_Source\PSoC5/UART_PM.c ****     #if(UART_CONTROL_REG_REMOVED == 0u)
+  90:Generated_Source\PSoC5/UART_PM.c ****         UART_CONTROL_REG = UART_backup.cr;
+  91:Generated_Source\PSoC5/UART_PM.c ****     #endif /* End UART_CONTROL_REG_REMOVED */
+  92:Generated_Source\PSoC5/UART_PM.c **** }
+  93:Generated_Source\PSoC5/UART_PM.c **** 
+  94:Generated_Source\PSoC5/UART_PM.c **** 
+  95:Generated_Source\PSoC5/UART_PM.c **** /*******************************************************************************
+  96:Generated_Source\PSoC5/UART_PM.c **** * Function Name: UART_Sleep
+  97:Generated_Source\PSoC5/UART_PM.c **** ********************************************************************************
+  98:Generated_Source\PSoC5/UART_PM.c **** *
+  99:Generated_Source\PSoC5/UART_PM.c **** * Summary:
+ 100:Generated_Source\PSoC5/UART_PM.c **** *  This is the preferred API to prepare the component for sleep. 
+ 101:Generated_Source\PSoC5/UART_PM.c **** *  The UART_Sleep() API saves the current component state. Then it
+ 102:Generated_Source\PSoC5/UART_PM.c **** *  calls the UART_Stop() function and calls 
+ 103:Generated_Source\PSoC5/UART_PM.c **** *  UART_SaveConfig() to save the hardware configuration.
+ 104:Generated_Source\PSoC5/UART_PM.c **** *  Call the UART_Sleep() function before calling the CyPmSleep() 
+ 105:Generated_Source\PSoC5/UART_PM.c **** *  or the CyPmHibernate() function. 
+ 106:Generated_Source\PSoC5/UART_PM.c **** *
+ 107:Generated_Source\PSoC5/UART_PM.c **** * Parameters:
+ 108:Generated_Source\PSoC5/UART_PM.c **** *  None.
+ 109:Generated_Source\PSoC5/UART_PM.c **** *
+ 110:Generated_Source\PSoC5/UART_PM.c **** * Return:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 4
+
+
+ 111:Generated_Source\PSoC5/UART_PM.c **** *  None.
+ 112:Generated_Source\PSoC5/UART_PM.c **** *
+ 113:Generated_Source\PSoC5/UART_PM.c **** * Global Variables:
+ 114:Generated_Source\PSoC5/UART_PM.c **** *  UART_backup - modified when non-retention registers are saved.
+ 115:Generated_Source\PSoC5/UART_PM.c **** *
+ 116:Generated_Source\PSoC5/UART_PM.c **** * Reentrant:
+ 117:Generated_Source\PSoC5/UART_PM.c **** *  No.
+ 118:Generated_Source\PSoC5/UART_PM.c **** *
+ 119:Generated_Source\PSoC5/UART_PM.c **** *******************************************************************************/
+ 120:Generated_Source\PSoC5/UART_PM.c **** void UART_Sleep(void)
+ 121:Generated_Source\PSoC5/UART_PM.c **** {
+  62              		.loc 1 121 0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		.loc 1 121 0
+  67 0000 08B5     		push	{r3, lr}
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 3, -8
+  70              		.cfi_offset 14, -4
+ 122:Generated_Source\PSoC5/UART_PM.c ****     #if(UART_RX_ENABLED || UART_HD_ENABLED)
+ 123:Generated_Source\PSoC5/UART_PM.c ****         if((UART_RXSTATUS_ACTL_REG  & UART_INT_ENABLE) != 0u)
+ 124:Generated_Source\PSoC5/UART_PM.c ****         {
+ 125:Generated_Source\PSoC5/UART_PM.c ****             UART_backup.enableState = 1u;
+ 126:Generated_Source\PSoC5/UART_PM.c ****         }
+ 127:Generated_Source\PSoC5/UART_PM.c ****         else
+ 128:Generated_Source\PSoC5/UART_PM.c ****         {
+ 129:Generated_Source\PSoC5/UART_PM.c ****             UART_backup.enableState = 0u;
+ 130:Generated_Source\PSoC5/UART_PM.c ****         }
+ 131:Generated_Source\PSoC5/UART_PM.c ****     #else
+ 132:Generated_Source\PSoC5/UART_PM.c ****         if((UART_TXSTATUS_ACTL_REG  & UART_INT_ENABLE) !=0u)
+  71              		.loc 1 132 0
+  72 0002 074B     		ldr	r3, .L7
+  73 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  74 0006 13F0100F 		tst	r3, #16
+  75 000a 03D0     		beq	.L4
+ 133:Generated_Source\PSoC5/UART_PM.c ****         {
+ 134:Generated_Source\PSoC5/UART_PM.c ****             UART_backup.enableState = 1u;
+  76              		.loc 1 134 0
+  77 000c 0122     		movs	r2, #1
+  78 000e 054B     		ldr	r3, .L7+4
+  79 0010 1A70     		strb	r2, [r3]
+  80 0012 02E0     		b	.L5
+  81              	.L4:
+ 135:Generated_Source\PSoC5/UART_PM.c ****         }
+ 136:Generated_Source\PSoC5/UART_PM.c ****         else
+ 137:Generated_Source\PSoC5/UART_PM.c ****         {
+ 138:Generated_Source\PSoC5/UART_PM.c ****             UART_backup.enableState = 0u;
+  82              		.loc 1 138 0
+  83 0014 0022     		movs	r2, #0
+  84 0016 034B     		ldr	r3, .L7+4
+  85 0018 1A70     		strb	r2, [r3]
+  86              	.L5:
+ 139:Generated_Source\PSoC5/UART_PM.c ****         }
+ 140:Generated_Source\PSoC5/UART_PM.c ****     #endif /* End UART_RX_ENABLED || UART_HD_ENABLED*/
+ 141:Generated_Source\PSoC5/UART_PM.c **** 
+ 142:Generated_Source\PSoC5/UART_PM.c ****     UART_Stop();
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 5
+
+
+  87              		.loc 1 142 0
+  88 001a FFF7FEFF 		bl	UART_Stop
+  89              	.LVL0:
+  90 001e 08BD     		pop	{r3, pc}
+  91              	.L8:
+  92              		.align	2
+  93              	.L7:
+  94 0020 9B650040 		.word	1073767835
+  95 0024 00000000 		.word	.LANCHOR0
+  96              		.cfi_endproc
+  97              	.LFE2:
+  98              		.size	UART_Sleep, .-UART_Sleep
+  99              		.section	.text.UART_Wakeup,"ax",%progbits
+ 100              		.align	2
+ 101              		.global	UART_Wakeup
+ 102              		.thumb
+ 103              		.thumb_func
+ 104              		.type	UART_Wakeup, %function
+ 105              	UART_Wakeup:
+ 106              	.LFB3:
+ 143:Generated_Source\PSoC5/UART_PM.c ****     UART_SaveConfig();
+ 144:Generated_Source\PSoC5/UART_PM.c **** }
+ 145:Generated_Source\PSoC5/UART_PM.c **** 
+ 146:Generated_Source\PSoC5/UART_PM.c **** 
+ 147:Generated_Source\PSoC5/UART_PM.c **** /*******************************************************************************
+ 148:Generated_Source\PSoC5/UART_PM.c **** * Function Name: UART_Wakeup
+ 149:Generated_Source\PSoC5/UART_PM.c **** ********************************************************************************
+ 150:Generated_Source\PSoC5/UART_PM.c **** *
+ 151:Generated_Source\PSoC5/UART_PM.c **** * Summary:
+ 152:Generated_Source\PSoC5/UART_PM.c **** *  This is the preferred API to restore the component to the state when 
+ 153:Generated_Source\PSoC5/UART_PM.c **** *  UART_Sleep() was called. The UART_Wakeup() function
+ 154:Generated_Source\PSoC5/UART_PM.c **** *  calls the UART_RestoreConfig() function to restore the 
+ 155:Generated_Source\PSoC5/UART_PM.c **** *  configuration. If the component was enabled before the 
+ 156:Generated_Source\PSoC5/UART_PM.c **** *  UART_Sleep() function was called, the UART_Wakeup()
+ 157:Generated_Source\PSoC5/UART_PM.c **** *  function will also re-enable the component.
+ 158:Generated_Source\PSoC5/UART_PM.c **** *
+ 159:Generated_Source\PSoC5/UART_PM.c **** * Parameters:
+ 160:Generated_Source\PSoC5/UART_PM.c **** *  None.
+ 161:Generated_Source\PSoC5/UART_PM.c **** *
+ 162:Generated_Source\PSoC5/UART_PM.c **** * Return:
+ 163:Generated_Source\PSoC5/UART_PM.c **** *  None.
+ 164:Generated_Source\PSoC5/UART_PM.c **** *
+ 165:Generated_Source\PSoC5/UART_PM.c **** * Global Variables:
+ 166:Generated_Source\PSoC5/UART_PM.c **** *  UART_backup - used when non-retention registers are restored.
+ 167:Generated_Source\PSoC5/UART_PM.c **** *
+ 168:Generated_Source\PSoC5/UART_PM.c **** * Reentrant:
+ 169:Generated_Source\PSoC5/UART_PM.c **** *  No.
+ 170:Generated_Source\PSoC5/UART_PM.c **** *
+ 171:Generated_Source\PSoC5/UART_PM.c **** *******************************************************************************/
+ 172:Generated_Source\PSoC5/UART_PM.c **** void UART_Wakeup(void)
+ 173:Generated_Source\PSoC5/UART_PM.c **** {
+ 107              		.loc 1 173 0
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111 0000 08B5     		push	{r3, lr}
+ 112              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 6
+
+
+ 113              		.cfi_offset 3, -8
+ 114              		.cfi_offset 14, -4
+ 174:Generated_Source\PSoC5/UART_PM.c ****     UART_RestoreConfig();
+ 175:Generated_Source\PSoC5/UART_PM.c ****     #if( (UART_RX_ENABLED) || (UART_HD_ENABLED) )
+ 176:Generated_Source\PSoC5/UART_PM.c ****         UART_ClearRxBuffer();
+ 177:Generated_Source\PSoC5/UART_PM.c ****     #endif /* End (UART_RX_ENABLED) || (UART_HD_ENABLED) */
+ 178:Generated_Source\PSoC5/UART_PM.c ****     #if(UART_TX_ENABLED || UART_HD_ENABLED)
+ 179:Generated_Source\PSoC5/UART_PM.c ****         UART_ClearTxBuffer();
+ 115              		.loc 1 179 0
+ 116 0002 FFF7FEFF 		bl	UART_ClearTxBuffer
+ 117              	.LVL1:
+ 180:Generated_Source\PSoC5/UART_PM.c ****     #endif /* End UART_TX_ENABLED || UART_HD_ENABLED */
+ 181:Generated_Source\PSoC5/UART_PM.c **** 
+ 182:Generated_Source\PSoC5/UART_PM.c ****     if(UART_backup.enableState != 0u)
+ 118              		.loc 1 182 0
+ 119 0006 034B     		ldr	r3, .L12
+ 120 0008 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 121 000a 0BB1     		cbz	r3, .L9
+ 183:Generated_Source\PSoC5/UART_PM.c ****     {
+ 184:Generated_Source\PSoC5/UART_PM.c ****         UART_Enable();
+ 122              		.loc 1 184 0
+ 123 000c FFF7FEFF 		bl	UART_Enable
+ 124              	.LVL2:
+ 125              	.L9:
+ 126 0010 08BD     		pop	{r3, pc}
+ 127              	.L13:
+ 128 0012 00BF     		.align	2
+ 129              	.L12:
+ 130 0014 00000000 		.word	.LANCHOR0
+ 131              		.cfi_endproc
+ 132              	.LFE3:
+ 133              		.size	UART_Wakeup, .-UART_Wakeup
+ 134              		.bss
+ 135              		.align	2
+ 136              		.set	.LANCHOR0,. + 0
+ 137              		.type	UART_backup, %object
+ 138              		.size	UART_backup, 1
+ 139              	UART_backup:
+ 140 0000 00       		.space	1
+ 141              		.text
+ 142              	.Letext0:
+ 143              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 144              		.file 3 "Generated_Source\\PSoC5\\UART.h"
+ 145              		.section	.debug_info,"",%progbits
+ 146              	.Ldebug_info0:
+ 147 0000 67010000 		.4byte	0x167
+ 148 0004 0400     		.2byte	0x4
+ 149 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 150 000a 04       		.byte	0x4
+ 151 000b 01       		.uleb128 0x1
+ 152 000c 8E000000 		.4byte	.LASF24
+ 153 0010 0C       		.byte	0xc
+ 154 0011 FF010000 		.4byte	.LASF25
+ 155 0015 41000000 		.4byte	.LASF26
+ 156 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 157 001d 00000000 		.4byte	0
+ 158 0021 00000000 		.4byte	.Ldebug_line0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 7
+
+
+ 159 0025 02       		.uleb128 0x2
+ 160 0026 01       		.byte	0x1
+ 161 0027 06       		.byte	0x6
+ 162 0028 F3010000 		.4byte	.LASF0
+ 163 002c 02       		.uleb128 0x2
+ 164 002d 01       		.byte	0x1
+ 165 002e 08       		.byte	0x8
+ 166 002f 80000000 		.4byte	.LASF1
+ 167 0033 02       		.uleb128 0x2
+ 168 0034 02       		.byte	0x2
+ 169 0035 05       		.byte	0x5
+ 170 0036 A9010000 		.4byte	.LASF2
+ 171 003a 02       		.uleb128 0x2
+ 172 003b 02       		.byte	0x2
+ 173 003c 07       		.byte	0x7
+ 174 003d 23000000 		.4byte	.LASF3
+ 175 0041 02       		.uleb128 0x2
+ 176 0042 04       		.byte	0x4
+ 177 0043 05       		.byte	0x5
+ 178 0044 D2010000 		.4byte	.LASF4
+ 179 0048 02       		.uleb128 0x2
+ 180 0049 04       		.byte	0x4
+ 181 004a 07       		.byte	0x7
+ 182 004b 21010000 		.4byte	.LASF5
+ 183 004f 02       		.uleb128 0x2
+ 184 0050 08       		.byte	0x8
+ 185 0051 05       		.byte	0x5
+ 186 0052 83010000 		.4byte	.LASF6
+ 187 0056 02       		.uleb128 0x2
+ 188 0057 08       		.byte	0x8
+ 189 0058 07       		.byte	0x7
+ 190 0059 4D010000 		.4byte	.LASF7
+ 191 005d 03       		.uleb128 0x3
+ 192 005e 04       		.byte	0x4
+ 193 005f 05       		.byte	0x5
+ 194 0060 696E7400 		.ascii	"int\000"
+ 195 0064 02       		.uleb128 0x2
+ 196 0065 04       		.byte	0x4
+ 197 0066 07       		.byte	0x7
+ 198 0067 40010000 		.4byte	.LASF8
+ 199 006b 04       		.uleb128 0x4
+ 200 006c 33010000 		.4byte	.LASF12
+ 201 0070 02       		.byte	0x2
+ 202 0071 E801     		.2byte	0x1e8
+ 203 0073 2C000000 		.4byte	0x2c
+ 204 0077 02       		.uleb128 0x2
+ 205 0078 04       		.byte	0x4
+ 206 0079 04       		.byte	0x4
+ 207 007a 6E000000 		.4byte	.LASF9
+ 208 007e 02       		.uleb128 0x2
+ 209 007f 08       		.byte	0x8
+ 210 0080 04       		.byte	0x4
+ 211 0081 39010000 		.4byte	.LASF10
+ 212 0085 02       		.uleb128 0x2
+ 213 0086 01       		.byte	0x1
+ 214 0087 08       		.byte	0x8
+ 215 0088 91010000 		.4byte	.LASF11
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 8
+
+
+ 216 008c 04       		.uleb128 0x4
+ 217 008d 1C010000 		.4byte	.LASF13
+ 218 0091 02       		.byte	0x2
+ 219 0092 9202     		.2byte	0x292
+ 220 0094 98000000 		.4byte	0x98
+ 221 0098 05       		.uleb128 0x5
+ 222 0099 6B000000 		.4byte	0x6b
+ 223 009d 02       		.uleb128 0x2
+ 224 009e 08       		.byte	0x8
+ 225 009f 04       		.byte	0x4
+ 226 00a0 E7010000 		.4byte	.LASF14
+ 227 00a4 02       		.uleb128 0x2
+ 228 00a5 04       		.byte	0x4
+ 229 00a6 07       		.byte	0x7
+ 230 00a7 7A010000 		.4byte	.LASF15
+ 231 00ab 06       		.uleb128 0x6
+ 232 00ac 96010000 		.4byte	.LASF27
+ 233 00b0 01       		.byte	0x1
+ 234 00b1 03       		.byte	0x3
+ 235 00b2 45       		.byte	0x45
+ 236 00b3 C4000000 		.4byte	0xc4
+ 237 00b7 07       		.uleb128 0x7
+ 238 00b8 DB010000 		.4byte	.LASF28
+ 239 00bc 03       		.byte	0x3
+ 240 00bd 47       		.byte	0x47
+ 241 00be 6B000000 		.4byte	0x6b
+ 242 00c2 00       		.byte	0
+ 243 00c3 00       		.byte	0
+ 244 00c4 08       		.uleb128 0x8
+ 245 00c5 20020000 		.4byte	.LASF16
+ 246 00c9 03       		.byte	0x3
+ 247 00ca 4D       		.byte	0x4d
+ 248 00cb AB000000 		.4byte	0xab
+ 249 00cf 09       		.uleb128 0x9
+ 250 00d0 00000000 		.4byte	.LASF17
+ 251 00d4 01       		.byte	0x1
+ 252 00d5 36       		.byte	0x36
+ 253 00d6 00000000 		.4byte	.LFB0
+ 254 00da 02000000 		.4byte	.LFE0-.LFB0
+ 255 00de 01       		.uleb128 0x1
+ 256 00df 9C       		.byte	0x9c
+ 257 00e0 09       		.uleb128 0x9
+ 258 00e1 10000000 		.4byte	.LASF18
+ 259 00e5 01       		.byte	0x1
+ 260 00e6 57       		.byte	0x57
+ 261 00e7 00000000 		.4byte	.LFB1
+ 262 00eb 02000000 		.4byte	.LFE1-.LFB1
+ 263 00ef 01       		.uleb128 0x1
+ 264 00f0 9C       		.byte	0x9c
+ 265 00f1 0A       		.uleb128 0xa
+ 266 00f2 36000000 		.4byte	.LASF19
+ 267 00f6 01       		.byte	0x1
+ 268 00f7 78       		.byte	0x78
+ 269 00f8 00000000 		.4byte	.LFB2
+ 270 00fc 28000000 		.4byte	.LFE2-.LFB2
+ 271 0100 01       		.uleb128 0x1
+ 272 0101 9C       		.byte	0x9c
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 9
+
+
+ 273 0102 10010000 		.4byte	0x110
+ 274 0106 0B       		.uleb128 0xb
+ 275 0107 1E000000 		.4byte	.LVL0
+ 276 010b 49010000 		.4byte	0x149
+ 277 010f 00       		.byte	0
+ 278 0110 0A       		.uleb128 0xa
+ 279 0111 C6010000 		.4byte	.LASF20
+ 280 0115 01       		.byte	0x1
+ 281 0116 AC       		.byte	0xac
+ 282 0117 00000000 		.4byte	.LFB3
+ 283 011b 18000000 		.4byte	.LFE3-.LFB3
+ 284 011f 01       		.uleb128 0x1
+ 285 0120 9C       		.byte	0x9c
+ 286 0121 38010000 		.4byte	0x138
+ 287 0125 0B       		.uleb128 0xb
+ 288 0126 06000000 		.4byte	.LVL1
+ 289 012a 54010000 		.4byte	0x154
+ 290 012e 0B       		.uleb128 0xb
+ 291 012f 10000000 		.4byte	.LVL2
+ 292 0133 5F010000 		.4byte	0x15f
+ 293 0137 00       		.byte	0
+ 294 0138 0C       		.uleb128 0xc
+ 295 0139 64010000 		.4byte	.LASF29
+ 296 013d 01       		.byte	0x1
+ 297 013e 18       		.byte	0x18
+ 298 013f C4000000 		.4byte	0xc4
+ 299 0143 05       		.uleb128 0x5
+ 300 0144 03       		.byte	0x3
+ 301 0145 00000000 		.4byte	UART_backup
+ 302 0149 0D       		.uleb128 0xd
+ 303 014a 70010000 		.4byte	.LASF21
+ 304 014e 70010000 		.4byte	.LASF21
+ 305 0152 03       		.byte	0x3
+ 306 0153 55       		.byte	0x55
+ 307 0154 0D       		.uleb128 0xd
+ 308 0155 B3010000 		.4byte	.LASF22
+ 309 0159 B3010000 		.4byte	.LASF22
+ 310 015d 03       		.byte	0x3
+ 311 015e 8F       		.byte	0x8f
+ 312 015f 0D       		.uleb128 0xd
+ 313 0160 74000000 		.4byte	.LASF23
+ 314 0164 74000000 		.4byte	.LASF23
+ 315 0168 03       		.byte	0x3
+ 316 0169 5A       		.byte	0x5a
+ 317 016a 00       		.byte	0
+ 318              		.section	.debug_abbrev,"",%progbits
+ 319              	.Ldebug_abbrev0:
+ 320 0000 01       		.uleb128 0x1
+ 321 0001 11       		.uleb128 0x11
+ 322 0002 01       		.byte	0x1
+ 323 0003 25       		.uleb128 0x25
+ 324 0004 0E       		.uleb128 0xe
+ 325 0005 13       		.uleb128 0x13
+ 326 0006 0B       		.uleb128 0xb
+ 327 0007 03       		.uleb128 0x3
+ 328 0008 0E       		.uleb128 0xe
+ 329 0009 1B       		.uleb128 0x1b
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 10
+
+
+ 330 000a 0E       		.uleb128 0xe
+ 331 000b 55       		.uleb128 0x55
+ 332 000c 17       		.uleb128 0x17
+ 333 000d 11       		.uleb128 0x11
+ 334 000e 01       		.uleb128 0x1
+ 335 000f 10       		.uleb128 0x10
+ 336 0010 17       		.uleb128 0x17
+ 337 0011 00       		.byte	0
+ 338 0012 00       		.byte	0
+ 339 0013 02       		.uleb128 0x2
+ 340 0014 24       		.uleb128 0x24
+ 341 0015 00       		.byte	0
+ 342 0016 0B       		.uleb128 0xb
+ 343 0017 0B       		.uleb128 0xb
+ 344 0018 3E       		.uleb128 0x3e
+ 345 0019 0B       		.uleb128 0xb
+ 346 001a 03       		.uleb128 0x3
+ 347 001b 0E       		.uleb128 0xe
+ 348 001c 00       		.byte	0
+ 349 001d 00       		.byte	0
+ 350 001e 03       		.uleb128 0x3
+ 351 001f 24       		.uleb128 0x24
+ 352 0020 00       		.byte	0
+ 353 0021 0B       		.uleb128 0xb
+ 354 0022 0B       		.uleb128 0xb
+ 355 0023 3E       		.uleb128 0x3e
+ 356 0024 0B       		.uleb128 0xb
+ 357 0025 03       		.uleb128 0x3
+ 358 0026 08       		.uleb128 0x8
+ 359 0027 00       		.byte	0
+ 360 0028 00       		.byte	0
+ 361 0029 04       		.uleb128 0x4
+ 362 002a 16       		.uleb128 0x16
+ 363 002b 00       		.byte	0
+ 364 002c 03       		.uleb128 0x3
+ 365 002d 0E       		.uleb128 0xe
+ 366 002e 3A       		.uleb128 0x3a
+ 367 002f 0B       		.uleb128 0xb
+ 368 0030 3B       		.uleb128 0x3b
+ 369 0031 05       		.uleb128 0x5
+ 370 0032 49       		.uleb128 0x49
+ 371 0033 13       		.uleb128 0x13
+ 372 0034 00       		.byte	0
+ 373 0035 00       		.byte	0
+ 374 0036 05       		.uleb128 0x5
+ 375 0037 35       		.uleb128 0x35
+ 376 0038 00       		.byte	0
+ 377 0039 49       		.uleb128 0x49
+ 378 003a 13       		.uleb128 0x13
+ 379 003b 00       		.byte	0
+ 380 003c 00       		.byte	0
+ 381 003d 06       		.uleb128 0x6
+ 382 003e 13       		.uleb128 0x13
+ 383 003f 01       		.byte	0x1
+ 384 0040 03       		.uleb128 0x3
+ 385 0041 0E       		.uleb128 0xe
+ 386 0042 0B       		.uleb128 0xb
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 11
+
+
+ 387 0043 0B       		.uleb128 0xb
+ 388 0044 3A       		.uleb128 0x3a
+ 389 0045 0B       		.uleb128 0xb
+ 390 0046 3B       		.uleb128 0x3b
+ 391 0047 0B       		.uleb128 0xb
+ 392 0048 01       		.uleb128 0x1
+ 393 0049 13       		.uleb128 0x13
+ 394 004a 00       		.byte	0
+ 395 004b 00       		.byte	0
+ 396 004c 07       		.uleb128 0x7
+ 397 004d 0D       		.uleb128 0xd
+ 398 004e 00       		.byte	0
+ 399 004f 03       		.uleb128 0x3
+ 400 0050 0E       		.uleb128 0xe
+ 401 0051 3A       		.uleb128 0x3a
+ 402 0052 0B       		.uleb128 0xb
+ 403 0053 3B       		.uleb128 0x3b
+ 404 0054 0B       		.uleb128 0xb
+ 405 0055 49       		.uleb128 0x49
+ 406 0056 13       		.uleb128 0x13
+ 407 0057 38       		.uleb128 0x38
+ 408 0058 0B       		.uleb128 0xb
+ 409 0059 00       		.byte	0
+ 410 005a 00       		.byte	0
+ 411 005b 08       		.uleb128 0x8
+ 412 005c 16       		.uleb128 0x16
+ 413 005d 00       		.byte	0
+ 414 005e 03       		.uleb128 0x3
+ 415 005f 0E       		.uleb128 0xe
+ 416 0060 3A       		.uleb128 0x3a
+ 417 0061 0B       		.uleb128 0xb
+ 418 0062 3B       		.uleb128 0x3b
+ 419 0063 0B       		.uleb128 0xb
+ 420 0064 49       		.uleb128 0x49
+ 421 0065 13       		.uleb128 0x13
+ 422 0066 00       		.byte	0
+ 423 0067 00       		.byte	0
+ 424 0068 09       		.uleb128 0x9
+ 425 0069 2E       		.uleb128 0x2e
+ 426 006a 00       		.byte	0
+ 427 006b 3F       		.uleb128 0x3f
+ 428 006c 19       		.uleb128 0x19
+ 429 006d 03       		.uleb128 0x3
+ 430 006e 0E       		.uleb128 0xe
+ 431 006f 3A       		.uleb128 0x3a
+ 432 0070 0B       		.uleb128 0xb
+ 433 0071 3B       		.uleb128 0x3b
+ 434 0072 0B       		.uleb128 0xb
+ 435 0073 27       		.uleb128 0x27
+ 436 0074 19       		.uleb128 0x19
+ 437 0075 11       		.uleb128 0x11
+ 438 0076 01       		.uleb128 0x1
+ 439 0077 12       		.uleb128 0x12
+ 440 0078 06       		.uleb128 0x6
+ 441 0079 40       		.uleb128 0x40
+ 442 007a 18       		.uleb128 0x18
+ 443 007b 9742     		.uleb128 0x2117
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 12
+
+
+ 444 007d 19       		.uleb128 0x19
+ 445 007e 00       		.byte	0
+ 446 007f 00       		.byte	0
+ 447 0080 0A       		.uleb128 0xa
+ 448 0081 2E       		.uleb128 0x2e
+ 449 0082 01       		.byte	0x1
+ 450 0083 3F       		.uleb128 0x3f
+ 451 0084 19       		.uleb128 0x19
+ 452 0085 03       		.uleb128 0x3
+ 453 0086 0E       		.uleb128 0xe
+ 454 0087 3A       		.uleb128 0x3a
+ 455 0088 0B       		.uleb128 0xb
+ 456 0089 3B       		.uleb128 0x3b
+ 457 008a 0B       		.uleb128 0xb
+ 458 008b 27       		.uleb128 0x27
+ 459 008c 19       		.uleb128 0x19
+ 460 008d 11       		.uleb128 0x11
+ 461 008e 01       		.uleb128 0x1
+ 462 008f 12       		.uleb128 0x12
+ 463 0090 06       		.uleb128 0x6
+ 464 0091 40       		.uleb128 0x40
+ 465 0092 18       		.uleb128 0x18
+ 466 0093 9742     		.uleb128 0x2117
+ 467 0095 19       		.uleb128 0x19
+ 468 0096 01       		.uleb128 0x1
+ 469 0097 13       		.uleb128 0x13
+ 470 0098 00       		.byte	0
+ 471 0099 00       		.byte	0
+ 472 009a 0B       		.uleb128 0xb
+ 473 009b 898201   		.uleb128 0x4109
+ 474 009e 00       		.byte	0
+ 475 009f 11       		.uleb128 0x11
+ 476 00a0 01       		.uleb128 0x1
+ 477 00a1 31       		.uleb128 0x31
+ 478 00a2 13       		.uleb128 0x13
+ 479 00a3 00       		.byte	0
+ 480 00a4 00       		.byte	0
+ 481 00a5 0C       		.uleb128 0xc
+ 482 00a6 34       		.uleb128 0x34
+ 483 00a7 00       		.byte	0
+ 484 00a8 03       		.uleb128 0x3
+ 485 00a9 0E       		.uleb128 0xe
+ 486 00aa 3A       		.uleb128 0x3a
+ 487 00ab 0B       		.uleb128 0xb
+ 488 00ac 3B       		.uleb128 0x3b
+ 489 00ad 0B       		.uleb128 0xb
+ 490 00ae 49       		.uleb128 0x49
+ 491 00af 13       		.uleb128 0x13
+ 492 00b0 02       		.uleb128 0x2
+ 493 00b1 18       		.uleb128 0x18
+ 494 00b2 00       		.byte	0
+ 495 00b3 00       		.byte	0
+ 496 00b4 0D       		.uleb128 0xd
+ 497 00b5 2E       		.uleb128 0x2e
+ 498 00b6 00       		.byte	0
+ 499 00b7 3F       		.uleb128 0x3f
+ 500 00b8 19       		.uleb128 0x19
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 13
+
+
+ 501 00b9 3C       		.uleb128 0x3c
+ 502 00ba 19       		.uleb128 0x19
+ 503 00bb 6E       		.uleb128 0x6e
+ 504 00bc 0E       		.uleb128 0xe
+ 505 00bd 03       		.uleb128 0x3
+ 506 00be 0E       		.uleb128 0xe
+ 507 00bf 3A       		.uleb128 0x3a
+ 508 00c0 0B       		.uleb128 0xb
+ 509 00c1 3B       		.uleb128 0x3b
+ 510 00c2 0B       		.uleb128 0xb
+ 511 00c3 00       		.byte	0
+ 512 00c4 00       		.byte	0
+ 513 00c5 00       		.byte	0
+ 514              		.section	.debug_aranges,"",%progbits
+ 515 0000 34000000 		.4byte	0x34
+ 516 0004 0200     		.2byte	0x2
+ 517 0006 00000000 		.4byte	.Ldebug_info0
+ 518 000a 04       		.byte	0x4
+ 519 000b 00       		.byte	0
+ 520 000c 0000     		.2byte	0
+ 521 000e 0000     		.2byte	0
+ 522 0010 00000000 		.4byte	.LFB0
+ 523 0014 02000000 		.4byte	.LFE0-.LFB0
+ 524 0018 00000000 		.4byte	.LFB1
+ 525 001c 02000000 		.4byte	.LFE1-.LFB1
+ 526 0020 00000000 		.4byte	.LFB2
+ 527 0024 28000000 		.4byte	.LFE2-.LFB2
+ 528 0028 00000000 		.4byte	.LFB3
+ 529 002c 18000000 		.4byte	.LFE3-.LFB3
+ 530 0030 00000000 		.4byte	0
+ 531 0034 00000000 		.4byte	0
+ 532              		.section	.debug_ranges,"",%progbits
+ 533              	.Ldebug_ranges0:
+ 534 0000 00000000 		.4byte	.LFB0
+ 535 0004 02000000 		.4byte	.LFE0
+ 536 0008 00000000 		.4byte	.LFB1
+ 537 000c 02000000 		.4byte	.LFE1
+ 538 0010 00000000 		.4byte	.LFB2
+ 539 0014 28000000 		.4byte	.LFE2
+ 540 0018 00000000 		.4byte	.LFB3
+ 541 001c 18000000 		.4byte	.LFE3
+ 542 0020 00000000 		.4byte	0
+ 543 0024 00000000 		.4byte	0
+ 544              		.section	.debug_line,"",%progbits
+ 545              	.Ldebug_line0:
+ 546 0000 9D000000 		.section	.debug_str,"MS",%progbits,1
+ 546      02004E00 
+ 546      00000201 
+ 546      FB0E0D00 
+ 546      01010101 
+ 547              	.LASF17:
+ 548 0000 55415254 		.ascii	"UART_SaveConfig\000"
+ 548      5F536176 
+ 548      65436F6E 
+ 548      66696700 
+ 549              	.LASF18:
+ 550 0010 55415254 		.ascii	"UART_RestoreConfig\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 14
+
+
+ 550      5F526573 
+ 550      746F7265 
+ 550      436F6E66 
+ 550      696700
+ 551              	.LASF3:
+ 552 0023 73686F72 		.ascii	"short unsigned int\000"
+ 552      7420756E 
+ 552      7369676E 
+ 552      65642069 
+ 552      6E7400
+ 553              	.LASF19:
+ 554 0036 55415254 		.ascii	"UART_Sleep\000"
+ 554      5F536C65 
+ 554      657000
+ 555              	.LASF26:
+ 556 0041 443A5C43 		.ascii	"D:\\Control digital\\Filtros_FIR\\Filtros.cydsn\000"
+ 556      6F6E7472 
+ 556      6F6C2064 
+ 556      69676974 
+ 556      616C5C46 
+ 557              	.LASF9:
+ 558 006e 666C6F61 		.ascii	"float\000"
+ 558      7400
+ 559              	.LASF23:
+ 560 0074 55415254 		.ascii	"UART_Enable\000"
+ 560      5F456E61 
+ 560      626C6500 
+ 561              	.LASF1:
+ 562 0080 756E7369 		.ascii	"unsigned char\000"
+ 562      676E6564 
+ 562      20636861 
+ 562      7200
+ 563              	.LASF24:
+ 564 008e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 564      43313120 
+ 564      352E342E 
+ 564      31203230 
+ 564      31363036 
+ 565 00c1 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 565      20726576 
+ 565      6973696F 
+ 565      6E203233 
+ 565      37373135 
+ 566 00f4 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 566      66756E63 
+ 566      74696F6E 
+ 566      2D736563 
+ 566      74696F6E 
+ 567              	.LASF13:
+ 568 011c 72656738 		.ascii	"reg8\000"
+ 568      00
+ 569              	.LASF5:
+ 570 0121 6C6F6E67 		.ascii	"long unsigned int\000"
+ 570      20756E73 
+ 570      69676E65 
+ 570      6420696E 
+ 570      7400
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 15
+
+
+ 571              	.LASF12:
+ 572 0133 75696E74 		.ascii	"uint8\000"
+ 572      3800
+ 573              	.LASF10:
+ 574 0139 646F7562 		.ascii	"double\000"
+ 574      6C6500
+ 575              	.LASF8:
+ 576 0140 756E7369 		.ascii	"unsigned int\000"
+ 576      676E6564 
+ 576      20696E74 
+ 576      00
+ 577              	.LASF7:
+ 578 014d 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 578      206C6F6E 
+ 578      6720756E 
+ 578      7369676E 
+ 578      65642069 
+ 579              	.LASF29:
+ 580 0164 55415254 		.ascii	"UART_backup\000"
+ 580      5F626163 
+ 580      6B757000 
+ 581              	.LASF21:
+ 582 0170 55415254 		.ascii	"UART_Stop\000"
+ 582      5F53746F 
+ 582      7000
+ 583              	.LASF15:
+ 584 017a 73697A65 		.ascii	"sizetype\000"
+ 584      74797065 
+ 584      00
+ 585              	.LASF6:
+ 586 0183 6C6F6E67 		.ascii	"long long int\000"
+ 586      206C6F6E 
+ 586      6720696E 
+ 586      7400
+ 587              	.LASF11:
+ 588 0191 63686172 		.ascii	"char\000"
+ 588      00
+ 589              	.LASF27:
+ 590 0196 55415254 		.ascii	"UART_backupStruct_\000"
+ 590      5F626163 
+ 590      6B757053 
+ 590      74727563 
+ 590      745F00
+ 591              	.LASF2:
+ 592 01a9 73686F72 		.ascii	"short int\000"
+ 592      7420696E 
+ 592      7400
+ 593              	.LASF22:
+ 594 01b3 55415254 		.ascii	"UART_ClearTxBuffer\000"
+ 594      5F436C65 
+ 594      61725478 
+ 594      42756666 
+ 594      657200
+ 595              	.LASF20:
+ 596 01c6 55415254 		.ascii	"UART_Wakeup\000"
+ 596      5F57616B 
+ 596      65757000 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccELA94l.s 			page 16
+
+
+ 597              	.LASF4:
+ 598 01d2 6C6F6E67 		.ascii	"long int\000"
+ 598      20696E74 
+ 598      00
+ 599              	.LASF28:
+ 600 01db 656E6162 		.ascii	"enableState\000"
+ 600      6C655374 
+ 600      61746500 
+ 601              	.LASF14:
+ 602 01e7 6C6F6E67 		.ascii	"long double\000"
+ 602      20646F75 
+ 602      626C6500 
+ 603              	.LASF0:
+ 604 01f3 7369676E 		.ascii	"signed char\000"
+ 604      65642063 
+ 604      68617200 
+ 605              	.LASF25:
+ 606 01ff 47656E65 		.ascii	"Generated_Source\\PSoC5\\UART_PM.c\000"
+ 606      72617465 
+ 606      645F536F 
+ 606      75726365 
+ 606      5C50536F 
+ 607              	.LASF16:
+ 608 0220 55415254 		.ascii	"UART_BACKUP_STRUCT\000"
+ 608      5F424143 
+ 608      4B55505F 
+ 608      53545255 
+ 608      435400
+ 609              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

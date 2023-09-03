@@ -1,0 +1,622 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"Cal_pesos.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_fmul
+  20              		.global	__aeabi_fsub
+  21              		.global	__aeabi_fdiv
+  22              		.section	.text.P,"ax",%progbits
+  23              		.align	2
+  24              		.global	P
+  25              		.thumb
+  26              		.thumb_func
+  27              		.type	P, %function
+  28              	P:
+  29              	.LFB0:
+  30              		.file 1 "Cal_pesos.c"
+   1:Cal_pesos.c   **** /*
+   2:Cal_pesos.c   ****     Código para generar los pesos pondereados para la implementación
+   3:Cal_pesos.c   ****     de un flitro digital de Media movil con pesos exponenciales en un
+   4:Cal_pesos.c   ****     MCU 
+   5:Cal_pesos.c   **** */
+   6:Cal_pesos.c   **** 
+   7:Cal_pesos.c   **** //Funcion para calcular los pesos pondereados exponencialmentes
+   8:Cal_pesos.c   **** // Gaurda los pesos en un arreglo definido por el usuario 
+   9:Cal_pesos.c   **** void P(int ventana, float b, float *pesos){
+  31              		.loc 1 9 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              	.LVL0:
+  36 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+  37              		.cfi_def_cfa_offset 32
+  38              		.cfi_offset 3, -32
+  39              		.cfi_offset 4, -28
+  40              		.cfi_offset 5, -24
+  41              		.cfi_offset 6, -20
+  42              		.cfi_offset 7, -16
+  43              		.cfi_offset 8, -12
+  44              		.cfi_offset 9, -8
+  45              		.cfi_offset 14, -4
+  46 0004 0646     		mov	r6, r0
+  47 0006 0F46     		mov	r7, r1
+  48 0008 9146     		mov	r9, r2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 2
+
+
+  49              	.LVL1:
+  50              	.LBB2:
+  10:Cal_pesos.c   **** 
+  11:Cal_pesos.c   ****     //variables
+  12:Cal_pesos.c   ****     float a, pow_b = 1.0;
+  13:Cal_pesos.c   **** 
+  14:Cal_pesos.c   ****     //calcularmos la potencia de a elevada a ventana
+  15:Cal_pesos.c   ****     for( int i=0; i < ventana; i++){
+  51              		.loc 1 15 0
+  52 000a 0024     		movs	r4, #0
+  53              	.LBE2:
+  12:Cal_pesos.c   **** 
+  54              		.loc 1 12 0
+  55 000c 4FF07E55 		mov	r5, #1065353216
+  56              	.LBB3:
+  57              		.loc 1 15 0
+  58 0010 05E0     		b	.L2
+  59              	.LVL2:
+  60              	.L3:
+  16:Cal_pesos.c   ****         pow_b *= b;
+  61              		.loc 1 16 0 discriminator 3
+  62 0012 3946     		mov	r1, r7
+  63 0014 2846     		mov	r0, r5
+  64 0016 FFF7FEFF 		bl	__aeabi_fmul
+  65              	.LVL3:
+  66 001a 0546     		mov	r5, r0
+  67              	.LVL4:
+  15:Cal_pesos.c   ****         pow_b *= b;
+  68              		.loc 1 15 0 discriminator 3
+  69 001c 0134     		adds	r4, r4, #1
+  70              	.LVL5:
+  71              	.L2:
+  15:Cal_pesos.c   ****         pow_b *= b;
+  72              		.loc 1 15 0 is_stmt 0 discriminator 1
+  73 001e B442     		cmp	r4, r6
+  74 0020 F7DB     		blt	.L3
+  75              	.LBE3:
+  17:Cal_pesos.c   ****     }
+  18:Cal_pesos.c   ****     //calculamos a
+  19:Cal_pesos.c   ****     a = (1-b)/(1-pow_b);
+  76              		.loc 1 19 0 is_stmt 1
+  77 0022 3946     		mov	r1, r7
+  78 0024 4FF07E50 		mov	r0, #1065353216
+  79 0028 FFF7FEFF 		bl	__aeabi_fsub
+  80              	.LVL6:
+  81 002c 0446     		mov	r4, r0
+  82              	.LVL7:
+  83 002e 2946     		mov	r1, r5
+  84 0030 4FF07E50 		mov	r0, #1065353216
+  85 0034 FFF7FEFF 		bl	__aeabi_fsub
+  86              	.LVL8:
+  87 0038 0146     		mov	r1, r0
+  88 003a 2046     		mov	r0, r4
+  89 003c FFF7FEFF 		bl	__aeabi_fdiv
+  90              	.LVL9:
+  91 0040 8046     		mov	r8, r0
+  92              	.LVL10:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 3
+
+
+  93              	.LBB4:
+  20:Cal_pesos.c   **** 
+  21:Cal_pesos.c   ****     //Delvolvemos a valo 1
+  22:Cal_pesos.c   ****     pow_b = 1.0;
+  23:Cal_pesos.c   ****     //Calculamos los pesos 
+  24:Cal_pesos.c   ****     for(int i=0; i<ventana; i++){
+  94              		.loc 1 24 0
+  95 0042 0024     		movs	r4, #0
+  96              	.LBE4:
+  22:Cal_pesos.c   ****     //Calculamos los pesos 
+  97              		.loc 1 22 0
+  98 0044 4FF07E55 		mov	r5, #1065353216
+  99              	.LBB5:
+ 100              		.loc 1 24 0
+ 101 0048 0BE0     		b	.L4
+ 102              	.LVL11:
+ 103              	.L5:
+  25:Cal_pesos.c   ****         pesos[i] = a*pow_b;
+ 104              		.loc 1 25 0 discriminator 3
+ 105 004a 4146     		mov	r1, r8
+ 106 004c 2846     		mov	r0, r5
+ 107 004e FFF7FEFF 		bl	__aeabi_fmul
+ 108              	.LVL12:
+ 109 0052 49F82400 		str	r0, [r9, r4, lsl #2]	@ float
+  26:Cal_pesos.c   ****         pow_b *= b;
+ 110              		.loc 1 26 0 discriminator 3
+ 111 0056 3946     		mov	r1, r7
+ 112 0058 2846     		mov	r0, r5
+ 113 005a FFF7FEFF 		bl	__aeabi_fmul
+ 114              	.LVL13:
+ 115 005e 0546     		mov	r5, r0
+ 116              	.LVL14:
+  24:Cal_pesos.c   ****         pesos[i] = a*pow_b;
+ 117              		.loc 1 24 0 discriminator 3
+ 118 0060 0134     		adds	r4, r4, #1
+ 119              	.LVL15:
+ 120              	.L4:
+  24:Cal_pesos.c   ****         pesos[i] = a*pow_b;
+ 121              		.loc 1 24 0 is_stmt 0 discriminator 1
+ 122 0062 B442     		cmp	r4, r6
+ 123 0064 F1DB     		blt	.L5
+ 124              	.LBE5:
+  27:Cal_pesos.c   ****     }
+  28:Cal_pesos.c   **** }
+ 125              		.loc 1 28 0 is_stmt 1
+ 126 0066 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 127              		.cfi_endproc
+ 128              	.LFE0:
+ 129              		.size	P, .-P
+ 130 006a 00BF     		.text
+ 131              	.Letext0:
+ 132              		.section	.debug_info,"",%progbits
+ 133              	.Ldebug_info0:
+ 134 0000 BB000000 		.4byte	0xbb
+ 135 0004 0400     		.2byte	0x4
+ 136 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 137 000a 04       		.byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 4
+
+
+ 138 000b 01       		.uleb128 0x1
+ 139 000c 41000000 		.4byte	.LASF4
+ 140 0010 0C       		.byte	0xc
+ 141 0011 D5000000 		.4byte	.LASF5
+ 142 0015 14000000 		.4byte	.LASF6
+ 143 0019 30000000 		.4byte	.Ldebug_ranges0+0x30
+ 144 001d 00000000 		.4byte	0
+ 145 0021 00000000 		.4byte	.Ldebug_line0
+ 146 0025 02       		.uleb128 0x2
+ 147 0026 5000     		.ascii	"P\000"
+ 148 0028 01       		.byte	0x1
+ 149 0029 09       		.byte	0x9
+ 150 002a 00000000 		.4byte	.LFB0
+ 151 002e 6A000000 		.4byte	.LFE0-.LFB0
+ 152 0032 01       		.uleb128 0x1
+ 153 0033 9C       		.byte	0x9c
+ 154 0034 AA000000 		.4byte	0xaa
+ 155 0038 03       		.uleb128 0x3
+ 156 0039 06000000 		.4byte	.LASF0
+ 157 003d 01       		.byte	0x1
+ 158 003e 09       		.byte	0x9
+ 159 003f AA000000 		.4byte	0xaa
+ 160 0043 00000000 		.4byte	.LLST0
+ 161 0047 04       		.uleb128 0x4
+ 162 0048 6200     		.ascii	"b\000"
+ 163 004a 01       		.byte	0x1
+ 164 004b 09       		.byte	0x9
+ 165 004c B1000000 		.4byte	0xb1
+ 166 0050 1E000000 		.4byte	.LLST1
+ 167 0054 03       		.uleb128 0x3
+ 168 0055 CF000000 		.4byte	.LASF1
+ 169 0059 01       		.byte	0x1
+ 170 005a 09       		.byte	0x9
+ 171 005b B8000000 		.4byte	0xb8
+ 172 005f 3C000000 		.4byte	.LLST2
+ 173 0063 05       		.uleb128 0x5
+ 174 0064 6100     		.ascii	"a\000"
+ 175 0066 01       		.byte	0x1
+ 176 0067 0C       		.byte	0xc
+ 177 0068 B1000000 		.4byte	0xb1
+ 178 006c 5A000000 		.4byte	.LLST3
+ 179 0070 06       		.uleb128 0x6
+ 180 0071 0E000000 		.4byte	.LASF2
+ 181 0075 01       		.byte	0x1
+ 182 0076 0C       		.byte	0xc
+ 183 0077 B1000000 		.4byte	0xb1
+ 184 007b 78000000 		.4byte	.LLST4
+ 185 007f 07       		.uleb128 0x7
+ 186 0080 00000000 		.4byte	.Ldebug_ranges0+0
+ 187 0084 96000000 		.4byte	0x96
+ 188 0088 05       		.uleb128 0x5
+ 189 0089 6900     		.ascii	"i\000"
+ 190 008b 01       		.byte	0x1
+ 191 008c 0F       		.byte	0xf
+ 192 008d AA000000 		.4byte	0xaa
+ 193 0091 E2000000 		.4byte	.LLST5
+ 194 0095 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 5
+
+
+ 195 0096 08       		.uleb128 0x8
+ 196 0097 18000000 		.4byte	.Ldebug_ranges0+0x18
+ 197 009b 05       		.uleb128 0x5
+ 198 009c 6900     		.ascii	"i\000"
+ 199 009e 01       		.byte	0x1
+ 200 009f 18       		.byte	0x18
+ 201 00a0 AA000000 		.4byte	0xaa
+ 202 00a4 01010000 		.4byte	.LLST6
+ 203 00a8 00       		.byte	0
+ 204 00a9 00       		.byte	0
+ 205 00aa 09       		.uleb128 0x9
+ 206 00ab 04       		.byte	0x4
+ 207 00ac 05       		.byte	0x5
+ 208 00ad 696E7400 		.ascii	"int\000"
+ 209 00b1 0A       		.uleb128 0xa
+ 210 00b2 04       		.byte	0x4
+ 211 00b3 04       		.byte	0x4
+ 212 00b4 00000000 		.4byte	.LASF3
+ 213 00b8 0B       		.uleb128 0xb
+ 214 00b9 04       		.byte	0x4
+ 215 00ba B1000000 		.4byte	0xb1
+ 216 00be 00       		.byte	0
+ 217              		.section	.debug_abbrev,"",%progbits
+ 218              	.Ldebug_abbrev0:
+ 219 0000 01       		.uleb128 0x1
+ 220 0001 11       		.uleb128 0x11
+ 221 0002 01       		.byte	0x1
+ 222 0003 25       		.uleb128 0x25
+ 223 0004 0E       		.uleb128 0xe
+ 224 0005 13       		.uleb128 0x13
+ 225 0006 0B       		.uleb128 0xb
+ 226 0007 03       		.uleb128 0x3
+ 227 0008 0E       		.uleb128 0xe
+ 228 0009 1B       		.uleb128 0x1b
+ 229 000a 0E       		.uleb128 0xe
+ 230 000b 55       		.uleb128 0x55
+ 231 000c 17       		.uleb128 0x17
+ 232 000d 11       		.uleb128 0x11
+ 233 000e 01       		.uleb128 0x1
+ 234 000f 10       		.uleb128 0x10
+ 235 0010 17       		.uleb128 0x17
+ 236 0011 00       		.byte	0
+ 237 0012 00       		.byte	0
+ 238 0013 02       		.uleb128 0x2
+ 239 0014 2E       		.uleb128 0x2e
+ 240 0015 01       		.byte	0x1
+ 241 0016 3F       		.uleb128 0x3f
+ 242 0017 19       		.uleb128 0x19
+ 243 0018 03       		.uleb128 0x3
+ 244 0019 08       		.uleb128 0x8
+ 245 001a 3A       		.uleb128 0x3a
+ 246 001b 0B       		.uleb128 0xb
+ 247 001c 3B       		.uleb128 0x3b
+ 248 001d 0B       		.uleb128 0xb
+ 249 001e 27       		.uleb128 0x27
+ 250 001f 19       		.uleb128 0x19
+ 251 0020 11       		.uleb128 0x11
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 6
+
+
+ 252 0021 01       		.uleb128 0x1
+ 253 0022 12       		.uleb128 0x12
+ 254 0023 06       		.uleb128 0x6
+ 255 0024 40       		.uleb128 0x40
+ 256 0025 18       		.uleb128 0x18
+ 257 0026 9642     		.uleb128 0x2116
+ 258 0028 19       		.uleb128 0x19
+ 259 0029 01       		.uleb128 0x1
+ 260 002a 13       		.uleb128 0x13
+ 261 002b 00       		.byte	0
+ 262 002c 00       		.byte	0
+ 263 002d 03       		.uleb128 0x3
+ 264 002e 05       		.uleb128 0x5
+ 265 002f 00       		.byte	0
+ 266 0030 03       		.uleb128 0x3
+ 267 0031 0E       		.uleb128 0xe
+ 268 0032 3A       		.uleb128 0x3a
+ 269 0033 0B       		.uleb128 0xb
+ 270 0034 3B       		.uleb128 0x3b
+ 271 0035 0B       		.uleb128 0xb
+ 272 0036 49       		.uleb128 0x49
+ 273 0037 13       		.uleb128 0x13
+ 274 0038 02       		.uleb128 0x2
+ 275 0039 17       		.uleb128 0x17
+ 276 003a 00       		.byte	0
+ 277 003b 00       		.byte	0
+ 278 003c 04       		.uleb128 0x4
+ 279 003d 05       		.uleb128 0x5
+ 280 003e 00       		.byte	0
+ 281 003f 03       		.uleb128 0x3
+ 282 0040 08       		.uleb128 0x8
+ 283 0041 3A       		.uleb128 0x3a
+ 284 0042 0B       		.uleb128 0xb
+ 285 0043 3B       		.uleb128 0x3b
+ 286 0044 0B       		.uleb128 0xb
+ 287 0045 49       		.uleb128 0x49
+ 288 0046 13       		.uleb128 0x13
+ 289 0047 02       		.uleb128 0x2
+ 290 0048 17       		.uleb128 0x17
+ 291 0049 00       		.byte	0
+ 292 004a 00       		.byte	0
+ 293 004b 05       		.uleb128 0x5
+ 294 004c 34       		.uleb128 0x34
+ 295 004d 00       		.byte	0
+ 296 004e 03       		.uleb128 0x3
+ 297 004f 08       		.uleb128 0x8
+ 298 0050 3A       		.uleb128 0x3a
+ 299 0051 0B       		.uleb128 0xb
+ 300 0052 3B       		.uleb128 0x3b
+ 301 0053 0B       		.uleb128 0xb
+ 302 0054 49       		.uleb128 0x49
+ 303 0055 13       		.uleb128 0x13
+ 304 0056 02       		.uleb128 0x2
+ 305 0057 17       		.uleb128 0x17
+ 306 0058 00       		.byte	0
+ 307 0059 00       		.byte	0
+ 308 005a 06       		.uleb128 0x6
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 7
+
+
+ 309 005b 34       		.uleb128 0x34
+ 310 005c 00       		.byte	0
+ 311 005d 03       		.uleb128 0x3
+ 312 005e 0E       		.uleb128 0xe
+ 313 005f 3A       		.uleb128 0x3a
+ 314 0060 0B       		.uleb128 0xb
+ 315 0061 3B       		.uleb128 0x3b
+ 316 0062 0B       		.uleb128 0xb
+ 317 0063 49       		.uleb128 0x49
+ 318 0064 13       		.uleb128 0x13
+ 319 0065 02       		.uleb128 0x2
+ 320 0066 17       		.uleb128 0x17
+ 321 0067 00       		.byte	0
+ 322 0068 00       		.byte	0
+ 323 0069 07       		.uleb128 0x7
+ 324 006a 0B       		.uleb128 0xb
+ 325 006b 01       		.byte	0x1
+ 326 006c 55       		.uleb128 0x55
+ 327 006d 17       		.uleb128 0x17
+ 328 006e 01       		.uleb128 0x1
+ 329 006f 13       		.uleb128 0x13
+ 330 0070 00       		.byte	0
+ 331 0071 00       		.byte	0
+ 332 0072 08       		.uleb128 0x8
+ 333 0073 0B       		.uleb128 0xb
+ 334 0074 01       		.byte	0x1
+ 335 0075 55       		.uleb128 0x55
+ 336 0076 17       		.uleb128 0x17
+ 337 0077 00       		.byte	0
+ 338 0078 00       		.byte	0
+ 339 0079 09       		.uleb128 0x9
+ 340 007a 24       		.uleb128 0x24
+ 341 007b 00       		.byte	0
+ 342 007c 0B       		.uleb128 0xb
+ 343 007d 0B       		.uleb128 0xb
+ 344 007e 3E       		.uleb128 0x3e
+ 345 007f 0B       		.uleb128 0xb
+ 346 0080 03       		.uleb128 0x3
+ 347 0081 08       		.uleb128 0x8
+ 348 0082 00       		.byte	0
+ 349 0083 00       		.byte	0
+ 350 0084 0A       		.uleb128 0xa
+ 351 0085 24       		.uleb128 0x24
+ 352 0086 00       		.byte	0
+ 353 0087 0B       		.uleb128 0xb
+ 354 0088 0B       		.uleb128 0xb
+ 355 0089 3E       		.uleb128 0x3e
+ 356 008a 0B       		.uleb128 0xb
+ 357 008b 03       		.uleb128 0x3
+ 358 008c 0E       		.uleb128 0xe
+ 359 008d 00       		.byte	0
+ 360 008e 00       		.byte	0
+ 361 008f 0B       		.uleb128 0xb
+ 362 0090 0F       		.uleb128 0xf
+ 363 0091 00       		.byte	0
+ 364 0092 0B       		.uleb128 0xb
+ 365 0093 0B       		.uleb128 0xb
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 8
+
+
+ 366 0094 49       		.uleb128 0x49
+ 367 0095 13       		.uleb128 0x13
+ 368 0096 00       		.byte	0
+ 369 0097 00       		.byte	0
+ 370 0098 00       		.byte	0
+ 371              		.section	.debug_loc,"",%progbits
+ 372              	.Ldebug_loc0:
+ 373              	.LLST0:
+ 374 0000 00000000 		.4byte	.LVL0
+ 375 0004 12000000 		.4byte	.LVL2
+ 376 0008 0100     		.2byte	0x1
+ 377 000a 50       		.byte	0x50
+ 378 000b 12000000 		.4byte	.LVL2
+ 379 000f 6A000000 		.4byte	.LFE0
+ 380 0013 0100     		.2byte	0x1
+ 381 0015 56       		.byte	0x56
+ 382 0016 00000000 		.4byte	0
+ 383 001a 00000000 		.4byte	0
+ 384              	.LLST1:
+ 385 001e 00000000 		.4byte	.LVL0
+ 386 0022 12000000 		.4byte	.LVL2
+ 387 0026 0100     		.2byte	0x1
+ 388 0028 51       		.byte	0x51
+ 389 0029 12000000 		.4byte	.LVL2
+ 390 002d 6A000000 		.4byte	.LFE0
+ 391 0031 0100     		.2byte	0x1
+ 392 0033 57       		.byte	0x57
+ 393 0034 00000000 		.4byte	0
+ 394 0038 00000000 		.4byte	0
+ 395              	.LLST2:
+ 396 003c 00000000 		.4byte	.LVL0
+ 397 0040 12000000 		.4byte	.LVL2
+ 398 0044 0100     		.2byte	0x1
+ 399 0046 52       		.byte	0x52
+ 400 0047 12000000 		.4byte	.LVL2
+ 401 004b 6A000000 		.4byte	.LFE0
+ 402 004f 0100     		.2byte	0x1
+ 403 0051 59       		.byte	0x59
+ 404 0052 00000000 		.4byte	0
+ 405 0056 00000000 		.4byte	0
+ 406              	.LLST3:
+ 407 005a 42000000 		.4byte	.LVL10
+ 408 005e 4A000000 		.4byte	.LVL11
+ 409 0062 0100     		.2byte	0x1
+ 410 0064 50       		.byte	0x50
+ 411 0065 4A000000 		.4byte	.LVL11
+ 412 0069 6A000000 		.4byte	.LFE0
+ 413 006d 0100     		.2byte	0x1
+ 414 006f 58       		.byte	0x58
+ 415 0070 00000000 		.4byte	0
+ 416 0074 00000000 		.4byte	0
+ 417              	.LLST4:
+ 418 0078 0A000000 		.4byte	.LVL1
+ 419 007c 12000000 		.4byte	.LVL2
+ 420 0080 0600     		.2byte	0x6
+ 421 0082 9E       		.byte	0x9e
+ 422 0083 04       		.uleb128 0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 9
+
+
+ 423 0084 0000803F 		.4byte	0x3f800000
+ 424 0088 12000000 		.4byte	.LVL2
+ 425 008c 1C000000 		.4byte	.LVL4
+ 426 0090 0100     		.2byte	0x1
+ 427 0092 55       		.byte	0x55
+ 428 0093 1C000000 		.4byte	.LVL4
+ 429 0097 1E000000 		.4byte	.LVL5
+ 430 009b 0100     		.2byte	0x1
+ 431 009d 50       		.byte	0x50
+ 432 009e 1E000000 		.4byte	.LVL5
+ 433 00a2 42000000 		.4byte	.LVL10
+ 434 00a6 0100     		.2byte	0x1
+ 435 00a8 55       		.byte	0x55
+ 436 00a9 42000000 		.4byte	.LVL10
+ 437 00ad 4A000000 		.4byte	.LVL11
+ 438 00b1 0600     		.2byte	0x6
+ 439 00b3 9E       		.byte	0x9e
+ 440 00b4 04       		.uleb128 0x4
+ 441 00b5 0000803F 		.4byte	0x3f800000
+ 442 00b9 4A000000 		.4byte	.LVL11
+ 443 00bd 60000000 		.4byte	.LVL14
+ 444 00c1 0100     		.2byte	0x1
+ 445 00c3 55       		.byte	0x55
+ 446 00c4 60000000 		.4byte	.LVL14
+ 447 00c8 62000000 		.4byte	.LVL15
+ 448 00cc 0100     		.2byte	0x1
+ 449 00ce 50       		.byte	0x50
+ 450 00cf 62000000 		.4byte	.LVL15
+ 451 00d3 6A000000 		.4byte	.LFE0
+ 452 00d7 0100     		.2byte	0x1
+ 453 00d9 55       		.byte	0x55
+ 454 00da 00000000 		.4byte	0
+ 455 00de 00000000 		.4byte	0
+ 456              	.LLST5:
+ 457 00e2 0A000000 		.4byte	.LVL1
+ 458 00e6 12000000 		.4byte	.LVL2
+ 459 00ea 0200     		.2byte	0x2
+ 460 00ec 30       		.byte	0x30
+ 461 00ed 9F       		.byte	0x9f
+ 462 00ee 12000000 		.4byte	.LVL2
+ 463 00f2 2E000000 		.4byte	.LVL7
+ 464 00f6 0100     		.2byte	0x1
+ 465 00f8 54       		.byte	0x54
+ 466 00f9 00000000 		.4byte	0
+ 467 00fd 00000000 		.4byte	0
+ 468              	.LLST6:
+ 469 0101 42000000 		.4byte	.LVL10
+ 470 0105 4A000000 		.4byte	.LVL11
+ 471 0109 0200     		.2byte	0x2
+ 472 010b 30       		.byte	0x30
+ 473 010c 9F       		.byte	0x9f
+ 474 010d 4A000000 		.4byte	.LVL11
+ 475 0111 6A000000 		.4byte	.LFE0
+ 476 0115 0100     		.2byte	0x1
+ 477 0117 54       		.byte	0x54
+ 478 0118 00000000 		.4byte	0
+ 479 011c 00000000 		.4byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 10
+
+
+ 480              		.section	.debug_aranges,"",%progbits
+ 481 0000 1C000000 		.4byte	0x1c
+ 482 0004 0200     		.2byte	0x2
+ 483 0006 00000000 		.4byte	.Ldebug_info0
+ 484 000a 04       		.byte	0x4
+ 485 000b 00       		.byte	0
+ 486 000c 0000     		.2byte	0
+ 487 000e 0000     		.2byte	0
+ 488 0010 00000000 		.4byte	.LFB0
+ 489 0014 6A000000 		.4byte	.LFE0-.LFB0
+ 490 0018 00000000 		.4byte	0
+ 491 001c 00000000 		.4byte	0
+ 492              		.section	.debug_ranges,"",%progbits
+ 493              	.Ldebug_ranges0:
+ 494 0000 0A000000 		.4byte	.LBB2
+ 495 0004 0C000000 		.4byte	.LBE2
+ 496 0008 10000000 		.4byte	.LBB3
+ 497 000c 22000000 		.4byte	.LBE3
+ 498 0010 00000000 		.4byte	0
+ 499 0014 00000000 		.4byte	0
+ 500 0018 42000000 		.4byte	.LBB4
+ 501 001c 44000000 		.4byte	.LBE4
+ 502 0020 48000000 		.4byte	.LBB5
+ 503 0024 66000000 		.4byte	.LBE5
+ 504 0028 00000000 		.4byte	0
+ 505 002c 00000000 		.4byte	0
+ 506 0030 00000000 		.4byte	.LFB0
+ 507 0034 6A000000 		.4byte	.LFE0
+ 508 0038 00000000 		.4byte	0
+ 509 003c 00000000 		.4byte	0
+ 510              		.section	.debug_line,"",%progbits
+ 511              	.Ldebug_line0:
+ 512 0000 64000000 		.section	.debug_str,"MS",%progbits,1
+ 512      02002200 
+ 512      00000201 
+ 512      FB0E0D00 
+ 512      01010101 
+ 513              	.LASF3:
+ 514 0000 666C6F61 		.ascii	"float\000"
+ 514      7400
+ 515              	.LASF0:
+ 516 0006 76656E74 		.ascii	"ventana\000"
+ 516      616E6100 
+ 517              	.LASF2:
+ 518 000e 706F775F 		.ascii	"pow_b\000"
+ 518      6200
+ 519              	.LASF6:
+ 520 0014 443A5C43 		.ascii	"D:\\Control digital\\Filtros_FIR\\Filtros.cydsn\000"
+ 520      6F6E7472 
+ 520      6F6C2064 
+ 520      69676974 
+ 520      616C5C46 
+ 521              	.LASF4:
+ 522 0041 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 522      43313120 
+ 522      352E342E 
+ 522      31203230 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccV8ocgr.s 			page 11
+
+
+ 522      31363036 
+ 523 0074 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 523      20726576 
+ 523      6973696F 
+ 523      6E203233 
+ 523      37373135 
+ 524 00a7 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 524      66756E63 
+ 524      74696F6E 
+ 524      2D736563 
+ 524      74696F6E 
+ 525              	.LASF1:
+ 526 00cf 7065736F 		.ascii	"pesos\000"
+ 526      7300
+ 527              	.LASF5:
+ 528 00d5 43616C5F 		.ascii	"Cal_pesos.c\000"
+ 528      7065736F 
+ 528      732E6300 
+ 529              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
