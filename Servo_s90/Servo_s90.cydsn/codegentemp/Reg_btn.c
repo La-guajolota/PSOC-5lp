@@ -17,7 +17,7 @@
 
 #include "Reg_btn.h"
 
-#if !defined(Reg_btn_sts_intr_sts_reg__REMOVED) /* Check for removal by optimization */
+#if !defined(Reg_btn_sts_sts_reg__REMOVED) /* Check for removal by optimization */
 
 
 /*******************************************************************************

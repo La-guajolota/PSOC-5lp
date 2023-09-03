@@ -7,4 +7,4 @@
 #include <stdint.h>
 
 //Convierte del angulo solicitado a el duty cycle necesario de 1ms-2ms
-uint8_t Ang_Per(uint8_t anglulo);
+uint16_t Ang_Per(uint16_t anglulo);

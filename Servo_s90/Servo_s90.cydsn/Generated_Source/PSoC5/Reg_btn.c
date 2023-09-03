@@ -17,7 +17,7 @@
 
 #include "Reg_btn.h"
 
-#if !defined(Reg_btn_sts_intr_sts_reg__REMOVED) /* Check for removal by optimization */
+#if !defined(Reg_btn_sts_sts_reg__REMOVED) /* Check for removal by optimization */
 
 
 /*******************************************************************************
@@ -100,7 +100,7 @@ void Reg_btn_InterruptDisable(void)
 *  None.
 *
 *******************************************************************************/
-void  Reg_btn_WriteMask(uint8 mask) 
+void Reg_btn_WriteMask(uint8 mask) 
 {
     #if(Reg_btn_INPUTS < 8u)
     	mask &= ((uint8)(1u << Reg_btn_INPUTS) - 1u);

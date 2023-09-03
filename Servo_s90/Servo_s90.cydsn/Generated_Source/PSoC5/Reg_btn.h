@@ -72,10 +72,10 @@ uint8 Reg_btn_ReadMask(void) ;
 ***************************************/
 
 /* Status Register */
-#define Reg_btn_Status             (* (reg8 *) Reg_btn_sts_intr_sts_reg__STATUS_REG )
-#define Reg_btn_Status_PTR         (  (reg8 *) Reg_btn_sts_intr_sts_reg__STATUS_REG )
-#define Reg_btn_Status_Mask        (* (reg8 *) Reg_btn_sts_intr_sts_reg__MASK_REG )
-#define Reg_btn_Status_Aux_Ctrl    (* (reg8 *) Reg_btn_sts_intr_sts_reg__STATUS_AUX_CTL_REG )
+#define Reg_btn_Status             (* (reg8 *) Reg_btn_sts_sts_reg__STATUS_REG )
+#define Reg_btn_Status_PTR         (  (reg8 *) Reg_btn_sts_sts_reg__STATUS_REG )
+#define Reg_btn_Status_Mask        (* (reg8 *) Reg_btn_sts_sts_reg__MASK_REG )
+#define Reg_btn_Status_Aux_Ctrl    (* (reg8 *) Reg_btn_sts_sts_reg__STATUS_AUX_CTL_REG )
 
 #endif /* End CY_STATUS_REG_Reg_btn_H */
 

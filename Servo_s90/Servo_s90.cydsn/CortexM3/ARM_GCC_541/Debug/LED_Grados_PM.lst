@@ -1,0 +1,884 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"LED_Grados_PM.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.LED_Grados_Sleep,"ax",%progbits
+  20              		.align	2
+  21              		.global	LED_Grados_Sleep
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	LED_Grados_Sleep, %function
+  25              	LED_Grados_Sleep:
+  26              	.LFB0:
+  27              		.file 1 "Generated_Source\\PSoC5\\LED_Grados_PM.c"
+   1:Generated_Source\PSoC5/LED_Grados_PM.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/LED_Grados_PM.c **** * File Name: LED_Grados_PM.c
+   3:Generated_Source\PSoC5/LED_Grados_PM.c **** * Version 1.10
+   4:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+   5:Generated_Source\PSoC5/LED_Grados_PM.c **** * Description:
+   6:Generated_Source\PSoC5/LED_Grados_PM.c **** *  This file provides the power management source code to API for the
+   7:Generated_Source\PSoC5/LED_Grados_PM.c **** *  LED_Driver component.
+   8:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+   9:Generated_Source\PSoC5/LED_Grados_PM.c **** * Note:
+  10:Generated_Source\PSoC5/LED_Grados_PM.c **** *  None
+  11:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  12:Generated_Source\PSoC5/LED_Grados_PM.c **** *******************************************************************************
+  13:Generated_Source\PSoC5/LED_Grados_PM.c **** * Copyright 2013-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  14:Generated_Source\PSoC5/LED_Grados_PM.c **** * You may use this file only in accordance with the license, terms, conditions,
+  15:Generated_Source\PSoC5/LED_Grados_PM.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  16:Generated_Source\PSoC5/LED_Grados_PM.c **** * the software package with which this file was provided.
+  17:Generated_Source\PSoC5/LED_Grados_PM.c **** ********************************************************************************/
+  18:Generated_Source\PSoC5/LED_Grados_PM.c **** 
+  19:Generated_Source\PSoC5/LED_Grados_PM.c **** #include "LED_Grados.h"
+  20:Generated_Source\PSoC5/LED_Grados_PM.c **** static LED_Grados_backupStruct LED_Grados_backup;
+  21:Generated_Source\PSoC5/LED_Grados_PM.c **** 
+  22:Generated_Source\PSoC5/LED_Grados_PM.c **** 
+  23:Generated_Source\PSoC5/LED_Grados_PM.c **** /*******************************************************************************
+  24:Generated_Source\PSoC5/LED_Grados_PM.c **** * Function Name: LED_Grados_Sleep
+  25:Generated_Source\PSoC5/LED_Grados_PM.c **** ********************************************************************************
+  26:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  27:Generated_Source\PSoC5/LED_Grados_PM.c **** * Summary:
+  28:Generated_Source\PSoC5/LED_Grados_PM.c **** *  Stop and Save the user configuration
+  29:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  30:Generated_Source\PSoC5/LED_Grados_PM.c **** * Parameters:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 2
+
+
+  31:Generated_Source\PSoC5/LED_Grados_PM.c **** *  None
+  32:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  33:Generated_Source\PSoC5/LED_Grados_PM.c **** * Return:
+  34:Generated_Source\PSoC5/LED_Grados_PM.c **** *  None
+  35:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  36:Generated_Source\PSoC5/LED_Grados_PM.c **** *******************************************************************************/
+  37:Generated_Source\PSoC5/LED_Grados_PM.c **** void LED_Grados_Sleep(void) 
+  38:Generated_Source\PSoC5/LED_Grados_PM.c **** {
+  28              		.loc 1 38 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  39:Generated_Source\PSoC5/LED_Grados_PM.c ****     uint8 i;
+  40:Generated_Source\PSoC5/LED_Grados_PM.c ****     
+  41:Generated_Source\PSoC5/LED_Grados_PM.c ****     /* Store the component enable state */
+  42:Generated_Source\PSoC5/LED_Grados_PM.c ****     LED_Grados_backup.ledEnableState = LED_Grados_enableVar;
+  36              		.loc 1 42 0
+  37 0002 094B     		ldr	r3, .L5
+  38 0004 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  39 0006 094B     		ldr	r3, .L5+4
+  40 0008 1A70     		strb	r2, [r3]
+  41              	.LVL0:
+  43:Generated_Source\PSoC5/LED_Grados_PM.c ****     
+  44:Generated_Source\PSoC5/LED_Grados_PM.c ****     /* Save the segment buffers */
+  45:Generated_Source\PSoC5/LED_Grados_PM.c ****     for(i = 0u; i < LED_Grados_NUM_COM; i++)
+  42              		.loc 1 45 0
+  43 000a 0023     		movs	r3, #0
+  44 000c 06E0     		b	.L2
+  45              	.LVL1:
+  46              	.L3:
+  46:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+  47:Generated_Source\PSoC5/LED_Grados_PM.c ****         LED_Grados_backup.segLBackup[i] = LED_Grados_segLBuffer[i];
+  47              		.loc 1 47 0 discriminator 3
+  48 000e 084A     		ldr	r2, .L5+8
+  49 0010 D15C     		ldrb	r1, [r2, r3]	@ zero_extendqisi2
+  50 0012 064A     		ldr	r2, .L5+4
+  51 0014 1A44     		add	r2, r2, r3
+  52 0016 5170     		strb	r1, [r2, #1]
+  45:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+  53              		.loc 1 45 0 discriminator 3
+  54 0018 0133     		adds	r3, r3, #1
+  55              	.LVL2:
+  56 001a DBB2     		uxtb	r3, r3
+  57              	.LVL3:
+  58              	.L2:
+  45:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+  59              		.loc 1 45 0 is_stmt 0 discriminator 1
+  60 001c 032B     		cmp	r3, #3
+  61 001e F6D9     		bls	.L3
+  48:Generated_Source\PSoC5/LED_Grados_PM.c ****         #if (LED_Grados_NUM_SEG > 8u) 
+  49:Generated_Source\PSoC5/LED_Grados_PM.c ****             LED_Grados_backup.segMBackup[i] = LED_Grados_segMBuffer[i];
+  50:Generated_Source\PSoC5/LED_Grados_PM.c ****         #endif /* (LED_Grados_NUM_SEG > 8u) */
+  51:Generated_Source\PSoC5/LED_Grados_PM.c ****         #if (LED_Grados_NUM_SEG > 16u) 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 3
+
+
+  52:Generated_Source\PSoC5/LED_Grados_PM.c ****             LED_Grados_backup.segHBackup[i] = LED_Grados_segHBuffer[i];
+  53:Generated_Source\PSoC5/LED_Grados_PM.c ****         #endif /* (LED_Grados_NUM_SEG > 16u) */
+  54:Generated_Source\PSoC5/LED_Grados_PM.c ****     }
+  55:Generated_Source\PSoC5/LED_Grados_PM.c ****     
+  56:Generated_Source\PSoC5/LED_Grados_PM.c ****     LED_Grados_Stop();
+  62              		.loc 1 56 0 is_stmt 1
+  63 0020 FFF7FEFF 		bl	LED_Grados_Stop
+  64              	.LVL4:
+  65 0024 08BD     		pop	{r3, pc}
+  66              	.L6:
+  67 0026 00BF     		.align	2
+  68              	.L5:
+  69 0028 00000000 		.word	LED_Grados_enableVar
+  70 002c 00000000 		.word	.LANCHOR0
+  71 0030 00000000 		.word	LED_Grados_segLBuffer
+  72              		.cfi_endproc
+  73              	.LFE0:
+  74              		.size	LED_Grados_Sleep, .-LED_Grados_Sleep
+  75              		.section	.text.LED_Grados_Wakeup,"ax",%progbits
+  76              		.align	2
+  77              		.global	LED_Grados_Wakeup
+  78              		.thumb
+  79              		.thumb_func
+  80              		.type	LED_Grados_Wakeup, %function
+  81              	LED_Grados_Wakeup:
+  82              	.LFB1:
+  57:Generated_Source\PSoC5/LED_Grados_PM.c **** }
+  58:Generated_Source\PSoC5/LED_Grados_PM.c **** 
+  59:Generated_Source\PSoC5/LED_Grados_PM.c **** 
+  60:Generated_Source\PSoC5/LED_Grados_PM.c **** /*******************************************************************************
+  61:Generated_Source\PSoC5/LED_Grados_PM.c **** * Function Name: LED_Grados_Wakeup
+  62:Generated_Source\PSoC5/LED_Grados_PM.c **** ********************************************************************************
+  63:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  64:Generated_Source\PSoC5/LED_Grados_PM.c **** * Summary:
+  65:Generated_Source\PSoC5/LED_Grados_PM.c **** *  Restores and enables the user configuration
+  66:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  67:Generated_Source\PSoC5/LED_Grados_PM.c **** * Parameters:
+  68:Generated_Source\PSoC5/LED_Grados_PM.c **** *  None
+  69:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  70:Generated_Source\PSoC5/LED_Grados_PM.c **** * Return:
+  71:Generated_Source\PSoC5/LED_Grados_PM.c **** *  None
+  72:Generated_Source\PSoC5/LED_Grados_PM.c **** *
+  73:Generated_Source\PSoC5/LED_Grados_PM.c **** *******************************************************************************/
+  74:Generated_Source\PSoC5/LED_Grados_PM.c **** void LED_Grados_Wakeup(void) 
+  75:Generated_Source\PSoC5/LED_Grados_PM.c **** {
+  83              		.loc 1 75 0
+  84              		.cfi_startproc
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 0, uses_anonymous_args = 0
+  87 0000 08B5     		push	{r3, lr}
+  88              		.cfi_def_cfa_offset 8
+  89              		.cfi_offset 3, -8
+  90              		.cfi_offset 14, -4
+  91              	.LVL5:
+  76:Generated_Source\PSoC5/LED_Grados_PM.c ****     uint8 i;
+  77:Generated_Source\PSoC5/LED_Grados_PM.c ****     
+  78:Generated_Source\PSoC5/LED_Grados_PM.c ****     /* Restore the segment buffers */
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 4
+
+
+  79:Generated_Source\PSoC5/LED_Grados_PM.c ****     for(i = 0u; i < LED_Grados_NUM_COM; i++)
+  92              		.loc 1 79 0
+  93 0002 0023     		movs	r3, #0
+  94 0004 06E0     		b	.L8
+  95              	.LVL6:
+  96              	.L9:
+  80:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+  81:Generated_Source\PSoC5/LED_Grados_PM.c ****         LED_Grados_segLBuffer[i] = LED_Grados_backup.segLBackup[i];
+  97              		.loc 1 81 0 discriminator 3
+  98 0006 084A     		ldr	r2, .L12
+  99 0008 1A44     		add	r2, r2, r3
+ 100 000a 5178     		ldrb	r1, [r2, #1]	@ zero_extendqisi2
+ 101 000c 074A     		ldr	r2, .L12+4
+ 102 000e D154     		strb	r1, [r2, r3]
+  79:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+ 103              		.loc 1 79 0 discriminator 3
+ 104 0010 0133     		adds	r3, r3, #1
+ 105              	.LVL7:
+ 106 0012 DBB2     		uxtb	r3, r3
+ 107              	.LVL8:
+ 108              	.L8:
+  79:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+ 109              		.loc 1 79 0 is_stmt 0 discriminator 1
+ 110 0014 032B     		cmp	r3, #3
+ 111 0016 F6D9     		bls	.L9
+  82:Generated_Source\PSoC5/LED_Grados_PM.c ****         #if (LED_Grados_NUM_SEG > 8u) 
+  83:Generated_Source\PSoC5/LED_Grados_PM.c ****             LED_Grados_segMBuffer[i] = LED_Grados_backup.segMBackup[i];
+  84:Generated_Source\PSoC5/LED_Grados_PM.c ****         #endif /* (LED_Grados_NUM_SEG > 8u) */
+  85:Generated_Source\PSoC5/LED_Grados_PM.c ****         #if (LED_Grados_NUM_SEG > 16u) 
+  86:Generated_Source\PSoC5/LED_Grados_PM.c ****             LED_Grados_segHBuffer[i] = LED_Grados_backup.segHBackup[i];
+  87:Generated_Source\PSoC5/LED_Grados_PM.c ****         #endif /* (LED_Grados_NUM_SEG > 16u) */
+  88:Generated_Source\PSoC5/LED_Grados_PM.c ****     }
+  89:Generated_Source\PSoC5/LED_Grados_PM.c ****     
+  90:Generated_Source\PSoC5/LED_Grados_PM.c ****     if(LED_Grados_backup.ledEnableState == LED_Grados_ENABLED)
+ 112              		.loc 1 90 0 is_stmt 1
+ 113 0018 034B     		ldr	r3, .L12
+ 114              	.LVL9:
+ 115 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 116 001c 012B     		cmp	r3, #1
+ 117 001e 01D1     		bne	.L7
+  91:Generated_Source\PSoC5/LED_Grados_PM.c ****     {
+  92:Generated_Source\PSoC5/LED_Grados_PM.c ****         /* Enable the component */
+  93:Generated_Source\PSoC5/LED_Grados_PM.c ****         LED_Grados_Enable();
+ 118              		.loc 1 93 0
+ 119 0020 FFF7FEFF 		bl	LED_Grados_Enable
+ 120              	.LVL10:
+ 121              	.L7:
+ 122 0024 08BD     		pop	{r3, pc}
+ 123              	.L13:
+ 124 0026 00BF     		.align	2
+ 125              	.L12:
+ 126 0028 00000000 		.word	.LANCHOR0
+ 127 002c 00000000 		.word	LED_Grados_segLBuffer
+ 128              		.cfi_endproc
+ 129              	.LFE1:
+ 130              		.size	LED_Grados_Wakeup, .-LED_Grados_Wakeup
+ 131              		.bss
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 5
+
+
+ 132              		.align	2
+ 133              		.set	.LANCHOR0,. + 0
+ 134              		.type	LED_Grados_backup, %object
+ 135              		.size	LED_Grados_backup, 5
+ 136              	LED_Grados_backup:
+ 137 0000 00000000 		.space	5
+ 137      00
+ 138              		.text
+ 139              	.Letext0:
+ 140              		.file 2 "Generated_Source\\PSoC5\\LED_Grados.h"
+ 141              		.file 3 "Generated_Source\\PSoC5/cytypes.h"
+ 142              		.section	.debug_info,"",%progbits
+ 143              	.Ldebug_info0:
+ 144 0000 61010000 		.4byte	0x161
+ 145 0004 0400     		.2byte	0x4
+ 146 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 147 000a 04       		.byte	0x4
+ 148 000b 01       		.uleb128 0x1
+ 149 000c 3F000000 		.4byte	.LASF24
+ 150 0010 0C       		.byte	0xc
+ 151 0011 E4010000 		.4byte	.LASF25
+ 152 0015 81010000 		.4byte	.LASF26
+ 153 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 154 001d 00000000 		.4byte	0
+ 155 0021 00000000 		.4byte	.Ldebug_line0
+ 156 0025 02       		.uleb128 0x2
+ 157 0026 01       		.byte	0x1
+ 158 0027 06       		.byte	0x6
+ 159 0028 2B020000 		.4byte	.LASF0
+ 160 002c 02       		.uleb128 0x2
+ 161 002d 01       		.byte	0x1
+ 162 002e 08       		.byte	0x8
+ 163 002f 31000000 		.4byte	.LASF1
+ 164 0033 02       		.uleb128 0x2
+ 165 0034 02       		.byte	0x2
+ 166 0035 05       		.byte	0x5
+ 167 0036 D4010000 		.4byte	.LASF2
+ 168 003a 02       		.uleb128 0x2
+ 169 003b 02       		.byte	0x2
+ 170 003c 07       		.byte	0x7
+ 171 003d DF000000 		.4byte	.LASF3
+ 172 0041 02       		.uleb128 0x2
+ 173 0042 04       		.byte	0x4
+ 174 0043 05       		.byte	0x5
+ 175 0044 0B020000 		.4byte	.LASF4
+ 176 0048 02       		.uleb128 0x2
+ 177 0049 04       		.byte	0x4
+ 178 004a 07       		.byte	0x7
+ 179 004b CD000000 		.4byte	.LASF5
+ 180 004f 02       		.uleb128 0x2
+ 181 0050 08       		.byte	0x8
+ 182 0051 05       		.byte	0x5
+ 183 0052 73010000 		.4byte	.LASF6
+ 184 0056 02       		.uleb128 0x2
+ 185 0057 08       		.byte	0x8
+ 186 0058 07       		.byte	0x7
+ 187 0059 53010000 		.4byte	.LASF7
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 6
+
+
+ 188 005d 03       		.uleb128 0x3
+ 189 005e 04       		.byte	0x4
+ 190 005f 05       		.byte	0x5
+ 191 0060 696E7400 		.ascii	"int\000"
+ 192 0064 02       		.uleb128 0x2
+ 193 0065 04       		.byte	0x4
+ 194 0066 07       		.byte	0x7
+ 195 0067 46010000 		.4byte	.LASF8
+ 196 006b 04       		.uleb128 0x4
+ 197 006c DE010000 		.4byte	.LASF15
+ 198 0070 03       		.byte	0x3
+ 199 0071 E801     		.2byte	0x1e8
+ 200 0073 2C000000 		.4byte	0x2c
+ 201 0077 02       		.uleb128 0x2
+ 202 0078 04       		.byte	0x4
+ 203 0079 04       		.byte	0x4
+ 204 007a 2B000000 		.4byte	.LASF9
+ 205 007e 02       		.uleb128 0x2
+ 206 007f 08       		.byte	0x8
+ 207 0080 04       		.byte	0x4
+ 208 0081 14010000 		.4byte	.LASF10
+ 209 0085 02       		.uleb128 0x2
+ 210 0086 01       		.byte	0x1
+ 211 0087 08       		.byte	0x8
+ 212 0088 14020000 		.4byte	.LASF11
+ 213 008c 05       		.uleb128 0x5
+ 214 008d 05       		.byte	0x5
+ 215 008e 02       		.byte	0x2
+ 216 008f 44       		.byte	0x44
+ 217 0090 AD000000 		.4byte	0xad
+ 218 0094 06       		.uleb128 0x6
+ 219 0095 00000000 		.4byte	.LASF12
+ 220 0099 02       		.byte	0x2
+ 221 009a 46       		.byte	0x46
+ 222 009b 6B000000 		.4byte	0x6b
+ 223 009f 00       		.byte	0
+ 224 00a0 06       		.uleb128 0x6
+ 225 00a1 20000000 		.4byte	.LASF13
+ 226 00a5 02       		.byte	0x2
+ 227 00a6 48       		.byte	0x48
+ 228 00a7 AD000000 		.4byte	0xad
+ 229 00ab 01       		.byte	0x1
+ 230 00ac 00       		.byte	0
+ 231 00ad 07       		.uleb128 0x7
+ 232 00ae 6B000000 		.4byte	0x6b
+ 233 00b2 BD000000 		.4byte	0xbd
+ 234 00b6 08       		.uleb128 0x8
+ 235 00b7 BD000000 		.4byte	0xbd
+ 236 00bb 03       		.byte	0x3
+ 237 00bc 00       		.byte	0
+ 238 00bd 02       		.uleb128 0x2
+ 239 00be 04       		.byte	0x4
+ 240 00bf 07       		.byte	0x7
+ 241 00c0 6A010000 		.4byte	.LASF14
+ 242 00c4 09       		.uleb128 0x9
+ 243 00c5 37020000 		.4byte	.LASF16
+ 244 00c9 02       		.byte	0x2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 7
+
+
+ 245 00ca 4F       		.byte	0x4f
+ 246 00cb 8C000000 		.4byte	0x8c
+ 247 00cf 0A       		.uleb128 0xa
+ 248 00d0 0F000000 		.4byte	.LASF17
+ 249 00d4 01       		.byte	0x1
+ 250 00d5 25       		.byte	0x25
+ 251 00d6 00000000 		.4byte	.LFB0
+ 252 00da 34000000 		.4byte	.LFE0-.LFB0
+ 253 00de 01       		.uleb128 0x1
+ 254 00df 9C       		.byte	0x9c
+ 255 00e0 FB000000 		.4byte	0xfb
+ 256 00e4 0B       		.uleb128 0xb
+ 257 00e5 6900     		.ascii	"i\000"
+ 258 00e7 01       		.byte	0x1
+ 259 00e8 27       		.byte	0x27
+ 260 00e9 6B000000 		.4byte	0x6b
+ 261 00ed 00000000 		.4byte	.LLST0
+ 262 00f1 0C       		.uleb128 0xc
+ 263 00f2 24000000 		.4byte	.LVL4
+ 264 00f6 4E010000 		.4byte	0x14e
+ 265 00fa 00       		.byte	0
+ 266 00fb 0A       		.uleb128 0xa
+ 267 00fc 19020000 		.4byte	.LASF18
+ 268 0100 01       		.byte	0x1
+ 269 0101 4A       		.byte	0x4a
+ 270 0102 00000000 		.4byte	.LFB1
+ 271 0106 30000000 		.4byte	.LFE1-.LFB1
+ 272 010a 01       		.uleb128 0x1
+ 273 010b 9C       		.byte	0x9c
+ 274 010c 27010000 		.4byte	0x127
+ 275 0110 0B       		.uleb128 0xb
+ 276 0111 6900     		.ascii	"i\000"
+ 277 0113 01       		.byte	0x1
+ 278 0114 4C       		.byte	0x4c
+ 279 0115 6B000000 		.4byte	0x6b
+ 280 0119 2A000000 		.4byte	.LLST1
+ 281 011d 0C       		.uleb128 0xc
+ 282 011e 24000000 		.4byte	.LVL10
+ 283 0122 59010000 		.4byte	0x159
+ 284 0126 00       		.byte	0
+ 285 0127 0D       		.uleb128 0xd
+ 286 0128 C2010000 		.4byte	.LASF19
+ 287 012c 01       		.byte	0x1
+ 288 012d 14       		.byte	0x14
+ 289 012e C4000000 		.4byte	0xc4
+ 290 0132 05       		.uleb128 0x5
+ 291 0133 03       		.byte	0x3
+ 292 0134 00000000 		.4byte	LED_Grados_backup
+ 293 0138 0E       		.uleb128 0xe
+ 294 0139 1B010000 		.4byte	.LASF20
+ 295 013d 02       		.byte	0x2
+ 296 013e 99       		.byte	0x99
+ 297 013f 6B000000 		.4byte	0x6b
+ 298 0143 0E       		.uleb128 0xe
+ 299 0144 30010000 		.4byte	.LASF21
+ 300 0148 02       		.byte	0x2
+ 301 0149 9C       		.byte	0x9c
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 8
+
+
+ 302 014a AD000000 		.4byte	0xad
+ 303 014e 0F       		.uleb128 0xf
+ 304 014f F2000000 		.4byte	.LASF22
+ 305 0153 F2000000 		.4byte	.LASF22
+ 306 0157 02       		.byte	0x2
+ 307 0158 58       		.byte	0x58
+ 308 0159 0F       		.uleb128 0xf
+ 309 015a 02010000 		.4byte	.LASF23
+ 310 015e 02010000 		.4byte	.LASF23
+ 311 0162 02       		.byte	0x2
+ 312 0163 56       		.byte	0x56
+ 313 0164 00       		.byte	0
+ 314              		.section	.debug_abbrev,"",%progbits
+ 315              	.Ldebug_abbrev0:
+ 316 0000 01       		.uleb128 0x1
+ 317 0001 11       		.uleb128 0x11
+ 318 0002 01       		.byte	0x1
+ 319 0003 25       		.uleb128 0x25
+ 320 0004 0E       		.uleb128 0xe
+ 321 0005 13       		.uleb128 0x13
+ 322 0006 0B       		.uleb128 0xb
+ 323 0007 03       		.uleb128 0x3
+ 324 0008 0E       		.uleb128 0xe
+ 325 0009 1B       		.uleb128 0x1b
+ 326 000a 0E       		.uleb128 0xe
+ 327 000b 55       		.uleb128 0x55
+ 328 000c 17       		.uleb128 0x17
+ 329 000d 11       		.uleb128 0x11
+ 330 000e 01       		.uleb128 0x1
+ 331 000f 10       		.uleb128 0x10
+ 332 0010 17       		.uleb128 0x17
+ 333 0011 00       		.byte	0
+ 334 0012 00       		.byte	0
+ 335 0013 02       		.uleb128 0x2
+ 336 0014 24       		.uleb128 0x24
+ 337 0015 00       		.byte	0
+ 338 0016 0B       		.uleb128 0xb
+ 339 0017 0B       		.uleb128 0xb
+ 340 0018 3E       		.uleb128 0x3e
+ 341 0019 0B       		.uleb128 0xb
+ 342 001a 03       		.uleb128 0x3
+ 343 001b 0E       		.uleb128 0xe
+ 344 001c 00       		.byte	0
+ 345 001d 00       		.byte	0
+ 346 001e 03       		.uleb128 0x3
+ 347 001f 24       		.uleb128 0x24
+ 348 0020 00       		.byte	0
+ 349 0021 0B       		.uleb128 0xb
+ 350 0022 0B       		.uleb128 0xb
+ 351 0023 3E       		.uleb128 0x3e
+ 352 0024 0B       		.uleb128 0xb
+ 353 0025 03       		.uleb128 0x3
+ 354 0026 08       		.uleb128 0x8
+ 355 0027 00       		.byte	0
+ 356 0028 00       		.byte	0
+ 357 0029 04       		.uleb128 0x4
+ 358 002a 16       		.uleb128 0x16
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 9
+
+
+ 359 002b 00       		.byte	0
+ 360 002c 03       		.uleb128 0x3
+ 361 002d 0E       		.uleb128 0xe
+ 362 002e 3A       		.uleb128 0x3a
+ 363 002f 0B       		.uleb128 0xb
+ 364 0030 3B       		.uleb128 0x3b
+ 365 0031 05       		.uleb128 0x5
+ 366 0032 49       		.uleb128 0x49
+ 367 0033 13       		.uleb128 0x13
+ 368 0034 00       		.byte	0
+ 369 0035 00       		.byte	0
+ 370 0036 05       		.uleb128 0x5
+ 371 0037 13       		.uleb128 0x13
+ 372 0038 01       		.byte	0x1
+ 373 0039 0B       		.uleb128 0xb
+ 374 003a 0B       		.uleb128 0xb
+ 375 003b 3A       		.uleb128 0x3a
+ 376 003c 0B       		.uleb128 0xb
+ 377 003d 3B       		.uleb128 0x3b
+ 378 003e 0B       		.uleb128 0xb
+ 379 003f 01       		.uleb128 0x1
+ 380 0040 13       		.uleb128 0x13
+ 381 0041 00       		.byte	0
+ 382 0042 00       		.byte	0
+ 383 0043 06       		.uleb128 0x6
+ 384 0044 0D       		.uleb128 0xd
+ 385 0045 00       		.byte	0
+ 386 0046 03       		.uleb128 0x3
+ 387 0047 0E       		.uleb128 0xe
+ 388 0048 3A       		.uleb128 0x3a
+ 389 0049 0B       		.uleb128 0xb
+ 390 004a 3B       		.uleb128 0x3b
+ 391 004b 0B       		.uleb128 0xb
+ 392 004c 49       		.uleb128 0x49
+ 393 004d 13       		.uleb128 0x13
+ 394 004e 38       		.uleb128 0x38
+ 395 004f 0B       		.uleb128 0xb
+ 396 0050 00       		.byte	0
+ 397 0051 00       		.byte	0
+ 398 0052 07       		.uleb128 0x7
+ 399 0053 01       		.uleb128 0x1
+ 400 0054 01       		.byte	0x1
+ 401 0055 49       		.uleb128 0x49
+ 402 0056 13       		.uleb128 0x13
+ 403 0057 01       		.uleb128 0x1
+ 404 0058 13       		.uleb128 0x13
+ 405 0059 00       		.byte	0
+ 406 005a 00       		.byte	0
+ 407 005b 08       		.uleb128 0x8
+ 408 005c 21       		.uleb128 0x21
+ 409 005d 00       		.byte	0
+ 410 005e 49       		.uleb128 0x49
+ 411 005f 13       		.uleb128 0x13
+ 412 0060 2F       		.uleb128 0x2f
+ 413 0061 0B       		.uleb128 0xb
+ 414 0062 00       		.byte	0
+ 415 0063 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 10
+
+
+ 416 0064 09       		.uleb128 0x9
+ 417 0065 16       		.uleb128 0x16
+ 418 0066 00       		.byte	0
+ 419 0067 03       		.uleb128 0x3
+ 420 0068 0E       		.uleb128 0xe
+ 421 0069 3A       		.uleb128 0x3a
+ 422 006a 0B       		.uleb128 0xb
+ 423 006b 3B       		.uleb128 0x3b
+ 424 006c 0B       		.uleb128 0xb
+ 425 006d 49       		.uleb128 0x49
+ 426 006e 13       		.uleb128 0x13
+ 427 006f 00       		.byte	0
+ 428 0070 00       		.byte	0
+ 429 0071 0A       		.uleb128 0xa
+ 430 0072 2E       		.uleb128 0x2e
+ 431 0073 01       		.byte	0x1
+ 432 0074 3F       		.uleb128 0x3f
+ 433 0075 19       		.uleb128 0x19
+ 434 0076 03       		.uleb128 0x3
+ 435 0077 0E       		.uleb128 0xe
+ 436 0078 3A       		.uleb128 0x3a
+ 437 0079 0B       		.uleb128 0xb
+ 438 007a 3B       		.uleb128 0x3b
+ 439 007b 0B       		.uleb128 0xb
+ 440 007c 27       		.uleb128 0x27
+ 441 007d 19       		.uleb128 0x19
+ 442 007e 11       		.uleb128 0x11
+ 443 007f 01       		.uleb128 0x1
+ 444 0080 12       		.uleb128 0x12
+ 445 0081 06       		.uleb128 0x6
+ 446 0082 40       		.uleb128 0x40
+ 447 0083 18       		.uleb128 0x18
+ 448 0084 9742     		.uleb128 0x2117
+ 449 0086 19       		.uleb128 0x19
+ 450 0087 01       		.uleb128 0x1
+ 451 0088 13       		.uleb128 0x13
+ 452 0089 00       		.byte	0
+ 453 008a 00       		.byte	0
+ 454 008b 0B       		.uleb128 0xb
+ 455 008c 34       		.uleb128 0x34
+ 456 008d 00       		.byte	0
+ 457 008e 03       		.uleb128 0x3
+ 458 008f 08       		.uleb128 0x8
+ 459 0090 3A       		.uleb128 0x3a
+ 460 0091 0B       		.uleb128 0xb
+ 461 0092 3B       		.uleb128 0x3b
+ 462 0093 0B       		.uleb128 0xb
+ 463 0094 49       		.uleb128 0x49
+ 464 0095 13       		.uleb128 0x13
+ 465 0096 02       		.uleb128 0x2
+ 466 0097 17       		.uleb128 0x17
+ 467 0098 00       		.byte	0
+ 468 0099 00       		.byte	0
+ 469 009a 0C       		.uleb128 0xc
+ 470 009b 898201   		.uleb128 0x4109
+ 471 009e 00       		.byte	0
+ 472 009f 11       		.uleb128 0x11
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 11
+
+
+ 473 00a0 01       		.uleb128 0x1
+ 474 00a1 31       		.uleb128 0x31
+ 475 00a2 13       		.uleb128 0x13
+ 476 00a3 00       		.byte	0
+ 477 00a4 00       		.byte	0
+ 478 00a5 0D       		.uleb128 0xd
+ 479 00a6 34       		.uleb128 0x34
+ 480 00a7 00       		.byte	0
+ 481 00a8 03       		.uleb128 0x3
+ 482 00a9 0E       		.uleb128 0xe
+ 483 00aa 3A       		.uleb128 0x3a
+ 484 00ab 0B       		.uleb128 0xb
+ 485 00ac 3B       		.uleb128 0x3b
+ 486 00ad 0B       		.uleb128 0xb
+ 487 00ae 49       		.uleb128 0x49
+ 488 00af 13       		.uleb128 0x13
+ 489 00b0 02       		.uleb128 0x2
+ 490 00b1 18       		.uleb128 0x18
+ 491 00b2 00       		.byte	0
+ 492 00b3 00       		.byte	0
+ 493 00b4 0E       		.uleb128 0xe
+ 494 00b5 34       		.uleb128 0x34
+ 495 00b6 00       		.byte	0
+ 496 00b7 03       		.uleb128 0x3
+ 497 00b8 0E       		.uleb128 0xe
+ 498 00b9 3A       		.uleb128 0x3a
+ 499 00ba 0B       		.uleb128 0xb
+ 500 00bb 3B       		.uleb128 0x3b
+ 501 00bc 0B       		.uleb128 0xb
+ 502 00bd 49       		.uleb128 0x49
+ 503 00be 13       		.uleb128 0x13
+ 504 00bf 3F       		.uleb128 0x3f
+ 505 00c0 19       		.uleb128 0x19
+ 506 00c1 3C       		.uleb128 0x3c
+ 507 00c2 19       		.uleb128 0x19
+ 508 00c3 00       		.byte	0
+ 509 00c4 00       		.byte	0
+ 510 00c5 0F       		.uleb128 0xf
+ 511 00c6 2E       		.uleb128 0x2e
+ 512 00c7 00       		.byte	0
+ 513 00c8 3F       		.uleb128 0x3f
+ 514 00c9 19       		.uleb128 0x19
+ 515 00ca 3C       		.uleb128 0x3c
+ 516 00cb 19       		.uleb128 0x19
+ 517 00cc 6E       		.uleb128 0x6e
+ 518 00cd 0E       		.uleb128 0xe
+ 519 00ce 03       		.uleb128 0x3
+ 520 00cf 0E       		.uleb128 0xe
+ 521 00d0 3A       		.uleb128 0x3a
+ 522 00d1 0B       		.uleb128 0xb
+ 523 00d2 3B       		.uleb128 0x3b
+ 524 00d3 0B       		.uleb128 0xb
+ 525 00d4 00       		.byte	0
+ 526 00d5 00       		.byte	0
+ 527 00d6 00       		.byte	0
+ 528              		.section	.debug_loc,"",%progbits
+ 529              	.Ldebug_loc0:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 12
+
+
+ 530              	.LLST0:
+ 531 0000 0A000000 		.4byte	.LVL0
+ 532 0004 0E000000 		.4byte	.LVL1
+ 533 0008 0200     		.2byte	0x2
+ 534 000a 30       		.byte	0x30
+ 535 000b 9F       		.byte	0x9f
+ 536 000c 0E000000 		.4byte	.LVL1
+ 537 0010 1A000000 		.4byte	.LVL2
+ 538 0014 0100     		.2byte	0x1
+ 539 0016 53       		.byte	0x53
+ 540 0017 1C000000 		.4byte	.LVL3
+ 541 001b 23000000 		.4byte	.LVL4-1
+ 542 001f 0100     		.2byte	0x1
+ 543 0021 53       		.byte	0x53
+ 544 0022 00000000 		.4byte	0
+ 545 0026 00000000 		.4byte	0
+ 546              	.LLST1:
+ 547 002a 02000000 		.4byte	.LVL5
+ 548 002e 06000000 		.4byte	.LVL6
+ 549 0032 0200     		.2byte	0x2
+ 550 0034 30       		.byte	0x30
+ 551 0035 9F       		.byte	0x9f
+ 552 0036 06000000 		.4byte	.LVL6
+ 553 003a 12000000 		.4byte	.LVL7
+ 554 003e 0100     		.2byte	0x1
+ 555 0040 53       		.byte	0x53
+ 556 0041 14000000 		.4byte	.LVL8
+ 557 0045 1A000000 		.4byte	.LVL9
+ 558 0049 0100     		.2byte	0x1
+ 559 004b 53       		.byte	0x53
+ 560 004c 00000000 		.4byte	0
+ 561 0050 00000000 		.4byte	0
+ 562              		.section	.debug_aranges,"",%progbits
+ 563 0000 24000000 		.4byte	0x24
+ 564 0004 0200     		.2byte	0x2
+ 565 0006 00000000 		.4byte	.Ldebug_info0
+ 566 000a 04       		.byte	0x4
+ 567 000b 00       		.byte	0
+ 568 000c 0000     		.2byte	0
+ 569 000e 0000     		.2byte	0
+ 570 0010 00000000 		.4byte	.LFB0
+ 571 0014 34000000 		.4byte	.LFE0-.LFB0
+ 572 0018 00000000 		.4byte	.LFB1
+ 573 001c 30000000 		.4byte	.LFE1-.LFB1
+ 574 0020 00000000 		.4byte	0
+ 575 0024 00000000 		.4byte	0
+ 576              		.section	.debug_ranges,"",%progbits
+ 577              	.Ldebug_ranges0:
+ 578 0000 00000000 		.4byte	.LFB0
+ 579 0004 34000000 		.4byte	.LFE0
+ 580 0008 00000000 		.4byte	.LFB1
+ 581 000c 30000000 		.4byte	.LFE1
+ 582 0010 00000000 		.4byte	0
+ 583 0014 00000000 		.4byte	0
+ 584              		.section	.debug_line,"",%progbits
+ 585              	.Ldebug_line0:
+ 586 0000 AB000000 		.section	.debug_str,"MS",%progbits,1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 13
+
+
+ 586      02005A00 
+ 586      00000201 
+ 586      FB0E0D00 
+ 586      01010101 
+ 587              	.LASF12:
+ 588 0000 6C656445 		.ascii	"ledEnableState\000"
+ 588      6E61626C 
+ 588      65537461 
+ 588      746500
+ 589              	.LASF17:
+ 590 000f 4C45445F 		.ascii	"LED_Grados_Sleep\000"
+ 590      47726164 
+ 590      6F735F53 
+ 590      6C656570 
+ 590      00
+ 591              	.LASF13:
+ 592 0020 7365674C 		.ascii	"segLBackup\000"
+ 592      4261636B 
+ 592      757000
+ 593              	.LASF9:
+ 594 002b 666C6F61 		.ascii	"float\000"
+ 594      7400
+ 595              	.LASF1:
+ 596 0031 756E7369 		.ascii	"unsigned char\000"
+ 596      676E6564 
+ 596      20636861 
+ 596      7200
+ 597              	.LASF24:
+ 598 003f 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 598      43313120 
+ 598      352E342E 
+ 598      31203230 
+ 598      31363036 
+ 599 0072 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 599      20726576 
+ 599      6973696F 
+ 599      6E203233 
+ 599      37373135 
+ 600 00a5 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 600      66756E63 
+ 600      74696F6E 
+ 600      2D736563 
+ 600      74696F6E 
+ 601              	.LASF5:
+ 602 00cd 6C6F6E67 		.ascii	"long unsigned int\000"
+ 602      20756E73 
+ 602      69676E65 
+ 602      6420696E 
+ 602      7400
+ 603              	.LASF3:
+ 604 00df 73686F72 		.ascii	"short unsigned int\000"
+ 604      7420756E 
+ 604      7369676E 
+ 604      65642069 
+ 604      6E7400
+ 605              	.LASF22:
+ 606 00f2 4C45445F 		.ascii	"LED_Grados_Stop\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 14
+
+
+ 606      47726164 
+ 606      6F735F53 
+ 606      746F7000 
+ 607              	.LASF23:
+ 608 0102 4C45445F 		.ascii	"LED_Grados_Enable\000"
+ 608      47726164 
+ 608      6F735F45 
+ 608      6E61626C 
+ 608      6500
+ 609              	.LASF10:
+ 610 0114 646F7562 		.ascii	"double\000"
+ 610      6C6500
+ 611              	.LASF20:
+ 612 011b 4C45445F 		.ascii	"LED_Grados_enableVar\000"
+ 612      47726164 
+ 612      6F735F65 
+ 612      6E61626C 
+ 612      65566172 
+ 613              	.LASF21:
+ 614 0130 4C45445F 		.ascii	"LED_Grados_segLBuffer\000"
+ 614      47726164 
+ 614      6F735F73 
+ 614      65674C42 
+ 614      75666665 
+ 615              	.LASF8:
+ 616 0146 756E7369 		.ascii	"unsigned int\000"
+ 616      676E6564 
+ 616      20696E74 
+ 616      00
+ 617              	.LASF7:
+ 618 0153 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 618      206C6F6E 
+ 618      6720756E 
+ 618      7369676E 
+ 618      65642069 
+ 619              	.LASF14:
+ 620 016a 73697A65 		.ascii	"sizetype\000"
+ 620      74797065 
+ 620      00
+ 621              	.LASF6:
+ 622 0173 6C6F6E67 		.ascii	"long long int\000"
+ 622      206C6F6E 
+ 622      6720696E 
+ 622      7400
+ 623              	.LASF26:
+ 624 0181 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\Servo_"
+ 624      73657273 
+ 624      5C616472 
+ 624      69615C4F 
+ 624      6E654472 
+ 625 01ae 7339305C 		.ascii	"s90\\Servo_s90.cydsn\000"
+ 625      53657276 
+ 625      6F5F7339 
+ 625      302E6379 
+ 625      64736E00 
+ 626              	.LASF19:
+ 627 01c2 4C45445F 		.ascii	"LED_Grados_backup\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\cce8Z5Ec.s 			page 15
+
+
+ 627      47726164 
+ 627      6F735F62 
+ 627      61636B75 
+ 627      7000
+ 628              	.LASF2:
+ 629 01d4 73686F72 		.ascii	"short int\000"
+ 629      7420696E 
+ 629      7400
+ 630              	.LASF15:
+ 631 01de 75696E74 		.ascii	"uint8\000"
+ 631      3800
+ 632              	.LASF25:
+ 633 01e4 47656E65 		.ascii	"Generated_Source\\PSoC5\\LED_Grados_PM.c\000"
+ 633      72617465 
+ 633      645F536F 
+ 633      75726365 
+ 633      5C50536F 
+ 634              	.LASF4:
+ 635 020b 6C6F6E67 		.ascii	"long int\000"
+ 635      20696E74 
+ 635      00
+ 636              	.LASF11:
+ 637 0214 63686172 		.ascii	"char\000"
+ 637      00
+ 638              	.LASF18:
+ 639 0219 4C45445F 		.ascii	"LED_Grados_Wakeup\000"
+ 639      47726164 
+ 639      6F735F57 
+ 639      616B6575 
+ 639      7000
+ 640              	.LASF0:
+ 641 022b 7369676E 		.ascii	"signed char\000"
+ 641      65642063 
+ 641      68617200 
+ 642              	.LASF16:
+ 643 0237 4C45445F 		.ascii	"LED_Grados_backupStruct\000"
+ 643      47726164 
+ 643      6F735F62 
+ 643      61636B75 
+ 643      70537472 
+ 644              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
