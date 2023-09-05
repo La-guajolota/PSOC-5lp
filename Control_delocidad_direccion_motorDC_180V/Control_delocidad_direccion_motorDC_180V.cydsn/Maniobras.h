@@ -1,11 +1,17 @@
 /*
 
-
 */
 #include <stdint.h>
 
 //Variables de control
+#define resolucion 16 //Modifica segun la resolucpon del pwm
 
+//Mascaras de inputs por los botones 
+#define Vmenos 0x1E
+#define Vmas 0x1D
+#define Der 0x1B
+#define Izq 0x17
+#define Paro 0x0F
 
 //Mascaras para control
 /*
@@ -19,21 +25,21 @@
     0  1  0  --> Gira derecha  2A-ON 1A-OFF
     1  0  0  --> Gira Izquierda 1A-ON 1A-OFF
     1  1  0  --> Paro a medias  1A=2A=ON
-    1  1  1  --> Paro total EN pone en altaimpedancia las salidad del L293B *2A Y 1A SON DONT CARE REALMENTE
+    0  0  1--> Paro total EN pone en altaimpedancia las salidad del L293B *2A Y 1A SON DONT CARE REALMENTE
  */
 #define Derecha 0x02
 #define Izquierda 0x04
 #define paro_medio 0x06
-#define paro_total 0x07
+#define paro_total 0x01
 
 //Función para cambio de giro
 /*
     Protocólo para el cambio de dirección:
-    1-. (DISMINUIR VELOCIDAD GRADUALMENTE) luego Paro a medias
-    2.- Paro total
+    1-. (DISMINUIR VELOCIDAD GRADUALMENTE) luego Paro a total
+    2.- Paro medio
     3.- Nueva dirección luego(AUMENTA LA VELOCIDAD HASTA ALCANZAR LA ANTERIOR AL REALIZAR EL CAMBIO DE SENTIDO)
 */
 void SENTIDO(uint8_t Estado);
 
 //Función para modificar la velocidad
-uint16_t Velocidad(uint16_t porcentaje);
+void Velocidad(uint8_t porcentaje);

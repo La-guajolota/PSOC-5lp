@@ -1,6 +1,6 @@
 // ======================================================================
 // Control_delocidad_direccion_motorDC_180V.v generated from TopDesign.cysch
-// 09/03/2023 at 23:35
+// 09/04/2023 at 19:27
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -1263,7 +1263,7 @@ module top ;
 		#(.id("7a661e9b-0b80-4cc4-9b8f-7c1cd7c03697"),
 		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
-		  .init_dr_st(1'b0),
+		  .init_dr_st(1'b1),
 		  .input_clk_en(0),
 		  .input_sync(1'b1),
 		  .input_sync_mode(1'b0),
@@ -1338,7 +1338,7 @@ module top ;
 		#(.id("7c67b71e-34b9-4c12-a9f0-6fa3481af4a8"),
 		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
-		  .init_dr_st(1'b0),
+		  .init_dr_st(1'b1),
 		  .input_clk_en(0),
 		  .input_sync(1'b1),
 		  .input_sync_mode(1'b0),
@@ -1413,7 +1413,7 @@ module top ;
 		#(.id("4e56d424-8ba9-46f0-8c89-3ca74ec0e14b"),
 		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
-		  .init_dr_st(1'b0),
+		  .init_dr_st(1'b1),
 		  .input_clk_en(0),
 		  .input_sync(1'b1),
 		  .input_sync_mode(1'b0),
