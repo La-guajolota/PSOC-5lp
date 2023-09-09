@@ -56,7 +56,7 @@ int main(void)
             cpp = Ang_Per(angulo);//Actualizamos el capture compare del pwm 
             PWM_WriteCompare(cpp);//y cambiamos el DUTYCYCLE
             LED_Grados_Write7SegNumberDec(angulo,0,4,0);
-            CyDelay(100);//Tiempo de cambio entre posición
+            CyDelay(10);//Tiempo de cambio entre posición
             
             bandera=0x00;//Reseteamos la bandera
         }

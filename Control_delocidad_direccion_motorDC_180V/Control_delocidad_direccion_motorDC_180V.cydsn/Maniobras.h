@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 //Variables de control
-#define resolucion 16 //Modifica segun la resolucpon del pwm
+#define resolucion 8 //Modifica segun la resolucpon del pwm
 
 //Mascaras de inputs por los botones 
 #define Vmenos 0x1E

@@ -1,5 +1,7 @@
 /*
-
+    Funciones para el control de giro y velocidad de de un motor DC
+    El código se implementó con un protocólo de cambio de estado. 
+    Sí se necesita un cambio
 */
 #include <stdint.h>
 #include "Maniobras.h"
@@ -34,8 +36,8 @@ void SENTIDO(uint8_t Estado){
     uint16_t CPP_1 = PWM_Mosfet_ReadCompare();//leemos cpp del momento
     for(int i=CPP_1;i>0;i--){
         PWM_Mosfet_WriteCompare(i);
-        CyDelay(10
-        );//Pocura el cambio no tan de golpe
+        LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);//Mostramos la potecia
+        CyDelay(100);//Pocura el cambio no tan de golpe
     }
     
     //Enmascaramos
@@ -47,14 +49,17 @@ void SENTIDO(uint8_t Estado){
     //PASO TRES!!!
     Reg &= Estado;
     Driver_RELAY_Write(Reg);//Actualizamos
-    CyDelay(10);
     
     //Subimos velocidad antes del cambio de estado
-    uint16_t CPP_2 = PWM_Mosfet_ReadCompare();//leemos cpp del momento velocidad lenta
-    for(int i=CPP_2;i<CPP_1;i++){
-        PWM_Mosfet_WriteCompare(i);
-        CyDelay(10);//Pocura el cambio no tan de golpe
+    if(Estado != paro_total){
+        uint16_t CPP_2 = PWM_Mosfet_ReadCompare();//leemos cpp del momento velocidad lenta
+        for(int i=CPP_2;i<CPP_1;i++){
+            PWM_Mosfet_WriteCompare(i);
+            LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);//Mostramos la potecia
+            CyDelay(100);//Pocura el cambio no tan de golpe    
+            }
     }
+    
 }
 
 //Función para modificar la velocidad
@@ -67,23 +72,11 @@ void SENTIDO(uint8_t Estado){
 */
 void Velocidad(uint8_t porcentaje){
     
-    uint8_t vel_nueva = (porcentaje/100.0)*resolucion;//Velocidad está expresado en conteos
-    uint16_t Vel_act = PWM_Mosfet_ReadCompare();//Velocidad actual que corre el motor
+    uint8_t vel_nueva = porcentaje*resolucion/100;//Velocidad está expresado en conteos
+    PWM_Mosfet_WriteCompare(vel_nueva);
+    LED_VELOCIDAD_Write7SegNumberDec(porcentaje,0,4,0);//Mostramos la potecia
+    CyDelay(100);
     
-    if(vel_nueva>Vel_act)//Tenemos que acelerar
-    {
-        for(int i=Vel_act;i<=vel_nueva;i++){
-            PWM_Mosfet_WriteCompare(i);
-            CyDelay(10);//Pocura el cambio no tan de golpe
-        }
-        
-    }else if(Vel_act>vel_nueva)//Tenemos que desacelerar
-    {
-        for(int i=Vel_act;i>vel_nueva;i--){
-            PWM_Mosfet_WriteCompare(i);
-            CyDelay(10);//Pocura el cambio no tan de golpe
-        }
-    }
 }
 
 

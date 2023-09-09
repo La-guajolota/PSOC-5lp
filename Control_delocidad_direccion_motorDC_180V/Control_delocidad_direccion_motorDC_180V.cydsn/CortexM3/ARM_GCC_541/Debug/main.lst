@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 1
 
 
    1              		.syntax unified
@@ -32,9 +32,9 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 1
    2:main.c        **** #include "project.h"
    3:main.c        **** #include "Maniobras.h"
    4:main.c        **** 
-   5:main.c        **** 
-   6:main.c        **** //Variables globales
-   7:main.c        **** uint8_t mando;//Contiene los estados de las entradas de control
+   5:main.c        **** //Variables globales
+   6:main.c        **** uint8_t mando, mando_anterior=Paro;//Contiene los estados de las entradas de control
+   7:main.c        **** uint8_t Potenccia=0;//Numero de conteo comparación del PWM
    8:main.c        **** 
    9:main.c        **** int main(void)
   10:main.c        **** {
@@ -53,758 +53,886 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 1
   39              	@ 11 "main.c" 1
   40 0002 62B6     		CPSIE   i
   41              	@ 0 "" 2
-  12:main.c        ****     PWM_Mosfet_Start();
-  42              		.loc 1 12 0
+  12:main.c        ****     //Perifericos
+  13:main.c        ****     PWM_Mosfet_Start();
+  42              		.loc 1 13 0
   43              		.thumb
   44              		.syntax unified
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 2
+
+
   45 0004 FFF7FEFF 		bl	PWM_Mosfet_Start
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 2
-
-
   46              	.LVL0:
-  13:main.c        ****     LED_VELOCIDAD_Start();
-  47              		.loc 1 13 0
+  14:main.c        ****     LED_VELOCIDAD_Start();
+  47              		.loc 1 14 0
   48 0008 FFF7FEFF 		bl	LED_VELOCIDAD_Start
   49              	.LVL1:
-  14:main.c        ****     LED_VELOCIDAD_Write7SegNumberDec(0,0,4,0);//Mostramos la potecia inicial                       
-  50              		.loc 1 14 0
+  15:main.c        ****     
+  16:main.c        ****     //Condiciones iniciales
+  17:main.c        ****     LED_VELOCIDAD_Write7SegNumberDec(0,0,4,0);//Mostramos la potecia inicial                       
+  50              		.loc 1 17 0
   51 000c 0023     		movs	r3, #0
   52 000e 0422     		movs	r2, #4
   53 0010 1946     		mov	r1, r3
   54 0012 1846     		mov	r0, r3
   55 0014 FFF7FEFF 		bl	LED_VELOCIDAD_Write7SegNumberDec
   56              	.LVL2:
-  15:main.c        ****     PWM_Mosfet_WriteCompare(0x00);//Reteamos velocidad a 0
-  57              		.loc 1 15 0
-  58 0018 0020     		movs	r0, #0
+  18:main.c        ****     PWM_Mosfet_WriteCompare(255);//Reteamos velocidad a 0
+  57              		.loc 1 18 0
+  58 0018 FF20     		movs	r0, #255
   59 001a FFF7FEFF 		bl	PWM_Mosfet_WriteCompare
   60              	.LVL3:
-  16:main.c        ****     Driver_RELAY_Write(0x01);//sETEAMOS LA SALIDA A 0XFF PARO TOTAL
-  61              		.loc 1 16 0
+  19:main.c        ****     Driver_RELAY_Write(paro_total);//sETEAMOS LA SALIDA A PARO TOTAL
+  61              		.loc 1 19 0
   62 001e 0120     		movs	r0, #1
   63 0020 FFF7FEFF 		bl	Driver_RELAY_Write
   64              	.LVL4:
   65              	.L2:
-  17:main.c        ****     
-  18:main.c        ****     for(;;)
-  19:main.c        ****     {
-  20:main.c        ****       //checamos el registro de control
-  21:main.c        ****        mando = Control_manual_Read();
-  66              		.loc 1 21 0
+  20:main.c        ****     
+  21:main.c        ****     for(;;)
+  22:main.c        ****     {
+  23:main.c        ****       //checamos el registro de control
+  24:main.c        ****        mando = Control_manual_Read();
+  66              		.loc 1 24 0
   67 0024 FFF7FEFF 		bl	Control_manual_Read
   68              	.LVL5:
-  69 0028 0B4B     		ldr	r3, .L8
+  69 0028 1C4B     		ldr	r3, .L12
   70 002a 1870     		strb	r0, [r3]
-  22:main.c        ****        
-  23:main.c        ****       //Existió algún cambio del registro con su estado normal??
-  24:main.c        ****     /*
-  25:main.c        ****         El registro de control en los botones es
-  26:main.c        ****         0b00011111  --> 0x1F
-  27:main.c        ****       */
-  28:main.c        ****       if(mando != 0x1F)
-  71              		.loc 1 28 0
+  25:main.c        ****        
+  26:main.c        ****       //Existió algún cambio del registro con su estado normal??
+  27:main.c        ****     /*
+  28:main.c        ****         El registro de control en los botones es
+  29:main.c        ****         0b00011111  --> 0x1F
+  30:main.c        ****       */
+  31:main.c        ****       if(mando != 0x1F){
+  71              		.loc 1 31 0
   72 002c 1F28     		cmp	r0, #31
   73 002e F9D0     		beq	.L2
-  29:main.c        ****     {
-  30:main.c        ****        
-  31:main.c        ****       switch(mando){
-  74              		.loc 1 31 0
-  75 0030 1728     		cmp	r0, #23
-  76 0032 08D0     		beq	.L4
-  77 0034 1B28     		cmp	r0, #27
-  78 0036 02D0     		beq	.L5
-  79 0038 0F28     		cmp	r0, #15
-  80 003a F3D1     		bne	.L2
-  81 003c 07E0     		b	.L6
-  82              	.L5:
-  32:main.c        ****         case Der:
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 3
+  32:main.c        ****         
+  33:main.c        ****           if(mando != mando_anterior){//Revisamos si la nueva accion no es el estado actual
+  74              		.loc 1 33 0
+  75 0030 1B4B     		ldr	r3, .L12+4
+  76 0032 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  77 0034 9842     		cmp	r0, r3
+  78 0036 2CD0     		beq	.L3
+  34:main.c        ****             switch(mando){
+  79              		.loc 1 34 0
+  80 0038 0F38     		subs	r0, r0, #15
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 3
 
 
-  33:main.c        ****             SENTIDO(Derecha);
-  83              		.loc 1 33 0
-  84 003e 0220     		movs	r0, #2
-  85 0040 FFF7FEFF 		bl	SENTIDO
-  86              	.LVL6:
-  34:main.c        ****             break;
-  87              		.loc 1 34 0
-  88 0044 EEE7     		b	.L2
-  89              	.L4:
-  35:main.c        ****         case Izq:
-  36:main.c        ****             SENTIDO(Izquierda);
-  90              		.loc 1 36 0
-  91 0046 0420     		movs	r0, #4
-  92 0048 FFF7FEFF 		bl	SENTIDO
-  93              	.LVL7:
-  37:main.c        ****             break;
-  94              		.loc 1 37 0
-  95 004c EAE7     		b	.L2
-  96              	.L6:
-  38:main.c        ****         case Paro:
-  39:main.c        ****             Driver_RELAY_Write(paro_total);;
-  97              		.loc 1 39 0
-  98 004e 0120     		movs	r0, #1
-  99 0050 FFF7FEFF 		bl	Driver_RELAY_Write
- 100              	.LVL8:
-  40:main.c        ****             break;   
- 101              		.loc 1 40 0
- 102 0054 E6E7     		b	.L2
- 103              	.L9:
- 104 0056 00BF     		.align	2
- 105              	.L8:
- 106 0058 00000000 		.word	mando
- 107              		.cfi_endproc
- 108              	.LFE63:
- 109              		.size	main, .-main
- 110              		.comm	mando,1,1
- 111              		.text
- 112              	.Letext0:
- 113              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
- 114              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
- 115              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
- 116              		.file 5 "Generated_Source\\PSoC5/PWM_Mosfet.h"
- 117              		.file 6 "Generated_Source\\PSoC5/LED_VELOCIDAD.h"
- 118              		.file 7 "Generated_Source\\PSoC5/Driver_RELAY.h"
- 119              		.file 8 "Generated_Source\\PSoC5/Control_manual.h"
- 120              		.file 9 "Maniobras.h"
- 121              		.section	.debug_info,"",%progbits
- 122              	.Ldebug_info0:
- 123 0000 D8010000 		.4byte	0x1d8
- 124 0004 0400     		.2byte	0x4
- 125 0006 00000000 		.4byte	.Ldebug_abbrev0
- 126 000a 04       		.byte	0x4
- 127 000b 01       		.uleb128 0x1
- 128 000c 6E000000 		.4byte	.LASF27
- 129 0010 0C       		.byte	0xc
- 130 0011 2A020000 		.4byte	.LASF28
- 131 0015 10010000 		.4byte	.LASF29
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 4
+  81 003a 0F28     		cmp	r0, #15
+  82 003c 29D8     		bhi	.L3
+  83 003e DFE800F0 		tbb	[pc, r0]
+  84              	.L5:
+  85 0042 08       		.byte	(.L4-.L5)/2
+  86 0043 28       		.byte	(.L3-.L5)/2
+  87 0044 28       		.byte	(.L3-.L5)/2
+  88 0045 28       		.byte	(.L3-.L5)/2
+  89 0046 28       		.byte	(.L3-.L5)/2
+  90 0047 28       		.byte	(.L3-.L5)/2
+  91 0048 28       		.byte	(.L3-.L5)/2
+  92 0049 28       		.byte	(.L3-.L5)/2
+  93 004a 10       		.byte	(.L6-.L5)/2
+  94 004b 28       		.byte	(.L3-.L5)/2
+  95 004c 28       		.byte	(.L3-.L5)/2
+  96 004d 28       		.byte	(.L3-.L5)/2
+  97 004e 0C       		.byte	(.L7-.L5)/2
+  98 004f 28       		.byte	(.L3-.L5)/2
+  99 0050 14       		.byte	(.L8-.L5)/2
+ 100 0051 1F       		.byte	(.L9-.L5)/2
+ 101              		.p2align 1
+ 102              	.L4:
+  35:main.c        ****             case Paro:
+  36:main.c        ****                 SENTIDO(paro_total);
+ 103              		.loc 1 36 0
+ 104 0052 0120     		movs	r0, #1
+ 105 0054 FFF7FEFF 		bl	SENTIDO
+ 106              	.LVL6:
+  37:main.c        ****                 break;
+ 107              		.loc 1 37 0
+ 108 0058 1BE0     		b	.L3
+ 109              	.L7:
+  38:main.c        ****             case Der:
+  39:main.c        ****                 SENTIDO(Derecha);
+ 110              		.loc 1 39 0
+ 111 005a 0220     		movs	r0, #2
+ 112 005c FFF7FEFF 		bl	SENTIDO
+ 113              	.LVL7:
+  40:main.c        ****                 break;
+ 114              		.loc 1 40 0
+ 115 0060 17E0     		b	.L3
+ 116              	.L6:
+  41:main.c        ****             case Izq:
+  42:main.c        ****                 SENTIDO(Izquierda);
+ 117              		.loc 1 42 0
+ 118 0062 0420     		movs	r0, #4
+ 119 0064 FFF7FEFF 		bl	SENTIDO
+ 120              	.LVL8:
+  43:main.c        ****                 break;
+ 121              		.loc 1 43 0
+ 122 0068 13E0     		b	.L3
+ 123              	.L8:
+  44:main.c        ****             case Vmas:
+  45:main.c        ****                 if(Potenccia<100){
+ 124              		.loc 1 45 0
+ 125 006a 0E4B     		ldr	r3, .L12+8
+ 126 006c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 4
 
 
- 132 0019 00000000 		.4byte	.Ldebug_ranges0+0
- 133 001d 00000000 		.4byte	0
- 134 0021 00000000 		.4byte	.Ldebug_line0
- 135 0025 02       		.uleb128 0x2
- 136 0026 01       		.byte	0x1
- 137 0027 06       		.byte	0x6
- 138 0028 5B020000 		.4byte	.LASF0
- 139 002c 03       		.uleb128 0x3
- 140 002d 08000000 		.4byte	.LASF4
- 141 0031 02       		.byte	0x2
- 142 0032 1D       		.byte	0x1d
- 143 0033 37000000 		.4byte	0x37
- 144 0037 02       		.uleb128 0x2
- 145 0038 01       		.byte	0x1
- 146 0039 08       		.byte	0x8
- 147 003a 60000000 		.4byte	.LASF1
- 148 003e 02       		.uleb128 0x2
- 149 003f 02       		.byte	0x2
- 150 0040 05       		.byte	0x5
- 151 0041 36020000 		.4byte	.LASF2
- 152 0045 02       		.uleb128 0x2
- 153 0046 02       		.byte	0x2
- 154 0047 07       		.byte	0x7
- 155 0048 40000000 		.4byte	.LASF3
- 156 004c 03       		.uleb128 0x3
- 157 004d 23000000 		.4byte	.LASF5
- 158 0051 02       		.byte	0x2
- 159 0052 3F       		.byte	0x3f
- 160 0053 57000000 		.4byte	0x57
- 161 0057 02       		.uleb128 0x2
- 162 0058 04       		.byte	0x4
- 163 0059 05       		.byte	0x5
- 164 005a 46020000 		.4byte	.LASF6
- 165 005e 02       		.uleb128 0x2
- 166 005f 04       		.byte	0x4
- 167 0060 07       		.byte	0x7
- 168 0061 9C010000 		.4byte	.LASF7
- 169 0065 02       		.uleb128 0x2
- 170 0066 08       		.byte	0x8
- 171 0067 05       		.byte	0x5
- 172 0068 1C020000 		.4byte	.LASF8
- 173 006c 02       		.uleb128 0x2
- 174 006d 08       		.byte	0x8
- 175 006e 07       		.byte	0x7
- 176 006f EC010000 		.4byte	.LASF9
- 177 0073 04       		.uleb128 0x4
- 178 0074 04       		.byte	0x4
- 179 0075 05       		.byte	0x5
- 180 0076 696E7400 		.ascii	"int\000"
- 181 007a 02       		.uleb128 0x2
- 182 007b 04       		.byte	0x4
- 183 007c 07       		.byte	0x7
- 184 007d DF010000 		.4byte	.LASF10
- 185 0081 03       		.uleb128 0x3
- 186 0082 03020000 		.4byte	.LASF11
- 187 0086 03       		.byte	0x3
- 188 0087 18       		.byte	0x18
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 5
+ 127 006e 632B     		cmp	r3, #99
+ 128 0070 0FD8     		bhi	.L3
+  46:main.c        ****                     Potenccia++;//Aumentamos potencia
+ 129              		.loc 1 46 0
+ 130 0072 0133     		adds	r3, r3, #1
+ 131 0074 D8B2     		uxtb	r0, r3
+ 132 0076 0B4B     		ldr	r3, .L12+8
+ 133 0078 1870     		strb	r0, [r3]
+  47:main.c        ****                     Velocidad(Potenccia);
+ 134              		.loc 1 47 0
+ 135 007a FFF7FEFF 		bl	Velocidad
+ 136              	.LVL9:
+ 137 007e 08E0     		b	.L3
+ 138              	.L9:
+  48:main.c        ****                 }
+  49:main.c        ****                 break;
+  50:main.c        ****             case Vmenos:
+  51:main.c        ****                 if(Potenccia>0){
+ 139              		.loc 1 51 0
+ 140 0080 084B     		ldr	r3, .L12+8
+ 141 0082 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 142 0084 2BB1     		cbz	r3, .L3
+  52:main.c        ****                     Potenccia--;//Disminuimos potencia potencia
+ 143              		.loc 1 52 0
+ 144 0086 013B     		subs	r3, r3, #1
+ 145 0088 D8B2     		uxtb	r0, r3
+ 146 008a 064B     		ldr	r3, .L12+8
+ 147 008c 1870     		strb	r0, [r3]
+  53:main.c        ****                     Velocidad(Potenccia);
+ 148              		.loc 1 53 0
+ 149 008e FFF7FEFF 		bl	Velocidad
+ 150              	.LVL10:
+ 151              	.L3:
+  54:main.c        ****                 }
+  55:main.c        ****                 break;  
+  56:main.c        ****           }    
+  57:main.c        ****     }
+  58:main.c        ****         mando_anterior = mando;
+ 152              		.loc 1 58 0
+ 153 0092 024B     		ldr	r3, .L12
+ 154 0094 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 155 0096 024B     		ldr	r3, .L12+4
+ 156 0098 1A70     		strb	r2, [r3]
+ 157 009a C3E7     		b	.L2
+ 158              	.L13:
+ 159              		.align	2
+ 160              	.L12:
+ 161 009c 00000000 		.word	mando
+ 162 00a0 00000000 		.word	.LANCHOR0
+ 163 00a4 00000000 		.word	.LANCHOR1
+ 164              		.cfi_endproc
+ 165              	.LFE63:
+ 166              		.size	main, .-main
+ 167              		.global	Potenccia
+ 168              		.global	mando_anterior
+ 169              		.comm	mando,1,1
+ 170              		.data
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 5
 
 
- 189 0088 2C000000 		.4byte	0x2c
- 190 008c 03       		.uleb128 0x3
- 191 008d 0B020000 		.4byte	.LASF12
- 192 0091 03       		.byte	0x3
- 193 0092 2C       		.byte	0x2c
- 194 0093 4C000000 		.4byte	0x4c
- 195 0097 02       		.uleb128 0x2
- 196 0098 04       		.byte	0x4
- 197 0099 04       		.byte	0x4
- 198 009a 5A000000 		.4byte	.LASF13
- 199 009e 02       		.uleb128 0x2
- 200 009f 08       		.byte	0x8
- 201 00a0 04       		.byte	0x4
- 202 00a1 53000000 		.4byte	.LASF14
- 203 00a5 02       		.uleb128 0x2
- 204 00a6 01       		.byte	0x1
- 205 00a7 08       		.byte	0x8
- 206 00a8 31020000 		.4byte	.LASF15
- 207 00ac 02       		.uleb128 0x2
- 208 00ad 04       		.byte	0x4
- 209 00ae 07       		.byte	0x7
- 210 00af 13020000 		.4byte	.LASF16
- 211 00b3 02       		.uleb128 0x2
- 212 00b4 08       		.byte	0x8
- 213 00b5 04       		.byte	0x4
- 214 00b6 4F020000 		.4byte	.LASF17
- 215 00ba 05       		.uleb128 0x5
- 216 00bb C2010000 		.4byte	.LASF30
- 217 00bf 01       		.byte	0x1
- 218 00c0 09       		.byte	0x9
- 219 00c1 73000000 		.4byte	0x73
- 220 00c5 00000000 		.4byte	.LFB63
- 221 00c9 5C000000 		.4byte	.LFE63-.LFB63
- 222 00cd 01       		.uleb128 0x1
- 223 00ce 9C       		.byte	0x9c
- 224 00cf 6C010000 		.4byte	0x16c
- 225 00d3 06       		.uleb128 0x6
- 226 00d4 08000000 		.4byte	.LVL0
- 227 00d8 8E010000 		.4byte	0x18e
- 228 00dc 06       		.uleb128 0x6
- 229 00dd 0C000000 		.4byte	.LVL1
- 230 00e1 99010000 		.4byte	0x199
- 231 00e5 07       		.uleb128 0x7
- 232 00e6 18000000 		.4byte	.LVL2
- 233 00ea A4010000 		.4byte	0x1a4
- 234 00ee 07010000 		.4byte	0x107
- 235 00f2 08       		.uleb128 0x8
- 236 00f3 01       		.uleb128 0x1
- 237 00f4 50       		.byte	0x50
- 238 00f5 01       		.uleb128 0x1
- 239 00f6 30       		.byte	0x30
- 240 00f7 08       		.uleb128 0x8
- 241 00f8 01       		.uleb128 0x1
- 242 00f9 51       		.byte	0x51
- 243 00fa 01       		.uleb128 0x1
- 244 00fb 30       		.byte	0x30
- 245 00fc 08       		.uleb128 0x8
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 6
+ 171              		.set	.LANCHOR0,. + 0
+ 172              		.type	mando_anterior, %object
+ 173              		.size	mando_anterior, 1
+ 174              	mando_anterior:
+ 175 0000 0F       		.byte	15
+ 176              		.bss
+ 177              		.set	.LANCHOR1,. + 0
+ 178              		.type	Potenccia, %object
+ 179              		.size	Potenccia, 1
+ 180              	Potenccia:
+ 181 0000 00       		.space	1
+ 182              		.text
+ 183              	.Letext0:
+ 184              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 185              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 186              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 187              		.file 5 "Generated_Source\\PSoC5/PWM_Mosfet.h"
+ 188              		.file 6 "Generated_Source\\PSoC5/LED_VELOCIDAD.h"
+ 189              		.file 7 "Generated_Source\\PSoC5/Driver_RELAY.h"
+ 190              		.file 8 "Generated_Source\\PSoC5/Control_manual.h"
+ 191              		.file 9 "Maniobras.h"
+ 192              		.section	.debug_info,"",%progbits
+ 193              	.Ldebug_info0:
+ 194 0000 1C020000 		.4byte	0x21c
+ 195 0004 0400     		.2byte	0x4
+ 196 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 197 000a 04       		.byte	0x4
+ 198 000b 01       		.uleb128 0x1
+ 199 000c 87000000 		.4byte	.LASF30
+ 200 0010 0C       		.byte	0xc
+ 201 0011 4D020000 		.4byte	.LASF31
+ 202 0015 29010000 		.4byte	.LASF32
+ 203 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 204 001d 00000000 		.4byte	0
+ 205 0021 00000000 		.4byte	.Ldebug_line0
+ 206 0025 02       		.uleb128 0x2
+ 207 0026 01       		.byte	0x1
+ 208 0027 06       		.byte	0x6
+ 209 0028 7E020000 		.4byte	.LASF0
+ 210 002c 03       		.uleb128 0x3
+ 211 002d 08000000 		.4byte	.LASF4
+ 212 0031 02       		.byte	0x2
+ 213 0032 1D       		.byte	0x1d
+ 214 0033 37000000 		.4byte	0x37
+ 215 0037 02       		.uleb128 0x2
+ 216 0038 01       		.byte	0x1
+ 217 0039 08       		.byte	0x8
+ 218 003a 79000000 		.4byte	.LASF1
+ 219 003e 02       		.uleb128 0x2
+ 220 003f 02       		.byte	0x2
+ 221 0040 05       		.byte	0x5
+ 222 0041 59020000 		.4byte	.LASF2
+ 223 0045 02       		.uleb128 0x2
+ 224 0046 02       		.byte	0x2
+ 225 0047 07       		.byte	0x7
+ 226 0048 40000000 		.4byte	.LASF3
+ 227 004c 03       		.uleb128 0x3
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 6
 
 
- 246 00fd 01       		.uleb128 0x1
- 247 00fe 52       		.byte	0x52
- 248 00ff 01       		.uleb128 0x1
- 249 0100 34       		.byte	0x34
- 250 0101 08       		.uleb128 0x8
- 251 0102 01       		.uleb128 0x1
- 252 0103 53       		.byte	0x53
- 253 0104 01       		.uleb128 0x1
- 254 0105 30       		.byte	0x30
- 255 0106 00       		.byte	0
- 256 0107 07       		.uleb128 0x7
- 257 0108 1E000000 		.4byte	.LVL3
- 258 010c AF010000 		.4byte	0x1af
- 259 0110 1A010000 		.4byte	0x11a
- 260 0114 08       		.uleb128 0x8
- 261 0115 01       		.uleb128 0x1
- 262 0116 50       		.byte	0x50
- 263 0117 01       		.uleb128 0x1
- 264 0118 30       		.byte	0x30
- 265 0119 00       		.byte	0
- 266 011a 07       		.uleb128 0x7
- 267 011b 24000000 		.4byte	.LVL4
- 268 011f BA010000 		.4byte	0x1ba
- 269 0123 2D010000 		.4byte	0x12d
- 270 0127 08       		.uleb128 0x8
- 271 0128 01       		.uleb128 0x1
- 272 0129 50       		.byte	0x50
- 273 012a 01       		.uleb128 0x1
- 274 012b 31       		.byte	0x31
- 275 012c 00       		.byte	0
- 276 012d 06       		.uleb128 0x6
- 277 012e 28000000 		.4byte	.LVL5
- 278 0132 C5010000 		.4byte	0x1c5
- 279 0136 07       		.uleb128 0x7
- 280 0137 44000000 		.4byte	.LVL6
- 281 013b D0010000 		.4byte	0x1d0
- 282 013f 49010000 		.4byte	0x149
- 283 0143 08       		.uleb128 0x8
- 284 0144 01       		.uleb128 0x1
- 285 0145 50       		.byte	0x50
- 286 0146 01       		.uleb128 0x1
- 287 0147 32       		.byte	0x32
- 288 0148 00       		.byte	0
- 289 0149 07       		.uleb128 0x7
- 290 014a 4C000000 		.4byte	.LVL7
- 291 014e D0010000 		.4byte	0x1d0
- 292 0152 5C010000 		.4byte	0x15c
- 293 0156 08       		.uleb128 0x8
- 294 0157 01       		.uleb128 0x1
- 295 0158 50       		.byte	0x50
- 296 0159 01       		.uleb128 0x1
- 297 015a 34       		.byte	0x34
- 298 015b 00       		.byte	0
- 299 015c 09       		.uleb128 0x9
- 300 015d 54000000 		.4byte	.LVL8
- 301 0161 BA010000 		.4byte	0x1ba
- 302 0165 08       		.uleb128 0x8
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 7
+ 228 004d 23000000 		.4byte	.LASF5
+ 229 0051 02       		.byte	0x2
+ 230 0052 3F       		.byte	0x3f
+ 231 0053 57000000 		.4byte	0x57
+ 232 0057 02       		.uleb128 0x2
+ 233 0058 04       		.byte	0x4
+ 234 0059 05       		.byte	0x5
+ 235 005a 69020000 		.4byte	.LASF6
+ 236 005e 02       		.uleb128 0x2
+ 237 005f 04       		.byte	0x4
+ 238 0060 07       		.byte	0x7
+ 239 0061 B5010000 		.4byte	.LASF7
+ 240 0065 02       		.uleb128 0x2
+ 241 0066 08       		.byte	0x8
+ 242 0067 05       		.byte	0x5
+ 243 0068 3F020000 		.4byte	.LASF8
+ 244 006c 02       		.uleb128 0x2
+ 245 006d 08       		.byte	0x8
+ 246 006e 07       		.byte	0x7
+ 247 006f 05020000 		.4byte	.LASF9
+ 248 0073 04       		.uleb128 0x4
+ 249 0074 04       		.byte	0x4
+ 250 0075 05       		.byte	0x5
+ 251 0076 696E7400 		.ascii	"int\000"
+ 252 007a 02       		.uleb128 0x2
+ 253 007b 04       		.byte	0x4
+ 254 007c 07       		.byte	0x7
+ 255 007d F8010000 		.4byte	.LASF10
+ 256 0081 03       		.uleb128 0x3
+ 257 0082 1C020000 		.4byte	.LASF11
+ 258 0086 03       		.byte	0x3
+ 259 0087 18       		.byte	0x18
+ 260 0088 2C000000 		.4byte	0x2c
+ 261 008c 03       		.uleb128 0x3
+ 262 008d 24020000 		.4byte	.LASF12
+ 263 0091 03       		.byte	0x3
+ 264 0092 2C       		.byte	0x2c
+ 265 0093 4C000000 		.4byte	0x4c
+ 266 0097 02       		.uleb128 0x2
+ 267 0098 04       		.byte	0x4
+ 268 0099 04       		.byte	0x4
+ 269 009a 73000000 		.4byte	.LASF13
+ 270 009e 02       		.uleb128 0x2
+ 271 009f 08       		.byte	0x8
+ 272 00a0 04       		.byte	0x4
+ 273 00a1 53000000 		.4byte	.LASF14
+ 274 00a5 02       		.uleb128 0x2
+ 275 00a6 01       		.byte	0x1
+ 276 00a7 08       		.byte	0x8
+ 277 00a8 54020000 		.4byte	.LASF15
+ 278 00ac 02       		.uleb128 0x2
+ 279 00ad 04       		.byte	0x4
+ 280 00ae 07       		.byte	0x7
+ 281 00af 36020000 		.4byte	.LASF16
+ 282 00b3 02       		.uleb128 0x2
+ 283 00b4 08       		.byte	0x8
+ 284 00b5 04       		.byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 7
 
 
- 303 0166 01       		.uleb128 0x1
- 304 0167 50       		.byte	0x50
- 305 0168 01       		.uleb128 0x1
- 306 0169 31       		.byte	0x31
- 307 016a 00       		.byte	0
- 308 016b 00       		.byte	0
- 309 016c 0A       		.uleb128 0xa
- 310 016d 8F010000 		.4byte	.LASF18
- 311 0171 04       		.byte	0x4
- 312 0172 1207     		.2byte	0x712
- 313 0174 78010000 		.4byte	0x178
- 314 0178 0B       		.uleb128 0xb
- 315 0179 8C000000 		.4byte	0x8c
- 316 017d 0C       		.uleb128 0xc
- 317 017e 40020000 		.4byte	.LASF19
- 318 0182 01       		.byte	0x1
- 319 0183 07       		.byte	0x7
- 320 0184 81000000 		.4byte	0x81
- 321 0188 05       		.uleb128 0x5
- 322 0189 03       		.byte	0x3
- 323 018a 00000000 		.4byte	mando
- 324 018e 0D       		.uleb128 0xd
- 325 018f 12000000 		.4byte	.LASF20
- 326 0193 12000000 		.4byte	.LASF20
- 327 0197 05       		.byte	0x5
- 328 0198 92       		.byte	0x92
- 329 0199 0D       		.uleb128 0xd
- 330 019a FC000000 		.4byte	.LASF21
- 331 019e FC000000 		.4byte	.LASF21
- 332 01a2 06       		.byte	0x6
- 333 01a3 57       		.byte	0x57
- 334 01a4 0D       		.uleb128 0xd
- 335 01a5 67020000 		.4byte	.LASF22
- 336 01a9 67020000 		.4byte	.LASF22
- 337 01ad 06       		.byte	0x6
- 338 01ae 61       		.byte	0x61
- 339 01af 0D       		.uleb128 0xd
- 340 01b0 C7010000 		.4byte	.LASF23
- 341 01b4 C7010000 		.4byte	.LASF23
- 342 01b8 05       		.byte	0x5
- 343 01b9 C3       		.byte	0xc3
- 344 01ba 0D       		.uleb128 0xd
- 345 01bb 2D000000 		.4byte	.LASF24
- 346 01bf 2D000000 		.4byte	.LASF24
- 347 01c3 07       		.byte	0x7
- 348 01c4 2F       		.byte	0x2f
- 349 01c5 0D       		.uleb128 0xd
- 350 01c6 AE010000 		.4byte	.LASF25
- 351 01ca AE010000 		.4byte	.LASF25
- 352 01ce 08       		.byte	0x8
- 353 01cf 30       		.byte	0x30
- 354 01d0 0D       		.uleb128 0xd
- 355 01d1 00000000 		.4byte	.LASF26
- 356 01d5 00000000 		.4byte	.LASF26
- 357 01d9 09       		.byte	0x9
- 358 01da 2A       		.byte	0x2a
- 359 01db 00       		.byte	0
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 8
+ 285 00b6 72020000 		.4byte	.LASF17
+ 286 00ba 05       		.uleb128 0x5
+ 287 00bb DB010000 		.4byte	.LASF33
+ 288 00bf 01       		.byte	0x1
+ 289 00c0 09       		.byte	0x9
+ 290 00c1 73000000 		.4byte	0x73
+ 291 00c5 00000000 		.4byte	.LFB63
+ 292 00c9 A8000000 		.4byte	.LFE63-.LFB63
+ 293 00cd 01       		.uleb128 0x1
+ 294 00ce 9C       		.byte	0x9c
+ 295 00cf 83010000 		.4byte	0x183
+ 296 00d3 06       		.uleb128 0x6
+ 297 00d4 08000000 		.4byte	.LVL0
+ 298 00d8 C7010000 		.4byte	0x1c7
+ 299 00dc 06       		.uleb128 0x6
+ 300 00dd 0C000000 		.4byte	.LVL1
+ 301 00e1 D2010000 		.4byte	0x1d2
+ 302 00e5 07       		.uleb128 0x7
+ 303 00e6 18000000 		.4byte	.LVL2
+ 304 00ea DD010000 		.4byte	0x1dd
+ 305 00ee 07010000 		.4byte	0x107
+ 306 00f2 08       		.uleb128 0x8
+ 307 00f3 01       		.uleb128 0x1
+ 308 00f4 50       		.byte	0x50
+ 309 00f5 01       		.uleb128 0x1
+ 310 00f6 30       		.byte	0x30
+ 311 00f7 08       		.uleb128 0x8
+ 312 00f8 01       		.uleb128 0x1
+ 313 00f9 51       		.byte	0x51
+ 314 00fa 01       		.uleb128 0x1
+ 315 00fb 30       		.byte	0x30
+ 316 00fc 08       		.uleb128 0x8
+ 317 00fd 01       		.uleb128 0x1
+ 318 00fe 52       		.byte	0x52
+ 319 00ff 01       		.uleb128 0x1
+ 320 0100 34       		.byte	0x34
+ 321 0101 08       		.uleb128 0x8
+ 322 0102 01       		.uleb128 0x1
+ 323 0103 53       		.byte	0x53
+ 324 0104 01       		.uleb128 0x1
+ 325 0105 30       		.byte	0x30
+ 326 0106 00       		.byte	0
+ 327 0107 07       		.uleb128 0x7
+ 328 0108 1E000000 		.4byte	.LVL3
+ 329 010c E8010000 		.4byte	0x1e8
+ 330 0110 1B010000 		.4byte	0x11b
+ 331 0114 08       		.uleb128 0x8
+ 332 0115 01       		.uleb128 0x1
+ 333 0116 50       		.byte	0x50
+ 334 0117 02       		.uleb128 0x2
+ 335 0118 09       		.byte	0x9
+ 336 0119 FF       		.byte	0xff
+ 337 011a 00       		.byte	0
+ 338 011b 07       		.uleb128 0x7
+ 339 011c 24000000 		.4byte	.LVL4
+ 340 0120 F3010000 		.4byte	0x1f3
+ 341 0124 2E010000 		.4byte	0x12e
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 8
 
 
- 360              		.section	.debug_abbrev,"",%progbits
- 361              	.Ldebug_abbrev0:
- 362 0000 01       		.uleb128 0x1
- 363 0001 11       		.uleb128 0x11
- 364 0002 01       		.byte	0x1
- 365 0003 25       		.uleb128 0x25
- 366 0004 0E       		.uleb128 0xe
- 367 0005 13       		.uleb128 0x13
- 368 0006 0B       		.uleb128 0xb
- 369 0007 03       		.uleb128 0x3
- 370 0008 0E       		.uleb128 0xe
- 371 0009 1B       		.uleb128 0x1b
- 372 000a 0E       		.uleb128 0xe
- 373 000b 55       		.uleb128 0x55
- 374 000c 17       		.uleb128 0x17
- 375 000d 11       		.uleb128 0x11
- 376 000e 01       		.uleb128 0x1
- 377 000f 10       		.uleb128 0x10
- 378 0010 17       		.uleb128 0x17
- 379 0011 00       		.byte	0
- 380 0012 00       		.byte	0
- 381 0013 02       		.uleb128 0x2
- 382 0014 24       		.uleb128 0x24
- 383 0015 00       		.byte	0
- 384 0016 0B       		.uleb128 0xb
- 385 0017 0B       		.uleb128 0xb
- 386 0018 3E       		.uleb128 0x3e
- 387 0019 0B       		.uleb128 0xb
- 388 001a 03       		.uleb128 0x3
- 389 001b 0E       		.uleb128 0xe
- 390 001c 00       		.byte	0
- 391 001d 00       		.byte	0
- 392 001e 03       		.uleb128 0x3
- 393 001f 16       		.uleb128 0x16
- 394 0020 00       		.byte	0
- 395 0021 03       		.uleb128 0x3
- 396 0022 0E       		.uleb128 0xe
- 397 0023 3A       		.uleb128 0x3a
- 398 0024 0B       		.uleb128 0xb
- 399 0025 3B       		.uleb128 0x3b
- 400 0026 0B       		.uleb128 0xb
- 401 0027 49       		.uleb128 0x49
- 402 0028 13       		.uleb128 0x13
- 403 0029 00       		.byte	0
- 404 002a 00       		.byte	0
- 405 002b 04       		.uleb128 0x4
- 406 002c 24       		.uleb128 0x24
- 407 002d 00       		.byte	0
- 408 002e 0B       		.uleb128 0xb
- 409 002f 0B       		.uleb128 0xb
- 410 0030 3E       		.uleb128 0x3e
- 411 0031 0B       		.uleb128 0xb
- 412 0032 03       		.uleb128 0x3
- 413 0033 08       		.uleb128 0x8
- 414 0034 00       		.byte	0
- 415 0035 00       		.byte	0
- 416 0036 05       		.uleb128 0x5
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 9
+ 342 0128 08       		.uleb128 0x8
+ 343 0129 01       		.uleb128 0x1
+ 344 012a 50       		.byte	0x50
+ 345 012b 01       		.uleb128 0x1
+ 346 012c 31       		.byte	0x31
+ 347 012d 00       		.byte	0
+ 348 012e 06       		.uleb128 0x6
+ 349 012f 28000000 		.4byte	.LVL5
+ 350 0133 FE010000 		.4byte	0x1fe
+ 351 0137 07       		.uleb128 0x7
+ 352 0138 58000000 		.4byte	.LVL6
+ 353 013c 09020000 		.4byte	0x209
+ 354 0140 4A010000 		.4byte	0x14a
+ 355 0144 08       		.uleb128 0x8
+ 356 0145 01       		.uleb128 0x1
+ 357 0146 50       		.byte	0x50
+ 358 0147 01       		.uleb128 0x1
+ 359 0148 31       		.byte	0x31
+ 360 0149 00       		.byte	0
+ 361 014a 07       		.uleb128 0x7
+ 362 014b 60000000 		.4byte	.LVL7
+ 363 014f 09020000 		.4byte	0x209
+ 364 0153 5D010000 		.4byte	0x15d
+ 365 0157 08       		.uleb128 0x8
+ 366 0158 01       		.uleb128 0x1
+ 367 0159 50       		.byte	0x50
+ 368 015a 01       		.uleb128 0x1
+ 369 015b 32       		.byte	0x32
+ 370 015c 00       		.byte	0
+ 371 015d 07       		.uleb128 0x7
+ 372 015e 68000000 		.4byte	.LVL8
+ 373 0162 09020000 		.4byte	0x209
+ 374 0166 70010000 		.4byte	0x170
+ 375 016a 08       		.uleb128 0x8
+ 376 016b 01       		.uleb128 0x1
+ 377 016c 50       		.byte	0x50
+ 378 016d 01       		.uleb128 0x1
+ 379 016e 34       		.byte	0x34
+ 380 016f 00       		.byte	0
+ 381 0170 06       		.uleb128 0x6
+ 382 0171 7E000000 		.4byte	.LVL9
+ 383 0175 14020000 		.4byte	0x214
+ 384 0179 06       		.uleb128 0x6
+ 385 017a 92000000 		.4byte	.LVL10
+ 386 017e 14020000 		.4byte	0x214
+ 387 0182 00       		.byte	0
+ 388 0183 09       		.uleb128 0x9
+ 389 0184 A8010000 		.4byte	.LASF18
+ 390 0188 04       		.byte	0x4
+ 391 0189 1207     		.2byte	0x712
+ 392 018b 8F010000 		.4byte	0x18f
+ 393 018f 0A       		.uleb128 0xa
+ 394 0190 8C000000 		.4byte	0x8c
+ 395 0194 0B       		.uleb128 0xb
+ 396 0195 63020000 		.4byte	.LASF19
+ 397 0199 01       		.byte	0x1
+ 398 019a 06       		.byte	0x6
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 9
 
 
- 417 0037 2E       		.uleb128 0x2e
- 418 0038 01       		.byte	0x1
- 419 0039 3F       		.uleb128 0x3f
- 420 003a 19       		.uleb128 0x19
- 421 003b 03       		.uleb128 0x3
- 422 003c 0E       		.uleb128 0xe
- 423 003d 3A       		.uleb128 0x3a
- 424 003e 0B       		.uleb128 0xb
- 425 003f 3B       		.uleb128 0x3b
- 426 0040 0B       		.uleb128 0xb
- 427 0041 27       		.uleb128 0x27
- 428 0042 19       		.uleb128 0x19
- 429 0043 49       		.uleb128 0x49
- 430 0044 13       		.uleb128 0x13
- 431 0045 8701     		.uleb128 0x87
- 432 0047 19       		.uleb128 0x19
- 433 0048 11       		.uleb128 0x11
- 434 0049 01       		.uleb128 0x1
- 435 004a 12       		.uleb128 0x12
- 436 004b 06       		.uleb128 0x6
- 437 004c 40       		.uleb128 0x40
- 438 004d 18       		.uleb128 0x18
- 439 004e 9742     		.uleb128 0x2117
- 440 0050 19       		.uleb128 0x19
- 441 0051 01       		.uleb128 0x1
- 442 0052 13       		.uleb128 0x13
- 443 0053 00       		.byte	0
- 444 0054 00       		.byte	0
- 445 0055 06       		.uleb128 0x6
- 446 0056 898201   		.uleb128 0x4109
- 447 0059 00       		.byte	0
- 448 005a 11       		.uleb128 0x11
- 449 005b 01       		.uleb128 0x1
- 450 005c 31       		.uleb128 0x31
- 451 005d 13       		.uleb128 0x13
- 452 005e 00       		.byte	0
- 453 005f 00       		.byte	0
- 454 0060 07       		.uleb128 0x7
- 455 0061 898201   		.uleb128 0x4109
- 456 0064 01       		.byte	0x1
- 457 0065 11       		.uleb128 0x11
- 458 0066 01       		.uleb128 0x1
- 459 0067 31       		.uleb128 0x31
- 460 0068 13       		.uleb128 0x13
- 461 0069 01       		.uleb128 0x1
- 462 006a 13       		.uleb128 0x13
- 463 006b 00       		.byte	0
- 464 006c 00       		.byte	0
- 465 006d 08       		.uleb128 0x8
- 466 006e 8A8201   		.uleb128 0x410a
- 467 0071 00       		.byte	0
- 468 0072 02       		.uleb128 0x2
- 469 0073 18       		.uleb128 0x18
- 470 0074 9142     		.uleb128 0x2111
- 471 0076 18       		.uleb128 0x18
- 472 0077 00       		.byte	0
- 473 0078 00       		.byte	0
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 10
+ 399 019b 81000000 		.4byte	0x81
+ 400 019f 05       		.uleb128 0x5
+ 401 01a0 03       		.byte	0x3
+ 402 01a1 00000000 		.4byte	mando
+ 403 01a5 0B       		.uleb128 0xb
+ 404 01a6 5A000000 		.4byte	.LASF20
+ 405 01aa 01       		.byte	0x1
+ 406 01ab 06       		.byte	0x6
+ 407 01ac 81000000 		.4byte	0x81
+ 408 01b0 05       		.uleb128 0x5
+ 409 01b1 03       		.byte	0x3
+ 410 01b2 00000000 		.4byte	mando_anterior
+ 411 01b6 0B       		.uleb128 0xb
+ 412 01b7 69000000 		.4byte	.LASF21
+ 413 01bb 01       		.byte	0x1
+ 414 01bc 07       		.byte	0x7
+ 415 01bd 81000000 		.4byte	0x81
+ 416 01c1 05       		.uleb128 0x5
+ 417 01c2 03       		.byte	0x3
+ 418 01c3 00000000 		.4byte	Potenccia
+ 419 01c7 0C       		.uleb128 0xc
+ 420 01c8 12000000 		.4byte	.LASF22
+ 421 01cc 12000000 		.4byte	.LASF22
+ 422 01d0 05       		.byte	0x5
+ 423 01d1 92       		.byte	0x92
+ 424 01d2 0C       		.uleb128 0xc
+ 425 01d3 15010000 		.4byte	.LASF23
+ 426 01d7 15010000 		.4byte	.LASF23
+ 427 01db 06       		.byte	0x6
+ 428 01dc 57       		.byte	0x57
+ 429 01dd 0C       		.uleb128 0xc
+ 430 01de 8A020000 		.4byte	.LASF24
+ 431 01e2 8A020000 		.4byte	.LASF24
+ 432 01e6 06       		.byte	0x6
+ 433 01e7 61       		.byte	0x61
+ 434 01e8 0C       		.uleb128 0xc
+ 435 01e9 E0010000 		.4byte	.LASF25
+ 436 01ed E0010000 		.4byte	.LASF25
+ 437 01f1 05       		.byte	0x5
+ 438 01f2 C3       		.byte	0xc3
+ 439 01f3 0C       		.uleb128 0xc
+ 440 01f4 2D000000 		.4byte	.LASF26
+ 441 01f8 2D000000 		.4byte	.LASF26
+ 442 01fc 07       		.byte	0x7
+ 443 01fd 2F       		.byte	0x2f
+ 444 01fe 0C       		.uleb128 0xc
+ 445 01ff C7010000 		.4byte	.LASF27
+ 446 0203 C7010000 		.4byte	.LASF27
+ 447 0207 08       		.byte	0x8
+ 448 0208 30       		.byte	0x30
+ 449 0209 0C       		.uleb128 0xc
+ 450 020a 00000000 		.4byte	.LASF28
+ 451 020e 00000000 		.4byte	.LASF28
+ 452 0212 09       		.byte	0x9
+ 453 0213 2A       		.byte	0x2a
+ 454 0214 0C       		.uleb128 0xc
+ 455 0215 2C020000 		.4byte	.LASF29
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 10
 
 
- 474 0079 09       		.uleb128 0x9
- 475 007a 898201   		.uleb128 0x4109
- 476 007d 01       		.byte	0x1
- 477 007e 11       		.uleb128 0x11
- 478 007f 01       		.uleb128 0x1
- 479 0080 31       		.uleb128 0x31
- 480 0081 13       		.uleb128 0x13
- 481 0082 00       		.byte	0
- 482 0083 00       		.byte	0
- 483 0084 0A       		.uleb128 0xa
- 484 0085 34       		.uleb128 0x34
- 485 0086 00       		.byte	0
- 486 0087 03       		.uleb128 0x3
- 487 0088 0E       		.uleb128 0xe
- 488 0089 3A       		.uleb128 0x3a
- 489 008a 0B       		.uleb128 0xb
- 490 008b 3B       		.uleb128 0x3b
- 491 008c 05       		.uleb128 0x5
- 492 008d 49       		.uleb128 0x49
- 493 008e 13       		.uleb128 0x13
- 494 008f 3F       		.uleb128 0x3f
- 495 0090 19       		.uleb128 0x19
- 496 0091 3C       		.uleb128 0x3c
- 497 0092 19       		.uleb128 0x19
- 498 0093 00       		.byte	0
- 499 0094 00       		.byte	0
- 500 0095 0B       		.uleb128 0xb
- 501 0096 35       		.uleb128 0x35
- 502 0097 00       		.byte	0
- 503 0098 49       		.uleb128 0x49
- 504 0099 13       		.uleb128 0x13
- 505 009a 00       		.byte	0
- 506 009b 00       		.byte	0
- 507 009c 0C       		.uleb128 0xc
- 508 009d 34       		.uleb128 0x34
- 509 009e 00       		.byte	0
- 510 009f 03       		.uleb128 0x3
- 511 00a0 0E       		.uleb128 0xe
- 512 00a1 3A       		.uleb128 0x3a
- 513 00a2 0B       		.uleb128 0xb
- 514 00a3 3B       		.uleb128 0x3b
- 515 00a4 0B       		.uleb128 0xb
- 516 00a5 49       		.uleb128 0x49
- 517 00a6 13       		.uleb128 0x13
- 518 00a7 3F       		.uleb128 0x3f
- 519 00a8 19       		.uleb128 0x19
- 520 00a9 02       		.uleb128 0x2
- 521 00aa 18       		.uleb128 0x18
- 522 00ab 00       		.byte	0
- 523 00ac 00       		.byte	0
- 524 00ad 0D       		.uleb128 0xd
- 525 00ae 2E       		.uleb128 0x2e
- 526 00af 00       		.byte	0
- 527 00b0 3F       		.uleb128 0x3f
- 528 00b1 19       		.uleb128 0x19
- 529 00b2 3C       		.uleb128 0x3c
- 530 00b3 19       		.uleb128 0x19
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 11
+ 456 0219 2C020000 		.4byte	.LASF29
+ 457 021d 09       		.byte	0x9
+ 458 021e 2D       		.byte	0x2d
+ 459 021f 00       		.byte	0
+ 460              		.section	.debug_abbrev,"",%progbits
+ 461              	.Ldebug_abbrev0:
+ 462 0000 01       		.uleb128 0x1
+ 463 0001 11       		.uleb128 0x11
+ 464 0002 01       		.byte	0x1
+ 465 0003 25       		.uleb128 0x25
+ 466 0004 0E       		.uleb128 0xe
+ 467 0005 13       		.uleb128 0x13
+ 468 0006 0B       		.uleb128 0xb
+ 469 0007 03       		.uleb128 0x3
+ 470 0008 0E       		.uleb128 0xe
+ 471 0009 1B       		.uleb128 0x1b
+ 472 000a 0E       		.uleb128 0xe
+ 473 000b 55       		.uleb128 0x55
+ 474 000c 17       		.uleb128 0x17
+ 475 000d 11       		.uleb128 0x11
+ 476 000e 01       		.uleb128 0x1
+ 477 000f 10       		.uleb128 0x10
+ 478 0010 17       		.uleb128 0x17
+ 479 0011 00       		.byte	0
+ 480 0012 00       		.byte	0
+ 481 0013 02       		.uleb128 0x2
+ 482 0014 24       		.uleb128 0x24
+ 483 0015 00       		.byte	0
+ 484 0016 0B       		.uleb128 0xb
+ 485 0017 0B       		.uleb128 0xb
+ 486 0018 3E       		.uleb128 0x3e
+ 487 0019 0B       		.uleb128 0xb
+ 488 001a 03       		.uleb128 0x3
+ 489 001b 0E       		.uleb128 0xe
+ 490 001c 00       		.byte	0
+ 491 001d 00       		.byte	0
+ 492 001e 03       		.uleb128 0x3
+ 493 001f 16       		.uleb128 0x16
+ 494 0020 00       		.byte	0
+ 495 0021 03       		.uleb128 0x3
+ 496 0022 0E       		.uleb128 0xe
+ 497 0023 3A       		.uleb128 0x3a
+ 498 0024 0B       		.uleb128 0xb
+ 499 0025 3B       		.uleb128 0x3b
+ 500 0026 0B       		.uleb128 0xb
+ 501 0027 49       		.uleb128 0x49
+ 502 0028 13       		.uleb128 0x13
+ 503 0029 00       		.byte	0
+ 504 002a 00       		.byte	0
+ 505 002b 04       		.uleb128 0x4
+ 506 002c 24       		.uleb128 0x24
+ 507 002d 00       		.byte	0
+ 508 002e 0B       		.uleb128 0xb
+ 509 002f 0B       		.uleb128 0xb
+ 510 0030 3E       		.uleb128 0x3e
+ 511 0031 0B       		.uleb128 0xb
+ 512 0032 03       		.uleb128 0x3
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 11
 
 
- 531 00b4 6E       		.uleb128 0x6e
- 532 00b5 0E       		.uleb128 0xe
- 533 00b6 03       		.uleb128 0x3
- 534 00b7 0E       		.uleb128 0xe
- 535 00b8 3A       		.uleb128 0x3a
- 536 00b9 0B       		.uleb128 0xb
- 537 00ba 3B       		.uleb128 0x3b
- 538 00bb 0B       		.uleb128 0xb
- 539 00bc 00       		.byte	0
- 540 00bd 00       		.byte	0
- 541 00be 00       		.byte	0
- 542              		.section	.debug_aranges,"",%progbits
- 543 0000 1C000000 		.4byte	0x1c
- 544 0004 0200     		.2byte	0x2
- 545 0006 00000000 		.4byte	.Ldebug_info0
- 546 000a 04       		.byte	0x4
- 547 000b 00       		.byte	0
- 548 000c 0000     		.2byte	0
- 549 000e 0000     		.2byte	0
- 550 0010 00000000 		.4byte	.LFB63
- 551 0014 5C000000 		.4byte	.LFE63-.LFB63
- 552 0018 00000000 		.4byte	0
- 553 001c 00000000 		.4byte	0
- 554              		.section	.debug_ranges,"",%progbits
- 555              	.Ldebug_ranges0:
- 556 0000 00000000 		.4byte	.LFB63
- 557 0004 5C000000 		.4byte	.LFE63
- 558 0008 00000000 		.4byte	0
- 559 000c 00000000 		.4byte	0
- 560              		.section	.debug_line,"",%progbits
- 561              	.Ldebug_line0:
- 562 0000 BB010000 		.section	.debug_str,"MS",%progbits,1
- 562      02009701 
- 562      00000201 
- 562      FB0E0D00 
- 562      01010101 
- 563              	.LASF26:
- 564 0000 53454E54 		.ascii	"SENTIDO\000"
- 564      49444F00 
- 565              	.LASF4:
- 566 0008 5F5F7569 		.ascii	"__uint8_t\000"
- 566      6E74385F 
- 566      7400
- 567              	.LASF20:
- 568 0012 50574D5F 		.ascii	"PWM_Mosfet_Start\000"
- 568      4D6F7366 
- 568      65745F53 
- 568      74617274 
- 568      00
- 569              	.LASF5:
- 570 0023 5F5F696E 		.ascii	"__int32_t\000"
- 570      7433325F 
- 570      7400
- 571              	.LASF24:
- 572 002d 44726976 		.ascii	"Driver_RELAY_Write\000"
- 572      65725F52 
- 572      454C4159 
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 12
+ 513 0033 08       		.uleb128 0x8
+ 514 0034 00       		.byte	0
+ 515 0035 00       		.byte	0
+ 516 0036 05       		.uleb128 0x5
+ 517 0037 2E       		.uleb128 0x2e
+ 518 0038 01       		.byte	0x1
+ 519 0039 3F       		.uleb128 0x3f
+ 520 003a 19       		.uleb128 0x19
+ 521 003b 03       		.uleb128 0x3
+ 522 003c 0E       		.uleb128 0xe
+ 523 003d 3A       		.uleb128 0x3a
+ 524 003e 0B       		.uleb128 0xb
+ 525 003f 3B       		.uleb128 0x3b
+ 526 0040 0B       		.uleb128 0xb
+ 527 0041 27       		.uleb128 0x27
+ 528 0042 19       		.uleb128 0x19
+ 529 0043 49       		.uleb128 0x49
+ 530 0044 13       		.uleb128 0x13
+ 531 0045 8701     		.uleb128 0x87
+ 532 0047 19       		.uleb128 0x19
+ 533 0048 11       		.uleb128 0x11
+ 534 0049 01       		.uleb128 0x1
+ 535 004a 12       		.uleb128 0x12
+ 536 004b 06       		.uleb128 0x6
+ 537 004c 40       		.uleb128 0x40
+ 538 004d 18       		.uleb128 0x18
+ 539 004e 9742     		.uleb128 0x2117
+ 540 0050 19       		.uleb128 0x19
+ 541 0051 01       		.uleb128 0x1
+ 542 0052 13       		.uleb128 0x13
+ 543 0053 00       		.byte	0
+ 544 0054 00       		.byte	0
+ 545 0055 06       		.uleb128 0x6
+ 546 0056 898201   		.uleb128 0x4109
+ 547 0059 00       		.byte	0
+ 548 005a 11       		.uleb128 0x11
+ 549 005b 01       		.uleb128 0x1
+ 550 005c 31       		.uleb128 0x31
+ 551 005d 13       		.uleb128 0x13
+ 552 005e 00       		.byte	0
+ 553 005f 00       		.byte	0
+ 554 0060 07       		.uleb128 0x7
+ 555 0061 898201   		.uleb128 0x4109
+ 556 0064 01       		.byte	0x1
+ 557 0065 11       		.uleb128 0x11
+ 558 0066 01       		.uleb128 0x1
+ 559 0067 31       		.uleb128 0x31
+ 560 0068 13       		.uleb128 0x13
+ 561 0069 01       		.uleb128 0x1
+ 562 006a 13       		.uleb128 0x13
+ 563 006b 00       		.byte	0
+ 564 006c 00       		.byte	0
+ 565 006d 08       		.uleb128 0x8
+ 566 006e 8A8201   		.uleb128 0x410a
+ 567 0071 00       		.byte	0
+ 568 0072 02       		.uleb128 0x2
+ 569 0073 18       		.uleb128 0x18
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 12
 
 
- 572      5F577269 
- 572      746500
- 573              	.LASF3:
- 574 0040 73686F72 		.ascii	"short unsigned int\000"
- 574      7420756E 
- 574      7369676E 
- 574      65642069 
- 574      6E7400
- 575              	.LASF14:
- 576 0053 646F7562 		.ascii	"double\000"
- 576      6C6500
- 577              	.LASF13:
- 578 005a 666C6F61 		.ascii	"float\000"
- 578      7400
- 579              	.LASF1:
- 580 0060 756E7369 		.ascii	"unsigned char\000"
- 580      676E6564 
- 580      20636861 
- 580      7200
- 581              	.LASF27:
- 582 006e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 582      43313120 
- 582      352E342E 
- 582      31203230 
- 582      31363036 
- 583 00a1 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 583      20726576 
- 583      6973696F 
- 583      6E203233 
- 583      37373135 
- 584 00d4 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 584      66756E63 
- 584      74696F6E 
- 584      2D736563 
- 584      74696F6E 
- 585              	.LASF21:
- 586 00fc 4C45445F 		.ascii	"LED_VELOCIDAD_Start\000"
- 586      56454C4F 
- 586      43494441 
- 586      445F5374 
- 586      61727400 
- 587              	.LASF29:
- 588 0110 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\Contro"
- 588      73657273 
- 588      5C616472 
- 588      69615C4F 
- 588      6E654472 
- 589 013d 6C5F6465 		.ascii	"l_delocidad_direccion_motorDC_180V\\Control_delocid"
- 589      6C6F6369 
- 589      6461645F 
- 589      64697265 
- 589      6363696F 
- 590 016f 61645F64 		.ascii	"ad_direccion_motorDC_180V.cydsn\000"
- 590      69726563 
- 590      63696F6E 
- 590      5F6D6F74 
- 590      6F724443 
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 13
+ 570 0074 9142     		.uleb128 0x2111
+ 571 0076 18       		.uleb128 0x18
+ 572 0077 00       		.byte	0
+ 573 0078 00       		.byte	0
+ 574 0079 09       		.uleb128 0x9
+ 575 007a 34       		.uleb128 0x34
+ 576 007b 00       		.byte	0
+ 577 007c 03       		.uleb128 0x3
+ 578 007d 0E       		.uleb128 0xe
+ 579 007e 3A       		.uleb128 0x3a
+ 580 007f 0B       		.uleb128 0xb
+ 581 0080 3B       		.uleb128 0x3b
+ 582 0081 05       		.uleb128 0x5
+ 583 0082 49       		.uleb128 0x49
+ 584 0083 13       		.uleb128 0x13
+ 585 0084 3F       		.uleb128 0x3f
+ 586 0085 19       		.uleb128 0x19
+ 587 0086 3C       		.uleb128 0x3c
+ 588 0087 19       		.uleb128 0x19
+ 589 0088 00       		.byte	0
+ 590 0089 00       		.byte	0
+ 591 008a 0A       		.uleb128 0xa
+ 592 008b 35       		.uleb128 0x35
+ 593 008c 00       		.byte	0
+ 594 008d 49       		.uleb128 0x49
+ 595 008e 13       		.uleb128 0x13
+ 596 008f 00       		.byte	0
+ 597 0090 00       		.byte	0
+ 598 0091 0B       		.uleb128 0xb
+ 599 0092 34       		.uleb128 0x34
+ 600 0093 00       		.byte	0
+ 601 0094 03       		.uleb128 0x3
+ 602 0095 0E       		.uleb128 0xe
+ 603 0096 3A       		.uleb128 0x3a
+ 604 0097 0B       		.uleb128 0xb
+ 605 0098 3B       		.uleb128 0x3b
+ 606 0099 0B       		.uleb128 0xb
+ 607 009a 49       		.uleb128 0x49
+ 608 009b 13       		.uleb128 0x13
+ 609 009c 3F       		.uleb128 0x3f
+ 610 009d 19       		.uleb128 0x19
+ 611 009e 02       		.uleb128 0x2
+ 612 009f 18       		.uleb128 0x18
+ 613 00a0 00       		.byte	0
+ 614 00a1 00       		.byte	0
+ 615 00a2 0C       		.uleb128 0xc
+ 616 00a3 2E       		.uleb128 0x2e
+ 617 00a4 00       		.byte	0
+ 618 00a5 3F       		.uleb128 0x3f
+ 619 00a6 19       		.uleb128 0x19
+ 620 00a7 3C       		.uleb128 0x3c
+ 621 00a8 19       		.uleb128 0x19
+ 622 00a9 6E       		.uleb128 0x6e
+ 623 00aa 0E       		.uleb128 0xe
+ 624 00ab 03       		.uleb128 0x3
+ 625 00ac 0E       		.uleb128 0xe
+ 626 00ad 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 13
 
 
- 591              	.LASF18:
- 592 018f 49544D5F 		.ascii	"ITM_RxBuffer\000"
- 592      52784275 
- 592      66666572 
- 592      00
- 593              	.LASF7:
- 594 019c 6C6F6E67 		.ascii	"long unsigned int\000"
- 594      20756E73 
- 594      69676E65 
- 594      6420696E 
- 594      7400
- 595              	.LASF25:
- 596 01ae 436F6E74 		.ascii	"Control_manual_Read\000"
- 596      726F6C5F 
- 596      6D616E75 
- 596      616C5F52 
- 596      65616400 
- 597              	.LASF30:
- 598 01c2 6D61696E 		.ascii	"main\000"
- 598      00
- 599              	.LASF23:
- 600 01c7 50574D5F 		.ascii	"PWM_Mosfet_WriteCompare\000"
- 600      4D6F7366 
- 600      65745F57 
- 600      72697465 
- 600      436F6D70 
- 601              	.LASF10:
- 602 01df 756E7369 		.ascii	"unsigned int\000"
- 602      676E6564 
- 602      20696E74 
- 602      00
- 603              	.LASF9:
- 604 01ec 6C6F6E67 		.ascii	"long long unsigned int\000"
- 604      206C6F6E 
- 604      6720756E 
- 604      7369676E 
- 604      65642069 
- 605              	.LASF11:
- 606 0203 75696E74 		.ascii	"uint8_t\000"
- 606      385F7400 
- 607              	.LASF12:
- 608 020b 696E7433 		.ascii	"int32_t\000"
- 608      325F7400 
- 609              	.LASF16:
- 610 0213 73697A65 		.ascii	"sizetype\000"
- 610      74797065 
- 610      00
- 611              	.LASF8:
- 612 021c 6C6F6E67 		.ascii	"long long int\000"
- 612      206C6F6E 
- 612      6720696E 
- 612      7400
- 613              	.LASF28:
- 614 022a 6D61696E 		.ascii	"main.c\000"
- 614      2E6300
- 615              	.LASF15:
- 616 0231 63686172 		.ascii	"char\000"
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccdYoypT.s 			page 14
+ 627 00ae 0B       		.uleb128 0xb
+ 628 00af 3B       		.uleb128 0x3b
+ 629 00b0 0B       		.uleb128 0xb
+ 630 00b1 00       		.byte	0
+ 631 00b2 00       		.byte	0
+ 632 00b3 00       		.byte	0
+ 633              		.section	.debug_aranges,"",%progbits
+ 634 0000 1C000000 		.4byte	0x1c
+ 635 0004 0200     		.2byte	0x2
+ 636 0006 00000000 		.4byte	.Ldebug_info0
+ 637 000a 04       		.byte	0x4
+ 638 000b 00       		.byte	0
+ 639 000c 0000     		.2byte	0
+ 640 000e 0000     		.2byte	0
+ 641 0010 00000000 		.4byte	.LFB63
+ 642 0014 A8000000 		.4byte	.LFE63-.LFB63
+ 643 0018 00000000 		.4byte	0
+ 644 001c 00000000 		.4byte	0
+ 645              		.section	.debug_ranges,"",%progbits
+ 646              	.Ldebug_ranges0:
+ 647 0000 00000000 		.4byte	.LFB63
+ 648 0004 A8000000 		.4byte	.LFE63
+ 649 0008 00000000 		.4byte	0
+ 650 000c 00000000 		.4byte	0
+ 651              		.section	.debug_line,"",%progbits
+ 652              	.Ldebug_line0:
+ 653 0000 C3010000 		.section	.debug_str,"MS",%progbits,1
+ 653      02009701 
+ 653      00000201 
+ 653      FB0E0D00 
+ 653      01010101 
+ 654              	.LASF28:
+ 655 0000 53454E54 		.ascii	"SENTIDO\000"
+ 655      49444F00 
+ 656              	.LASF4:
+ 657 0008 5F5F7569 		.ascii	"__uint8_t\000"
+ 657      6E74385F 
+ 657      7400
+ 658              	.LASF22:
+ 659 0012 50574D5F 		.ascii	"PWM_Mosfet_Start\000"
+ 659      4D6F7366 
+ 659      65745F53 
+ 659      74617274 
+ 659      00
+ 660              	.LASF5:
+ 661 0023 5F5F696E 		.ascii	"__int32_t\000"
+ 661      7433325F 
+ 661      7400
+ 662              	.LASF26:
+ 663 002d 44726976 		.ascii	"Driver_RELAY_Write\000"
+ 663      65725F52 
+ 663      454C4159 
+ 663      5F577269 
+ 663      746500
+ 664              	.LASF3:
+ 665 0040 73686F72 		.ascii	"short unsigned int\000"
+ 665      7420756E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 14
 
 
- 616      00
- 617              	.LASF2:
- 618 0236 73686F72 		.ascii	"short int\000"
- 618      7420696E 
- 618      7400
- 619              	.LASF19:
- 620 0240 6D616E64 		.ascii	"mando\000"
- 620      6F00
- 621              	.LASF6:
- 622 0246 6C6F6E67 		.ascii	"long int\000"
- 622      20696E74 
- 622      00
- 623              	.LASF17:
- 624 024f 6C6F6E67 		.ascii	"long double\000"
- 624      20646F75 
- 624      626C6500 
- 625              	.LASF0:
- 626 025b 7369676E 		.ascii	"signed char\000"
- 626      65642063 
- 626      68617200 
- 627              	.LASF22:
- 628 0267 4C45445F 		.ascii	"LED_VELOCIDAD_Write7SegNumberDec\000"
- 628      56454C4F 
- 628      43494441 
- 628      445F5772 
- 628      69746537 
- 629              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+ 665      7369676E 
+ 665      65642069 
+ 665      6E7400
+ 666              	.LASF14:
+ 667 0053 646F7562 		.ascii	"double\000"
+ 667      6C6500
+ 668              	.LASF20:
+ 669 005a 6D616E64 		.ascii	"mando_anterior\000"
+ 669      6F5F616E 
+ 669      74657269 
+ 669      6F7200
+ 670              	.LASF21:
+ 671 0069 506F7465 		.ascii	"Potenccia\000"
+ 671      6E636369 
+ 671      6100
+ 672              	.LASF13:
+ 673 0073 666C6F61 		.ascii	"float\000"
+ 673      7400
+ 674              	.LASF1:
+ 675 0079 756E7369 		.ascii	"unsigned char\000"
+ 675      676E6564 
+ 675      20636861 
+ 675      7200
+ 676              	.LASF30:
+ 677 0087 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 677      43313120 
+ 677      352E342E 
+ 677      31203230 
+ 677      31363036 
+ 678 00ba 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 678      20726576 
+ 678      6973696F 
+ 678      6E203233 
+ 678      37373135 
+ 679 00ed 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 679      66756E63 
+ 679      74696F6E 
+ 679      2D736563 
+ 679      74696F6E 
+ 680              	.LASF23:
+ 681 0115 4C45445F 		.ascii	"LED_VELOCIDAD_Start\000"
+ 681      56454C4F 
+ 681      43494441 
+ 681      445F5374 
+ 681      61727400 
+ 682              	.LASF32:
+ 683 0129 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\Contro"
+ 683      73657273 
+ 683      5C616472 
+ 683      69615C4F 
+ 683      6E654472 
+ 684 0156 6C5F6465 		.ascii	"l_delocidad_direccion_motorDC_180V\\Control_delocid"
+ 684      6C6F6369 
+ 684      6461645F 
+ 684      64697265 
+ 684      6363696F 
+ 685 0188 61645F64 		.ascii	"ad_direccion_motorDC_180V.cydsn\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 15
+
+
+ 685      69726563 
+ 685      63696F6E 
+ 685      5F6D6F74 
+ 685      6F724443 
+ 686              	.LASF18:
+ 687 01a8 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 687      52784275 
+ 687      66666572 
+ 687      00
+ 688              	.LASF7:
+ 689 01b5 6C6F6E67 		.ascii	"long unsigned int\000"
+ 689      20756E73 
+ 689      69676E65 
+ 689      6420696E 
+ 689      7400
+ 690              	.LASF27:
+ 691 01c7 436F6E74 		.ascii	"Control_manual_Read\000"
+ 691      726F6C5F 
+ 691      6D616E75 
+ 691      616C5F52 
+ 691      65616400 
+ 692              	.LASF33:
+ 693 01db 6D61696E 		.ascii	"main\000"
+ 693      00
+ 694              	.LASF25:
+ 695 01e0 50574D5F 		.ascii	"PWM_Mosfet_WriteCompare\000"
+ 695      4D6F7366 
+ 695      65745F57 
+ 695      72697465 
+ 695      436F6D70 
+ 696              	.LASF10:
+ 697 01f8 756E7369 		.ascii	"unsigned int\000"
+ 697      676E6564 
+ 697      20696E74 
+ 697      00
+ 698              	.LASF9:
+ 699 0205 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 699      206C6F6E 
+ 699      6720756E 
+ 699      7369676E 
+ 699      65642069 
+ 700              	.LASF11:
+ 701 021c 75696E74 		.ascii	"uint8_t\000"
+ 701      385F7400 
+ 702              	.LASF12:
+ 703 0224 696E7433 		.ascii	"int32_t\000"
+ 703      325F7400 
+ 704              	.LASF29:
+ 705 022c 56656C6F 		.ascii	"Velocidad\000"
+ 705      63696461 
+ 705      6400
+ 706              	.LASF16:
+ 707 0236 73697A65 		.ascii	"sizetype\000"
+ 707      74797065 
+ 707      00
+ 708              	.LASF8:
+ 709 023f 6C6F6E67 		.ascii	"long long int\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccMLiJ3e.s 			page 16
+
+
+ 709      206C6F6E 
+ 709      6720696E 
+ 709      7400
+ 710              	.LASF31:
+ 711 024d 6D61696E 		.ascii	"main.c\000"
+ 711      2E6300
+ 712              	.LASF15:
+ 713 0254 63686172 		.ascii	"char\000"
+ 713      00
+ 714              	.LASF2:
+ 715 0259 73686F72 		.ascii	"short int\000"
+ 715      7420696E 
+ 715      7400
+ 716              	.LASF19:
+ 717 0263 6D616E64 		.ascii	"mando\000"
+ 717      6F00
+ 718              	.LASF6:
+ 719 0269 6C6F6E67 		.ascii	"long int\000"
+ 719      20696E74 
+ 719      00
+ 720              	.LASF17:
+ 721 0272 6C6F6E67 		.ascii	"long double\000"
+ 721      20646F75 
+ 721      626C6500 
+ 722              	.LASF0:
+ 723 027e 7369676E 		.ascii	"signed char\000"
+ 723      65642063 
+ 723      68617200 
+ 724              	.LASF24:
+ 725 028a 4C45445F 		.ascii	"LED_VELOCIDAD_Write7SegNumberDec\000"
+ 725      56454C4F 
+ 725      43494441 
+ 725      445F5772 
+ 725      69746537 
+ 726              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
