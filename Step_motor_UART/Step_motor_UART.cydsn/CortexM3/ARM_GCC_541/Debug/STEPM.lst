@@ -1,0 +1,1008 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"STEPM.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.derecha,"ax",%progbits
+  20              		.align	2
+  21              		.global	derecha
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	derecha, %function
+  25              	derecha:
+  26              	.LFB64:
+  27              		.file 1 "STEPM.c"
+   1:STEPM.c       **** #include "project.h"
+   2:STEPM.c       **** #include "STEPM.h"
+   3:STEPM.c       **** 
+   4:STEPM.c       **** //Secuencia para realizar un paso
+   5:STEPM.c       **** uint8_t secuencia[8]={
+   6:STEPM.c       ****     0x08,
+   7:STEPM.c       ****     0x0C,
+   8:STEPM.c       ****     0x04,
+   9:STEPM.c       ****     0x06,
+  10:STEPM.c       ****     0x02,
+  11:STEPM.c       ****     0x03,
+  12:STEPM.c       ****     0x01,
+  13:STEPM.c       ****     0x09,
+  14:STEPM.c       **** };
+  15:STEPM.c       **** 
+  16:STEPM.c       **** 
+  17:STEPM.c       **** //Función para realizar un corrimiento (Tomar una dirección y efectuar avance de rotación)
+  18:STEPM.c       **** void Corrimiento(uint8_t DIR){
+  19:STEPM.c       ****     
+  20:STEPM.c       ****     switch (DIR){
+  21:STEPM.c       ****         case PAR:
+  22:STEPM.c       ****             STEP_MOTOR_driver_Write(0x00);
+  23:STEPM.c       ****             break;
+  24:STEPM.c       ****         case IZQ:
+  25:STEPM.c       ****             izquierda();
+  26:STEPM.c       ****             break;
+  27:STEPM.c       ****         case DER:
+  28:STEPM.c       ****             derecha();
+  29:STEPM.c       ****             break;
+  30:STEPM.c       ****     }
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 2
+
+
+  31:STEPM.c       ****     
+  32:STEPM.c       **** };
+  33:STEPM.c       **** //Subrutinas de direccion de corrimiento
+  34:STEPM.c       **** void derecha(){
+  28              		.loc 1 34 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+  36              	.LVL0:
+  37              	.LBB2:
+  35:STEPM.c       ****     for(int i=0;i<7;i++){
+  38              		.loc 1 35 0
+  39 0002 0024     		movs	r4, #0
+  40 0004 07E0     		b	.L2
+  41              	.LVL1:
+  42              	.L3:
+  36:STEPM.c       ****         STEP_MOTOR_driver_Write(secuencia[i]);
+  43              		.loc 1 36 0 discriminator 3
+  44 0006 054B     		ldr	r3, .L5
+  45 0008 185D     		ldrb	r0, [r3, r4]	@ zero_extendqisi2
+  46 000a FFF7FEFF 		bl	STEP_MOTOR_driver_Write
+  47              	.LVL2:
+  37:STEPM.c       ****         CyDelay(5);
+  48              		.loc 1 37 0 discriminator 3
+  49 000e 0520     		movs	r0, #5
+  50 0010 FFF7FEFF 		bl	CyDelay
+  51              	.LVL3:
+  35:STEPM.c       ****     for(int i=0;i<7;i++){
+  52              		.loc 1 35 0 discriminator 3
+  53 0014 0134     		adds	r4, r4, #1
+  54              	.LVL4:
+  55              	.L2:
+  35:STEPM.c       ****     for(int i=0;i<7;i++){
+  56              		.loc 1 35 0 is_stmt 0 discriminator 1
+  57 0016 062C     		cmp	r4, #6
+  58 0018 F5DD     		ble	.L3
+  59              	.LBE2:
+  38:STEPM.c       ****     }
+  39:STEPM.c       **** };
+  60              		.loc 1 39 0 is_stmt 1
+  61 001a 10BD     		pop	{r4, pc}
+  62              	.LVL5:
+  63              	.L6:
+  64              		.align	2
+  65              	.L5:
+  66 001c 00000000 		.word	.LANCHOR0
+  67              		.cfi_endproc
+  68              	.LFE64:
+  69              		.size	derecha, .-derecha
+  70              		.section	.text.izquierda,"ax",%progbits
+  71              		.align	2
+  72              		.global	izquierda
+  73              		.thumb
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 3
+
+
+  74              		.thumb_func
+  75              		.type	izquierda, %function
+  76              	izquierda:
+  77              	.LFB65:
+  40:STEPM.c       **** void izquierda(){
+  78              		.loc 1 40 0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82 0000 10B5     		push	{r4, lr}
+  83              		.cfi_def_cfa_offset 8
+  84              		.cfi_offset 4, -8
+  85              		.cfi_offset 14, -4
+  86              	.LVL6:
+  87              	.LBB3:
+  41:STEPM.c       ****     for(int i=7;i>0;i--){
+  88              		.loc 1 41 0
+  89 0002 0724     		movs	r4, #7
+  90 0004 07E0     		b	.L8
+  91              	.LVL7:
+  92              	.L9:
+  42:STEPM.c       ****         STEP_MOTOR_driver_Write(secuencia[i]);
+  93              		.loc 1 42 0 discriminator 3
+  94 0006 054B     		ldr	r3, .L11
+  95 0008 185D     		ldrb	r0, [r3, r4]	@ zero_extendqisi2
+  96 000a FFF7FEFF 		bl	STEP_MOTOR_driver_Write
+  97              	.LVL8:
+  43:STEPM.c       ****         CyDelay(5);
+  98              		.loc 1 43 0 discriminator 3
+  99 000e 0520     		movs	r0, #5
+ 100 0010 FFF7FEFF 		bl	CyDelay
+ 101              	.LVL9:
+  41:STEPM.c       ****     for(int i=7;i>0;i--){
+ 102              		.loc 1 41 0 discriminator 3
+ 103 0014 013C     		subs	r4, r4, #1
+ 104              	.LVL10:
+ 105              	.L8:
+  41:STEPM.c       ****     for(int i=7;i>0;i--){
+ 106              		.loc 1 41 0 is_stmt 0 discriminator 1
+ 107 0016 002C     		cmp	r4, #0
+ 108 0018 F5DC     		bgt	.L9
+ 109              	.LBE3:
+  44:STEPM.c       ****     }
+  45:STEPM.c       **** };...
+ 110              		.loc 1 45 0 is_stmt 1
+ 111 001a 10BD     		pop	{r4, pc}
+ 112              	.LVL11:
+ 113              	.L12:
+ 114              		.align	2
+ 115              	.L11:
+ 116 001c 00000000 		.word	.LANCHOR0
+ 117              		.cfi_endproc
+ 118              	.LFE65:
+ 119              		.size	izquierda, .-izquierda
+ 120              		.section	.text.Corrimiento,"ax",%progbits
+ 121              		.align	2
+ 122              		.global	Corrimiento
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 4
+
+
+ 123              		.thumb
+ 124              		.thumb_func
+ 125              		.type	Corrimiento, %function
+ 126              	Corrimiento:
+ 127              	.LFB63:
+  18:STEPM.c       **** void Corrimiento(uint8_t DIR){
+ 128              		.loc 1 18 0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              	.LVL12:
+ 133 0000 08B5     		push	{r3, lr}
+ 134              		.cfi_def_cfa_offset 8
+ 135              		.cfi_offset 3, -8
+ 136              		.cfi_offset 14, -4
+  20:STEPM.c       ****     switch (DIR){
+ 137              		.loc 1 20 0
+ 138 0002 0228     		cmp	r0, #2
+ 139 0004 07D0     		beq	.L15
+ 140 0006 0428     		cmp	r0, #4
+ 141 0008 08D0     		beq	.L16
+ 142 000a 0128     		cmp	r0, #1
+ 143 000c 08D1     		bne	.L13
+  22:STEPM.c       ****             STEP_MOTOR_driver_Write(0x00);
+ 144              		.loc 1 22 0
+ 145 000e 0020     		movs	r0, #0
+ 146              	.LVL13:
+ 147 0010 FFF7FEFF 		bl	STEP_MOTOR_driver_Write
+ 148              	.LVL14:
+  23:STEPM.c       ****             break;
+ 149              		.loc 1 23 0
+ 150 0014 08BD     		pop	{r3, pc}
+ 151              	.LVL15:
+ 152              	.L15:
+  25:STEPM.c       ****             izquierda();
+ 153              		.loc 1 25 0
+ 154 0016 FFF7FEFF 		bl	izquierda
+ 155              	.LVL16:
+  26:STEPM.c       ****             break;
+ 156              		.loc 1 26 0
+ 157 001a 08BD     		pop	{r3, pc}
+ 158              	.LVL17:
+ 159              	.L16:
+  28:STEPM.c       ****             derecha();
+ 160              		.loc 1 28 0
+ 161 001c FFF7FEFF 		bl	derecha
+ 162              	.LVL18:
+ 163              	.L13:
+ 164 0020 08BD     		pop	{r3, pc}
+ 165              		.cfi_endproc
+ 166              	.LFE63:
+ 167              		.size	Corrimiento, .-Corrimiento
+ 168              		.global	secuencia
+ 169 0022 00BF     		.data
+ 170              		.align	2
+ 171              		.set	.LANCHOR0,. + 0
+ 172              		.type	secuencia, %object
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 5
+
+
+ 173              		.size	secuencia, 8
+ 174              	secuencia:
+ 175 0000 08       		.byte	8
+ 176 0001 0C       		.byte	12
+ 177 0002 04       		.byte	4
+ 178 0003 06       		.byte	6
+ 179 0004 02       		.byte	2
+ 180 0005 03       		.byte	3
+ 181 0006 01       		.byte	1
+ 182 0007 09       		.byte	9
+ 183              		.text
+ 184              	.Letext0:
+ 185              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 186              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 187              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 188              		.file 5 "Generated_Source\\PSoC5/STEP_MOTOR_driver.h"
+ 189              		.file 6 "Generated_Source\\PSoC5/CyLib.h"
+ 190              		.section	.debug_info,"",%progbits
+ 191              	.Ldebug_info0:
+ 192 0000 D3010000 		.4byte	0x1d3
+ 193 0004 0400     		.2byte	0x4
+ 194 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 195 000a 04       		.byte	0x4
+ 196 000b 01       		.uleb128 0x1
+ 197 000c 56000000 		.4byte	.LASF24
+ 198 0010 0C       		.byte	0xc
+ 199 0011 7A010000 		.4byte	.LASF25
+ 200 0015 87010000 		.4byte	.LASF26
+ 201 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 202 001d 00000000 		.4byte	0
+ 203 0021 00000000 		.4byte	.Ldebug_line0
+ 204 0025 02       		.uleb128 0x2
+ 205 0026 01       		.byte	0x1
+ 206 0027 06       		.byte	0x6
+ 207 0028 F3010000 		.4byte	.LASF0
+ 208 002c 03       		.uleb128 0x3
+ 209 002d 0E000000 		.4byte	.LASF4
+ 210 0031 02       		.byte	0x2
+ 211 0032 1D       		.byte	0x1d
+ 212 0033 37000000 		.4byte	0x37
+ 213 0037 02       		.uleb128 0x2
+ 214 0038 01       		.byte	0x1
+ 215 0039 08       		.byte	0x8
+ 216 003a 48000000 		.4byte	.LASF1
+ 217 003e 02       		.uleb128 0x2
+ 218 003f 02       		.byte	0x2
+ 219 0040 05       		.byte	0x5
+ 220 0041 D4010000 		.4byte	.LASF2
+ 221 0045 02       		.uleb128 0x2
+ 222 0046 02       		.byte	0x2
+ 223 0047 07       		.byte	0x7
+ 224 0048 F6000000 		.4byte	.LASF3
+ 225 004c 03       		.uleb128 0x3
+ 226 004d 18000000 		.4byte	.LASF5
+ 227 0051 02       		.byte	0x2
+ 228 0052 3F       		.byte	0x3f
+ 229 0053 57000000 		.4byte	0x57
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 6
+
+
+ 230 0057 02       		.uleb128 0x2
+ 231 0058 04       		.byte	0x4
+ 232 0059 05       		.byte	0x5
+ 233 005a DE010000 		.4byte	.LASF6
+ 234 005e 02       		.uleb128 0x2
+ 235 005f 04       		.byte	0x4
+ 236 0060 07       		.byte	0x7
+ 237 0061 E4000000 		.4byte	.LASF7
+ 238 0065 02       		.uleb128 0x2
+ 239 0066 08       		.byte	0x8
+ 240 0067 05       		.byte	0x5
+ 241 0068 00000000 		.4byte	.LASF8
+ 242 006c 02       		.uleb128 0x2
+ 243 006d 08       		.byte	0x8
+ 244 006e 07       		.byte	0x7
+ 245 006f 3E010000 		.4byte	.LASF9
+ 246 0073 04       		.uleb128 0x4
+ 247 0074 04       		.byte	0x4
+ 248 0075 05       		.byte	0x5
+ 249 0076 696E7400 		.ascii	"int\000"
+ 250 007a 02       		.uleb128 0x2
+ 251 007b 04       		.byte	0x4
+ 252 007c 07       		.byte	0x7
+ 253 007d 31010000 		.4byte	.LASF10
+ 254 0081 03       		.uleb128 0x3
+ 255 0082 55010000 		.4byte	.LASF11
+ 256 0086 03       		.byte	0x3
+ 257 0087 18       		.byte	0x18
+ 258 0088 2C000000 		.4byte	0x2c
+ 259 008c 03       		.uleb128 0x3
+ 260 008d 5D010000 		.4byte	.LASF12
+ 261 0091 03       		.byte	0x3
+ 262 0092 2C       		.byte	0x2c
+ 263 0093 4C000000 		.4byte	0x4c
+ 264 0097 02       		.uleb128 0x2
+ 265 0098 04       		.byte	0x4
+ 266 0099 04       		.byte	0x4
+ 267 009a 42000000 		.4byte	.LASF13
+ 268 009e 02       		.uleb128 0x2
+ 269 009f 08       		.byte	0x8
+ 270 00a0 04       		.byte	0x4
+ 271 00a1 2A010000 		.4byte	.LASF14
+ 272 00a5 02       		.uleb128 0x2
+ 273 00a6 01       		.byte	0x1
+ 274 00a7 08       		.byte	0x8
+ 275 00a8 82010000 		.4byte	.LASF15
+ 276 00ac 02       		.uleb128 0x2
+ 277 00ad 08       		.byte	0x8
+ 278 00ae 04       		.byte	0x4
+ 279 00af E7010000 		.4byte	.LASF16
+ 280 00b3 02       		.uleb128 0x2
+ 281 00b4 04       		.byte	0x4
+ 282 00b5 07       		.byte	0x7
+ 283 00b6 71010000 		.4byte	.LASF17
+ 284 00ba 05       		.uleb128 0x5
+ 285 00bb 22000000 		.4byte	.LASF18
+ 286 00bf 01       		.byte	0x1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 7
+
+
+ 287 00c0 22       		.byte	0x22
+ 288 00c1 00000000 		.4byte	.LFB64
+ 289 00c5 20000000 		.4byte	.LFE64-.LFB64
+ 290 00c9 01       		.uleb128 0x1
+ 291 00ca 9C       		.byte	0x9c
+ 292 00cb FF000000 		.4byte	0xff
+ 293 00cf 06       		.uleb128 0x6
+ 294 00d0 02000000 		.4byte	.LBB2
+ 295 00d4 18000000 		.4byte	.LBE2-.LBB2
+ 296 00d8 07       		.uleb128 0x7
+ 297 00d9 6900     		.ascii	"i\000"
+ 298 00db 01       		.byte	0x1
+ 299 00dc 23       		.byte	0x23
+ 300 00dd 73000000 		.4byte	0x73
+ 301 00e1 00000000 		.4byte	.LLST0
+ 302 00e5 08       		.uleb128 0x8
+ 303 00e6 0E000000 		.4byte	.LVL2
+ 304 00ea C0010000 		.4byte	0x1c0
+ 305 00ee 09       		.uleb128 0x9
+ 306 00ef 14000000 		.4byte	.LVL3
+ 307 00f3 CB010000 		.4byte	0x1cb
+ 308 00f7 0A       		.uleb128 0xa
+ 309 00f8 01       		.uleb128 0x1
+ 310 00f9 50       		.byte	0x50
+ 311 00fa 01       		.uleb128 0x1
+ 312 00fb 35       		.byte	0x35
+ 313 00fc 00       		.byte	0
+ 314 00fd 00       		.byte	0
+ 315 00fe 00       		.byte	0
+ 316 00ff 05       		.uleb128 0x5
+ 317 0100 09010000 		.4byte	.LASF19
+ 318 0104 01       		.byte	0x1
+ 319 0105 28       		.byte	0x28
+ 320 0106 00000000 		.4byte	.LFB65
+ 321 010a 20000000 		.4byte	.LFE65-.LFB65
+ 322 010e 01       		.uleb128 0x1
+ 323 010f 9C       		.byte	0x9c
+ 324 0110 44010000 		.4byte	0x144
+ 325 0114 06       		.uleb128 0x6
+ 326 0115 02000000 		.4byte	.LBB3
+ 327 0119 18000000 		.4byte	.LBE3-.LBB3
+ 328 011d 07       		.uleb128 0x7
+ 329 011e 6900     		.ascii	"i\000"
+ 330 0120 01       		.byte	0x1
+ 331 0121 29       		.byte	0x29
+ 332 0122 73000000 		.4byte	0x73
+ 333 0126 1F000000 		.4byte	.LLST1
+ 334 012a 08       		.uleb128 0x8
+ 335 012b 0E000000 		.4byte	.LVL8
+ 336 012f C0010000 		.4byte	0x1c0
+ 337 0133 09       		.uleb128 0x9
+ 338 0134 14000000 		.4byte	.LVL9
+ 339 0138 CB010000 		.4byte	0x1cb
+ 340 013c 0A       		.uleb128 0xa
+ 341 013d 01       		.uleb128 0x1
+ 342 013e 50       		.byte	0x50
+ 343 013f 01       		.uleb128 0x1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 8
+
+
+ 344 0140 35       		.byte	0x35
+ 345 0141 00       		.byte	0
+ 346 0142 00       		.byte	0
+ 347 0143 00       		.byte	0
+ 348 0144 0B       		.uleb128 0xb
+ 349 0145 65010000 		.4byte	.LASF27
+ 350 0149 01       		.byte	0x1
+ 351 014a 12       		.byte	0x12
+ 352 014b 00000000 		.4byte	.LFB63
+ 353 014f 22000000 		.4byte	.LFE63-.LFB63
+ 354 0153 01       		.uleb128 0x1
+ 355 0154 9C       		.byte	0x9c
+ 356 0155 8E010000 		.4byte	0x18e
+ 357 0159 0C       		.uleb128 0xc
+ 358 015a 44495200 		.ascii	"DIR\000"
+ 359 015e 01       		.byte	0x1
+ 360 015f 12       		.byte	0x12
+ 361 0160 81000000 		.4byte	0x81
+ 362 0164 3E000000 		.4byte	.LLST2
+ 363 0168 0D       		.uleb128 0xd
+ 364 0169 14000000 		.4byte	.LVL14
+ 365 016d C0010000 		.4byte	0x1c0
+ 366 0171 7B010000 		.4byte	0x17b
+ 367 0175 0A       		.uleb128 0xa
+ 368 0176 01       		.uleb128 0x1
+ 369 0177 50       		.byte	0x50
+ 370 0178 01       		.uleb128 0x1
+ 371 0179 30       		.byte	0x30
+ 372 017a 00       		.byte	0
+ 373 017b 08       		.uleb128 0x8
+ 374 017c 1A000000 		.4byte	.LVL16
+ 375 0180 FF000000 		.4byte	0xff
+ 376 0184 08       		.uleb128 0x8
+ 377 0185 20000000 		.4byte	.LVL18
+ 378 0189 BA000000 		.4byte	0xba
+ 379 018d 00       		.byte	0
+ 380 018e 0E       		.uleb128 0xe
+ 381 018f 13010000 		.4byte	.LASF20
+ 382 0193 04       		.byte	0x4
+ 383 0194 1207     		.2byte	0x712
+ 384 0196 9A010000 		.4byte	0x19a
+ 385 019a 0F       		.uleb128 0xf
+ 386 019b 8C000000 		.4byte	0x8c
+ 387 019f 10       		.uleb128 0x10
+ 388 01a0 81000000 		.4byte	0x81
+ 389 01a4 AF010000 		.4byte	0x1af
+ 390 01a8 11       		.uleb128 0x11
+ 391 01a9 B3000000 		.4byte	0xb3
+ 392 01ad 07       		.byte	0x7
+ 393 01ae 00       		.byte	0
+ 394 01af 12       		.uleb128 0x12
+ 395 01b0 20010000 		.4byte	.LASF21
+ 396 01b4 01       		.byte	0x1
+ 397 01b5 05       		.byte	0x5
+ 398 01b6 9F010000 		.4byte	0x19f
+ 399 01ba 05       		.uleb128 0x5
+ 400 01bb 03       		.byte	0x3
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 9
+
+
+ 401 01bc 00000000 		.4byte	secuencia
+ 402 01c0 13       		.uleb128 0x13
+ 403 01c1 2A000000 		.4byte	.LASF22
+ 404 01c5 2A000000 		.4byte	.LASF22
+ 405 01c9 05       		.byte	0x5
+ 406 01ca 2F       		.byte	0x2f
+ 407 01cb 13       		.uleb128 0x13
+ 408 01cc FF010000 		.4byte	.LASF23
+ 409 01d0 FF010000 		.4byte	.LASF23
+ 410 01d4 06       		.byte	0x6
+ 411 01d5 76       		.byte	0x76
+ 412 01d6 00       		.byte	0
+ 413              		.section	.debug_abbrev,"",%progbits
+ 414              	.Ldebug_abbrev0:
+ 415 0000 01       		.uleb128 0x1
+ 416 0001 11       		.uleb128 0x11
+ 417 0002 01       		.byte	0x1
+ 418 0003 25       		.uleb128 0x25
+ 419 0004 0E       		.uleb128 0xe
+ 420 0005 13       		.uleb128 0x13
+ 421 0006 0B       		.uleb128 0xb
+ 422 0007 03       		.uleb128 0x3
+ 423 0008 0E       		.uleb128 0xe
+ 424 0009 1B       		.uleb128 0x1b
+ 425 000a 0E       		.uleb128 0xe
+ 426 000b 55       		.uleb128 0x55
+ 427 000c 17       		.uleb128 0x17
+ 428 000d 11       		.uleb128 0x11
+ 429 000e 01       		.uleb128 0x1
+ 430 000f 10       		.uleb128 0x10
+ 431 0010 17       		.uleb128 0x17
+ 432 0011 00       		.byte	0
+ 433 0012 00       		.byte	0
+ 434 0013 02       		.uleb128 0x2
+ 435 0014 24       		.uleb128 0x24
+ 436 0015 00       		.byte	0
+ 437 0016 0B       		.uleb128 0xb
+ 438 0017 0B       		.uleb128 0xb
+ 439 0018 3E       		.uleb128 0x3e
+ 440 0019 0B       		.uleb128 0xb
+ 441 001a 03       		.uleb128 0x3
+ 442 001b 0E       		.uleb128 0xe
+ 443 001c 00       		.byte	0
+ 444 001d 00       		.byte	0
+ 445 001e 03       		.uleb128 0x3
+ 446 001f 16       		.uleb128 0x16
+ 447 0020 00       		.byte	0
+ 448 0021 03       		.uleb128 0x3
+ 449 0022 0E       		.uleb128 0xe
+ 450 0023 3A       		.uleb128 0x3a
+ 451 0024 0B       		.uleb128 0xb
+ 452 0025 3B       		.uleb128 0x3b
+ 453 0026 0B       		.uleb128 0xb
+ 454 0027 49       		.uleb128 0x49
+ 455 0028 13       		.uleb128 0x13
+ 456 0029 00       		.byte	0
+ 457 002a 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 10
+
+
+ 458 002b 04       		.uleb128 0x4
+ 459 002c 24       		.uleb128 0x24
+ 460 002d 00       		.byte	0
+ 461 002e 0B       		.uleb128 0xb
+ 462 002f 0B       		.uleb128 0xb
+ 463 0030 3E       		.uleb128 0x3e
+ 464 0031 0B       		.uleb128 0xb
+ 465 0032 03       		.uleb128 0x3
+ 466 0033 08       		.uleb128 0x8
+ 467 0034 00       		.byte	0
+ 468 0035 00       		.byte	0
+ 469 0036 05       		.uleb128 0x5
+ 470 0037 2E       		.uleb128 0x2e
+ 471 0038 01       		.byte	0x1
+ 472 0039 3F       		.uleb128 0x3f
+ 473 003a 19       		.uleb128 0x19
+ 474 003b 03       		.uleb128 0x3
+ 475 003c 0E       		.uleb128 0xe
+ 476 003d 3A       		.uleb128 0x3a
+ 477 003e 0B       		.uleb128 0xb
+ 478 003f 3B       		.uleb128 0x3b
+ 479 0040 0B       		.uleb128 0xb
+ 480 0041 11       		.uleb128 0x11
+ 481 0042 01       		.uleb128 0x1
+ 482 0043 12       		.uleb128 0x12
+ 483 0044 06       		.uleb128 0x6
+ 484 0045 40       		.uleb128 0x40
+ 485 0046 18       		.uleb128 0x18
+ 486 0047 9742     		.uleb128 0x2117
+ 487 0049 19       		.uleb128 0x19
+ 488 004a 01       		.uleb128 0x1
+ 489 004b 13       		.uleb128 0x13
+ 490 004c 00       		.byte	0
+ 491 004d 00       		.byte	0
+ 492 004e 06       		.uleb128 0x6
+ 493 004f 0B       		.uleb128 0xb
+ 494 0050 01       		.byte	0x1
+ 495 0051 11       		.uleb128 0x11
+ 496 0052 01       		.uleb128 0x1
+ 497 0053 12       		.uleb128 0x12
+ 498 0054 06       		.uleb128 0x6
+ 499 0055 00       		.byte	0
+ 500 0056 00       		.byte	0
+ 501 0057 07       		.uleb128 0x7
+ 502 0058 34       		.uleb128 0x34
+ 503 0059 00       		.byte	0
+ 504 005a 03       		.uleb128 0x3
+ 505 005b 08       		.uleb128 0x8
+ 506 005c 3A       		.uleb128 0x3a
+ 507 005d 0B       		.uleb128 0xb
+ 508 005e 3B       		.uleb128 0x3b
+ 509 005f 0B       		.uleb128 0xb
+ 510 0060 49       		.uleb128 0x49
+ 511 0061 13       		.uleb128 0x13
+ 512 0062 02       		.uleb128 0x2
+ 513 0063 17       		.uleb128 0x17
+ 514 0064 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 11
+
+
+ 515 0065 00       		.byte	0
+ 516 0066 08       		.uleb128 0x8
+ 517 0067 898201   		.uleb128 0x4109
+ 518 006a 00       		.byte	0
+ 519 006b 11       		.uleb128 0x11
+ 520 006c 01       		.uleb128 0x1
+ 521 006d 31       		.uleb128 0x31
+ 522 006e 13       		.uleb128 0x13
+ 523 006f 00       		.byte	0
+ 524 0070 00       		.byte	0
+ 525 0071 09       		.uleb128 0x9
+ 526 0072 898201   		.uleb128 0x4109
+ 527 0075 01       		.byte	0x1
+ 528 0076 11       		.uleb128 0x11
+ 529 0077 01       		.uleb128 0x1
+ 530 0078 31       		.uleb128 0x31
+ 531 0079 13       		.uleb128 0x13
+ 532 007a 00       		.byte	0
+ 533 007b 00       		.byte	0
+ 534 007c 0A       		.uleb128 0xa
+ 535 007d 8A8201   		.uleb128 0x410a
+ 536 0080 00       		.byte	0
+ 537 0081 02       		.uleb128 0x2
+ 538 0082 18       		.uleb128 0x18
+ 539 0083 9142     		.uleb128 0x2111
+ 540 0085 18       		.uleb128 0x18
+ 541 0086 00       		.byte	0
+ 542 0087 00       		.byte	0
+ 543 0088 0B       		.uleb128 0xb
+ 544 0089 2E       		.uleb128 0x2e
+ 545 008a 01       		.byte	0x1
+ 546 008b 3F       		.uleb128 0x3f
+ 547 008c 19       		.uleb128 0x19
+ 548 008d 03       		.uleb128 0x3
+ 549 008e 0E       		.uleb128 0xe
+ 550 008f 3A       		.uleb128 0x3a
+ 551 0090 0B       		.uleb128 0xb
+ 552 0091 3B       		.uleb128 0x3b
+ 553 0092 0B       		.uleb128 0xb
+ 554 0093 27       		.uleb128 0x27
+ 555 0094 19       		.uleb128 0x19
+ 556 0095 11       		.uleb128 0x11
+ 557 0096 01       		.uleb128 0x1
+ 558 0097 12       		.uleb128 0x12
+ 559 0098 06       		.uleb128 0x6
+ 560 0099 40       		.uleb128 0x40
+ 561 009a 18       		.uleb128 0x18
+ 562 009b 9742     		.uleb128 0x2117
+ 563 009d 19       		.uleb128 0x19
+ 564 009e 01       		.uleb128 0x1
+ 565 009f 13       		.uleb128 0x13
+ 566 00a0 00       		.byte	0
+ 567 00a1 00       		.byte	0
+ 568 00a2 0C       		.uleb128 0xc
+ 569 00a3 05       		.uleb128 0x5
+ 570 00a4 00       		.byte	0
+ 571 00a5 03       		.uleb128 0x3
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 12
+
+
+ 572 00a6 08       		.uleb128 0x8
+ 573 00a7 3A       		.uleb128 0x3a
+ 574 00a8 0B       		.uleb128 0xb
+ 575 00a9 3B       		.uleb128 0x3b
+ 576 00aa 0B       		.uleb128 0xb
+ 577 00ab 49       		.uleb128 0x49
+ 578 00ac 13       		.uleb128 0x13
+ 579 00ad 02       		.uleb128 0x2
+ 580 00ae 17       		.uleb128 0x17
+ 581 00af 00       		.byte	0
+ 582 00b0 00       		.byte	0
+ 583 00b1 0D       		.uleb128 0xd
+ 584 00b2 898201   		.uleb128 0x4109
+ 585 00b5 01       		.byte	0x1
+ 586 00b6 11       		.uleb128 0x11
+ 587 00b7 01       		.uleb128 0x1
+ 588 00b8 31       		.uleb128 0x31
+ 589 00b9 13       		.uleb128 0x13
+ 590 00ba 01       		.uleb128 0x1
+ 591 00bb 13       		.uleb128 0x13
+ 592 00bc 00       		.byte	0
+ 593 00bd 00       		.byte	0
+ 594 00be 0E       		.uleb128 0xe
+ 595 00bf 34       		.uleb128 0x34
+ 596 00c0 00       		.byte	0
+ 597 00c1 03       		.uleb128 0x3
+ 598 00c2 0E       		.uleb128 0xe
+ 599 00c3 3A       		.uleb128 0x3a
+ 600 00c4 0B       		.uleb128 0xb
+ 601 00c5 3B       		.uleb128 0x3b
+ 602 00c6 05       		.uleb128 0x5
+ 603 00c7 49       		.uleb128 0x49
+ 604 00c8 13       		.uleb128 0x13
+ 605 00c9 3F       		.uleb128 0x3f
+ 606 00ca 19       		.uleb128 0x19
+ 607 00cb 3C       		.uleb128 0x3c
+ 608 00cc 19       		.uleb128 0x19
+ 609 00cd 00       		.byte	0
+ 610 00ce 00       		.byte	0
+ 611 00cf 0F       		.uleb128 0xf
+ 612 00d0 35       		.uleb128 0x35
+ 613 00d1 00       		.byte	0
+ 614 00d2 49       		.uleb128 0x49
+ 615 00d3 13       		.uleb128 0x13
+ 616 00d4 00       		.byte	0
+ 617 00d5 00       		.byte	0
+ 618 00d6 10       		.uleb128 0x10
+ 619 00d7 01       		.uleb128 0x1
+ 620 00d8 01       		.byte	0x1
+ 621 00d9 49       		.uleb128 0x49
+ 622 00da 13       		.uleb128 0x13
+ 623 00db 01       		.uleb128 0x1
+ 624 00dc 13       		.uleb128 0x13
+ 625 00dd 00       		.byte	0
+ 626 00de 00       		.byte	0
+ 627 00df 11       		.uleb128 0x11
+ 628 00e0 21       		.uleb128 0x21
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 13
+
+
+ 629 00e1 00       		.byte	0
+ 630 00e2 49       		.uleb128 0x49
+ 631 00e3 13       		.uleb128 0x13
+ 632 00e4 2F       		.uleb128 0x2f
+ 633 00e5 0B       		.uleb128 0xb
+ 634 00e6 00       		.byte	0
+ 635 00e7 00       		.byte	0
+ 636 00e8 12       		.uleb128 0x12
+ 637 00e9 34       		.uleb128 0x34
+ 638 00ea 00       		.byte	0
+ 639 00eb 03       		.uleb128 0x3
+ 640 00ec 0E       		.uleb128 0xe
+ 641 00ed 3A       		.uleb128 0x3a
+ 642 00ee 0B       		.uleb128 0xb
+ 643 00ef 3B       		.uleb128 0x3b
+ 644 00f0 0B       		.uleb128 0xb
+ 645 00f1 49       		.uleb128 0x49
+ 646 00f2 13       		.uleb128 0x13
+ 647 00f3 3F       		.uleb128 0x3f
+ 648 00f4 19       		.uleb128 0x19
+ 649 00f5 02       		.uleb128 0x2
+ 650 00f6 18       		.uleb128 0x18
+ 651 00f7 00       		.byte	0
+ 652 00f8 00       		.byte	0
+ 653 00f9 13       		.uleb128 0x13
+ 654 00fa 2E       		.uleb128 0x2e
+ 655 00fb 00       		.byte	0
+ 656 00fc 3F       		.uleb128 0x3f
+ 657 00fd 19       		.uleb128 0x19
+ 658 00fe 3C       		.uleb128 0x3c
+ 659 00ff 19       		.uleb128 0x19
+ 660 0100 6E       		.uleb128 0x6e
+ 661 0101 0E       		.uleb128 0xe
+ 662 0102 03       		.uleb128 0x3
+ 663 0103 0E       		.uleb128 0xe
+ 664 0104 3A       		.uleb128 0x3a
+ 665 0105 0B       		.uleb128 0xb
+ 666 0106 3B       		.uleb128 0x3b
+ 667 0107 0B       		.uleb128 0xb
+ 668 0108 00       		.byte	0
+ 669 0109 00       		.byte	0
+ 670 010a 00       		.byte	0
+ 671              		.section	.debug_loc,"",%progbits
+ 672              	.Ldebug_loc0:
+ 673              	.LLST0:
+ 674 0000 02000000 		.4byte	.LVL0
+ 675 0004 06000000 		.4byte	.LVL1
+ 676 0008 0200     		.2byte	0x2
+ 677 000a 30       		.byte	0x30
+ 678 000b 9F       		.byte	0x9f
+ 679 000c 06000000 		.4byte	.LVL1
+ 680 0010 1C000000 		.4byte	.LVL5
+ 681 0014 0100     		.2byte	0x1
+ 682 0016 54       		.byte	0x54
+ 683 0017 00000000 		.4byte	0
+ 684 001b 00000000 		.4byte	0
+ 685              	.LLST1:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 14
+
+
+ 686 001f 02000000 		.4byte	.LVL6
+ 687 0023 06000000 		.4byte	.LVL7
+ 688 0027 0200     		.2byte	0x2
+ 689 0029 37       		.byte	0x37
+ 690 002a 9F       		.byte	0x9f
+ 691 002b 06000000 		.4byte	.LVL7
+ 692 002f 1C000000 		.4byte	.LVL11
+ 693 0033 0100     		.2byte	0x1
+ 694 0035 54       		.byte	0x54
+ 695 0036 00000000 		.4byte	0
+ 696 003a 00000000 		.4byte	0
+ 697              	.LLST2:
+ 698 003e 00000000 		.4byte	.LVL12
+ 699 0042 10000000 		.4byte	.LVL13
+ 700 0046 0100     		.2byte	0x1
+ 701 0048 50       		.byte	0x50
+ 702 0049 10000000 		.4byte	.LVL13
+ 703 004d 16000000 		.4byte	.LVL15
+ 704 0051 0400     		.2byte	0x4
+ 705 0053 F3       		.byte	0xf3
+ 706 0054 01       		.uleb128 0x1
+ 707 0055 50       		.byte	0x50
+ 708 0056 9F       		.byte	0x9f
+ 709 0057 16000000 		.4byte	.LVL15
+ 710 005b 19000000 		.4byte	.LVL16-1
+ 711 005f 0100     		.2byte	0x1
+ 712 0061 50       		.byte	0x50
+ 713 0062 19000000 		.4byte	.LVL16-1
+ 714 0066 1C000000 		.4byte	.LVL17
+ 715 006a 0400     		.2byte	0x4
+ 716 006c F3       		.byte	0xf3
+ 717 006d 01       		.uleb128 0x1
+ 718 006e 50       		.byte	0x50
+ 719 006f 9F       		.byte	0x9f
+ 720 0070 1C000000 		.4byte	.LVL17
+ 721 0074 1F000000 		.4byte	.LVL18-1
+ 722 0078 0100     		.2byte	0x1
+ 723 007a 50       		.byte	0x50
+ 724 007b 1F000000 		.4byte	.LVL18-1
+ 725 007f 22000000 		.4byte	.LFE63
+ 726 0083 0400     		.2byte	0x4
+ 727 0085 F3       		.byte	0xf3
+ 728 0086 01       		.uleb128 0x1
+ 729 0087 50       		.byte	0x50
+ 730 0088 9F       		.byte	0x9f
+ 731 0089 00000000 		.4byte	0
+ 732 008d 00000000 		.4byte	0
+ 733              		.section	.debug_aranges,"",%progbits
+ 734 0000 2C000000 		.4byte	0x2c
+ 735 0004 0200     		.2byte	0x2
+ 736 0006 00000000 		.4byte	.Ldebug_info0
+ 737 000a 04       		.byte	0x4
+ 738 000b 00       		.byte	0
+ 739 000c 0000     		.2byte	0
+ 740 000e 0000     		.2byte	0
+ 741 0010 00000000 		.4byte	.LFB64
+ 742 0014 20000000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 15
+
+
+ 743 0018 00000000 		.4byte	.LFB65
+ 744 001c 20000000 		.4byte	.LFE65-.LFB65
+ 745 0020 00000000 		.4byte	.LFB63
+ 746 0024 22000000 		.4byte	.LFE63-.LFB63
+ 747 0028 00000000 		.4byte	0
+ 748 002c 00000000 		.4byte	0
+ 749              		.section	.debug_ranges,"",%progbits
+ 750              	.Ldebug_ranges0:
+ 751 0000 00000000 		.4byte	.LFB64
+ 752 0004 20000000 		.4byte	.LFE64
+ 753 0008 00000000 		.4byte	.LFB65
+ 754 000c 20000000 		.4byte	.LFE65
+ 755 0010 00000000 		.4byte	.LFB63
+ 756 0014 22000000 		.4byte	.LFE63
+ 757 0018 00000000 		.4byte	0
+ 758 001c 00000000 		.4byte	0
+ 759              		.section	.debug_line,"",%progbits
+ 760              	.Ldebug_line0:
+ 761 0000 CB010000 		.section	.debug_str,"MS",%progbits,1
+ 761      02006201 
+ 761      00000201 
+ 761      FB0E0D00 
+ 761      01010101 
+ 762              	.LASF8:
+ 763 0000 6C6F6E67 		.ascii	"long long int\000"
+ 763      206C6F6E 
+ 763      6720696E 
+ 763      7400
+ 764              	.LASF4:
+ 765 000e 5F5F7569 		.ascii	"__uint8_t\000"
+ 765      6E74385F 
+ 765      7400
+ 766              	.LASF5:
+ 767 0018 5F5F696E 		.ascii	"__int32_t\000"
+ 767      7433325F 
+ 767      7400
+ 768              	.LASF18:
+ 769 0022 64657265 		.ascii	"derecha\000"
+ 769      63686100 
+ 770              	.LASF22:
+ 771 002a 53544550 		.ascii	"STEP_MOTOR_driver_Write\000"
+ 771      5F4D4F54 
+ 771      4F525F64 
+ 771      72697665 
+ 771      725F5772 
+ 772              	.LASF13:
+ 773 0042 666C6F61 		.ascii	"float\000"
+ 773      7400
+ 774              	.LASF1:
+ 775 0048 756E7369 		.ascii	"unsigned char\000"
+ 775      676E6564 
+ 775      20636861 
+ 775      7200
+ 776              	.LASF24:
+ 777 0056 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 777      43313120 
+ 777      352E342E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 16
+
+
+ 777      31203230 
+ 777      31363036 
+ 778 0089 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 778      20726576 
+ 778      6973696F 
+ 778      6E203233 
+ 778      37373135 
+ 779 00bc 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 779      66756E63 
+ 779      74696F6E 
+ 779      2D736563 
+ 779      74696F6E 
+ 780              	.LASF7:
+ 781 00e4 6C6F6E67 		.ascii	"long unsigned int\000"
+ 781      20756E73 
+ 781      69676E65 
+ 781      6420696E 
+ 781      7400
+ 782              	.LASF3:
+ 783 00f6 73686F72 		.ascii	"short unsigned int\000"
+ 783      7420756E 
+ 783      7369676E 
+ 783      65642069 
+ 783      6E7400
+ 784              	.LASF19:
+ 785 0109 697A7175 		.ascii	"izquierda\000"
+ 785      69657264 
+ 785      6100
+ 786              	.LASF20:
+ 787 0113 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 787      52784275 
+ 787      66666572 
+ 787      00
+ 788              	.LASF21:
+ 789 0120 73656375 		.ascii	"secuencia\000"
+ 789      656E6369 
+ 789      6100
+ 790              	.LASF14:
+ 791 012a 646F7562 		.ascii	"double\000"
+ 791      6C6500
+ 792              	.LASF10:
+ 793 0131 756E7369 		.ascii	"unsigned int\000"
+ 793      676E6564 
+ 793      20696E74 
+ 793      00
+ 794              	.LASF9:
+ 795 013e 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 795      206C6F6E 
+ 795      6720756E 
+ 795      7369676E 
+ 795      65642069 
+ 796              	.LASF11:
+ 797 0155 75696E74 		.ascii	"uint8_t\000"
+ 797      385F7400 
+ 798              	.LASF12:
+ 799 015d 696E7433 		.ascii	"int32_t\000"
+ 799      325F7400 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccf1SkO6.s 			page 17
+
+
+ 800              	.LASF27:
+ 801 0165 436F7272 		.ascii	"Corrimiento\000"
+ 801      696D6965 
+ 801      6E746F00 
+ 802              	.LASF17:
+ 803 0171 73697A65 		.ascii	"sizetype\000"
+ 803      74797065 
+ 803      00
+ 804              	.LASF25:
+ 805 017a 53544550 		.ascii	"STEPM.c\000"
+ 805      4D2E6300 
+ 806              	.LASF15:
+ 807 0182 63686172 		.ascii	"char\000"
+ 807      00
+ 808              	.LASF26:
+ 809 0187 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\Step_m"
+ 809      73657273 
+ 809      5C616472 
+ 809      69615C4F 
+ 809      6E654472 
+ 810 01b4 6F746F72 		.ascii	"otor_UART\\Step_motor_UART.cydsn\000"
+ 810      5F554152 
+ 810      545C5374 
+ 810      65705F6D 
+ 810      6F746F72 
+ 811              	.LASF2:
+ 812 01d4 73686F72 		.ascii	"short int\000"
+ 812      7420696E 
+ 812      7400
+ 813              	.LASF6:
+ 814 01de 6C6F6E67 		.ascii	"long int\000"
+ 814      20696E74 
+ 814      00
+ 815              	.LASF16:
+ 816 01e7 6C6F6E67 		.ascii	"long double\000"
+ 816      20646F75 
+ 816      626C6500 
+ 817              	.LASF0:
+ 818 01f3 7369676E 		.ascii	"signed char\000"
+ 818      65642063 
+ 818      68617200 
+ 819              	.LASF23:
+ 820 01ff 43794465 		.ascii	"CyDelay\000"
+ 820      6C617900 
+ 821              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
