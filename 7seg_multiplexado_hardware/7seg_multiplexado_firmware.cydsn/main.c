@@ -49,15 +49,15 @@ int main(void)
             1  0   SETEO
             1  1   N/A
       */
-        
-            if(cont<=Conteo_max && bandera == 0x00){
+        if(bandera == 0x00){
+            if(cont<=Conteo_max){
             //Actualizamos el valor de 7 segmentos
             Separa_digitos(cont);//separamos digitos
             cont++;
             }else{
                 cont=0;
             }
-        
+        }
     }
 }
 
