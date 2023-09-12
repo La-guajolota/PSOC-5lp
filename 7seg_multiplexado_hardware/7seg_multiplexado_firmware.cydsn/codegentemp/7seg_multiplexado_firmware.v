@@ -1,6 +1,6 @@
 // ======================================================================
 // 7seg_multiplexado_firmware.v generated from TopDesign.cysch
-// 09/12/2023 at 02:28
+// 09/12/2023 at 02:47
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -882,8 +882,8 @@ module top ;
         .status_6(1'b0),
         .status_7(1'b0),
         .status_bus(Net_21[1:0]));
-    defparam Status_Botones.Bit0Mode = 0;
-    defparam Status_Botones.Bit1Mode = 0;
+    defparam Status_Botones.Bit0Mode = 1;
+    defparam Status_Botones.Bit1Mode = 1;
     defparam Status_Botones.Bit2Mode = 0;
     defparam Status_Botones.Bit3Mode = 0;
     defparam Status_Botones.Bit4Mode = 0;

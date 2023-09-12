@@ -5,7 +5,7 @@
 
 uint16_t cont=0x00;//Contador para el cronometro
 uint16_t bandera =0x00;
-uint8_t Reg_Botones;//Aqui van qué botones se había apretado
+uint8_t Reg_Botones=0;//Aqui van qué botones se había apretado
 CY_ISR(ISR_botones){
       ISR_botones_ClearPending();
     

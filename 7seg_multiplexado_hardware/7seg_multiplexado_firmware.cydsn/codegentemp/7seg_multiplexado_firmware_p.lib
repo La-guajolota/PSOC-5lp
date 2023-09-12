@@ -1079,9 +1079,33 @@ library (timing) {
         }
         pin (status_0) {
             direction : input;
+            timing () {
+                timing_type : setup_rising;
+                related_pin : "clock";
+                intrinsic_rise : 0.500;
+                intrinsic_fall : 0.500;
+            }
+            timing () {
+                timing_type : hold_rising;
+                related_pin : "clock";
+                intrinsic_rise : 2.000;
+                intrinsic_fall : 2.000;
+            }
         }
         pin (status_1) {
             direction : input;
+            timing () {
+                timing_type : setup_rising;
+                related_pin : "clock";
+                intrinsic_rise : 0.500;
+                intrinsic_fall : 0.500;
+            }
+            timing () {
+                timing_type : hold_rising;
+                related_pin : "clock";
+                intrinsic_rise : 2.000;
+                intrinsic_fall : 2.000;
+            }
         }
         pin (status_2) {
             direction : input;
@@ -1101,32 +1125,17 @@ library (timing) {
         pin (interrupt) {
             direction : output;
             timing () {
-                timing_sense : positive_unate;
-                timing_type : combinational;
-                related_pin : "status_0";
-                intrinsic_rise : 0.750;
-                intrinsic_fall : 0.750;
+                timing_type : rising_edge;
+                related_pin : "clock";
+                intrinsic_rise : 2.550;
+                intrinsic_fall : 2.550;
             }
             timing () {
-                timing_sense : positive_unate;
-                timing_type : combinational;
-                related_pin : "status_0";
-                intrinsic_rise : 2.460;
-                intrinsic_fall : 2.460;
-            }
-            timing () {
-                timing_sense : positive_unate;
-                timing_type : combinational;
-                related_pin : "status_1";
-                intrinsic_rise : 0.750;
-                intrinsic_fall : 0.750;
-            }
-            timing () {
-                timing_sense : positive_unate;
-                timing_type : combinational;
-                related_pin : "status_1";
-                intrinsic_rise : 2.460;
-                intrinsic_fall : 2.460;
+                timing_sense : negative_unate;
+                timing_type : clear;
+                related_pin : "reset";
+                intrinsic_rise : 5.500;
+                intrinsic_fall : 5.500;
             }
         }
     }
