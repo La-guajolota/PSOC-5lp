@@ -5,16 +5,16 @@
 
 uint16_t cont=0x00;//Contador para el cronometro
 uint16_t bandera =0x00;
-uint8_t Reg_Botones=0;//Aqui van qué botones se había apretado
+uint8_t Reg_Botones=0x00;//Aqui van qué botones se había apretado
 CY_ISR(ISR_botones){
       ISR_botones_ClearPending();
     
-      Reg_Botones = Status_Botones_Read();//Por el sticky se limpia despues de leer
+      Reg_Botones = Status_Botones_Read()-0x80;//Por el sticky se limpia despues de leer
       if(Reg_Botones == 0x02){//SETEO
         cont = 0;
         }
       if(Reg_Botones == 0x01){// 0inicio/1paro
-        bandera ^= bandera;//Hacemos
+        bandera = ~bandera;//Hacemos
       }
 }
 
@@ -50,7 +50,7 @@ int main(void)
             1  1   N/A
       */
         
-            if(cont<=Conteo_max && bandera == 0){
+            if(cont<=Conteo_max && bandera == 0x00){
             //Actualizamos el valor de 7 segmentos
             Separa_digitos(cont);//separamos digitos
             cont++;
