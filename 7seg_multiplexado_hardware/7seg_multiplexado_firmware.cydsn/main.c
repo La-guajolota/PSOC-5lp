@@ -3,13 +3,19 @@
 
 #define Conteo_max 9999 //Cambiamos esta madre para el conteo máximo
 
+uint16_t cont=0x00;//Contador para el cronometro
 uint16_t bandera =0x00;
 uint8_t Reg_Botones;//Aqui van qué botones se había apretado
 CY_ISR(ISR_botones){
       ISR_botones_ClearPending();
-      bandera ^= bandera;//Paramos la ventana xd
     
       Reg_Botones = Status_Botones_Read();//Por el sticky se limpia despues de leer
+      if(Reg_Botones == 0x02){//SETEO
+        cont = 0;
+        }
+      if(Reg_Botones == 0x01){// 0inicio/1paro
+        bandera ^= bandera;//Hacemos
+      }
 }
 
 
@@ -18,8 +24,9 @@ int main(void)
     CyGlobalIntEnable;
     ISR_botones_StartEx(ISR_botones);
     ISR_botones_ClearPending();
+    Status_Botones_InterruptEnable();
     
-    uint16_t cont=0x00;//Contador para el cronometro
+    
     uint8_t Mux_dig[] = {BIT0,BIT1,BIT2,BIT3};//Iniciamos con el primer los transistores habilitados
     for(;;)
     {
@@ -35,13 +42,21 @@ int main(void)
         
         
         //imulamos el conteo de segundo
-        if(cont<=Conteo_max){
+        /* 
+            B1,B0
+            0  0   B0 PARO   
+            0  1   B0 INICIO
+            1  0   SETEO
+            1  1   N/A
+      */
+        
+            if(cont<=Conteo_max && bandera == 0){
             //Actualizamos el valor de 7 segmentos
             Separa_digitos(cont);//separamos digitos
             cont++;
-        }else{
-            cont=0;
-        }
+            }else{
+                cont=0;
+            }
         
     }
 }

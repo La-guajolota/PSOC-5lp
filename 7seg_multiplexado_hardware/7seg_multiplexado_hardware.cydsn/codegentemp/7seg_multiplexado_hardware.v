@@ -1,6 +1,6 @@
 // ======================================================================
 // 7seg_multiplexado_hardware.v generated from TopDesign.cysch
-// 09/09/2023 at 10:35
+// 09/12/2023 at 02:34
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
