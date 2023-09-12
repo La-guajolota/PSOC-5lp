@@ -31,13 +31,14 @@ int main(void)
     for(;;)
     {
         
-        
+        //Actualizamos el valor de 7 segmentos
+        Separa_digitos(cont);//separamos digitos
         for(int i=0;i<=3;i++){
             //Rutina del multiplexado con displa
             BCD_CODIFIG(DIGITOS[i]);//Codificamos digito
             Displays_mux_Write(Mux_dig[i]);//Ensendemos el digito que le toca y apagamos los otros
             
-            CyDelay(10);//Pa que lusca alvrg
+            CyDelay(5);//Pa que lusca alvrg
         }
         
         
@@ -51,8 +52,6 @@ int main(void)
       */
         if(bandera == 0x00){
             if(cont<=Conteo_max){
-            //Actualizamos el valor de 7 segmentos
-            Separa_digitos(cont);//separamos digitos
             cont++;
             }else{
                 cont=0;
