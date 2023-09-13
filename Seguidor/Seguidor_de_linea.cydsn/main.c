@@ -2,14 +2,31 @@
 #include "project.h"
 //ECOGEMOS LAS TABLAS DE VERDAD SEGUN EL DRIVER DE LOS MOTORES
 // CON MODULO L293 o L298
-#include "L298N_trable.h"
+#include "L293.h"
 
 //Función para binarizar un numero en un array de caracteres 
 void getBinary(uint8_t n, char *reg);
 
+//INTERRUPCIONES DE DESVIO
+uint8_t flag_derecha=0,flag_izquierda=0;
+CY_ISR(isr_DER){
+    isr_DER_ClearPending();
+    flag_derecha = ~flag_derecha;
+   
+}
+CY_ISR(isr_IZQ){
+    isr_IZQ_ClearPending();
+    flag_izquierda = ~flag_izquierda;
+}
+
+
 int main(void)
 {
     CyGlobalIntEnable; 
+    isr_DER_StartEx(isr_IZQ);
+    isr_IZQ_StartEx(isr_DER);
+    isr_IZQ_ClearPending();
+    isr_IZQ_ClearPending();
     
     //COMENTABLE_ SOLO ES PARA DEBUGUEAR
     UART_Start();
@@ -17,34 +34,35 @@ int main(void)
     char LECTURA[8];
     
     uint8_t sensores;//Para la lectura de los sensores
+    
+    Control_DIRECCION_Write(BREAK);
+    
     for(;;)
     {
         //sensamos los motores
         sensores = SENSORES_Read();
         
-        //Comentable NO necesario
-        getBinary(sensores,LECTURA);
-        UART_PutString(LECTURA);
-        UART_PutChar('\n');
-        CyDelay(10);
         
-        //*** SITUACIONES POSIBLES CONSIDERADAS Y RESPECTIVAS RESPUESTA ANTE ELLAS****
-        if(sensores == 0xC3){//Continuamos hacia adelante
-            Control_DIRECCION_Write(GO);
-            CyDelay(10);
-        }
-        if(!(sensores &= 0XC0)){//Si sensores del lado MB está en línea
+        //Comentable NO necesario
+        //getBinary(sensores,LECTURA);
+        //UART_PutString(LECTURA);
+        //UART_PutChar('\n');
+        
+        
+        if(flag_derecha == 0xFF){
+            flag_derecha = ~flag_derecha;
             Control_DIRECCION_Write(LEFT);
-            CyDelay(10);
         }
-        if(!(sensores &= 0X03)){//Si sensores del lado MB está en línea
+        
+        if(flag_izquierda == 0xFF){
+            flag_izquierda = ~flag_izquierda;
             Control_DIRECCION_Write(RIGHT);
-            CyDelay(10);
         }
-        if(sensores == 0xFF){//nOS SALIMOS DE LA LINEA
-           Control_DIRECCION_Write(BACK);
-           CyDelay(10);
+        
+        if(sensores == 0xE7){
+           Control_DIRECCION_Write(GO);
         }
+        
     }
 }
 

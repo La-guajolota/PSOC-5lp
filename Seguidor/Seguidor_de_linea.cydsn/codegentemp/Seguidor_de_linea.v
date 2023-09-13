@@ -1,6 +1,6 @@
 // ======================================================================
 // Seguidor_de_linea.v generated from TopDesign.cysch
-// 09/13/2023 at 08:47
+// 09/13/2023 at 10:16
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -303,6 +303,19 @@ module UART_v2_50_0 (
 
 endmodule
 
+// Component: not_v1_0
+`ifdef CY_BLK_DIR
+`undef CY_BLK_DIR
+`endif
+
+`ifdef WARP
+`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0"
+`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0\not_v1_0.v"
+`else
+`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0"
+`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0\not_v1_0.v"
+`endif
+
 // top
 module top ;
 
@@ -320,14 +333,7 @@ module top ;
           wire  Net_27;
           wire  Net_26;
           wire  Net_25;
-          wire  Net_21;
-          wire  Net_20;
-          wire  Net_19;
-          wire  Net_18;
-          wire  Net_16;
-          wire  Net_15;
-          wire  Net_14;
-          wire  Net_13;
+          wire [7:0] Net_46;
           wire  Net_22;
           wire  Net_12;
           wire  Net_10;
@@ -339,15 +345,24 @@ module top ;
           wire  Net_3;
           wire  Net_24;
           wire  Net_11;
-          wire [7:0] Net_23;
           wire [5:0] Net_6;
+          wire  Net_55;
+          wire  Net_58;
+          wire  Net_20;
+          wire  Net_19;
+          wire  Net_18;
+          wire  Net_16;
+          wire  Net_15;
+          wire  Net_14;
+          wire  Net_21;
+          wire  Net_23;
           wire  Net_17;
 
-	wire [5:0] tmpOE__L298N_net;
-	wire [5:0] tmpFB_5__L298N_net;
-	wire [5:0] tmpIO_5__L298N_net;
-	wire [0:0] tmpINTERRUPT_0__L298N_net;
-	electrical [0:0] tmpSIOVREF__L298N_net;
+	wire [5:0] tmpOE__Driv_inputs_net;
+	wire [5:0] tmpFB_5__Driv_inputs_net;
+	wire [5:0] tmpIO_5__Driv_inputs_net;
+	wire [0:0] tmpINTERRUPT_0__Driv_inputs_net;
+	electrical [0:0] tmpSIOVREF__Driv_inputs_net;
 
 	cy_psoc3_pins_v1_10
 		#(.id("e851a3b9-efb8-48be-bbb8-b303b216c393"),
@@ -402,13 +417,13 @@ module top ;
 		  .ovt_needed(6'b0_0_0_0_0_0),
 		  .ovt_slew_control(12'b00_00_00_00_00_00),
 		  .input_buffer_sel(12'b00_00_00_00_00_00))
-		L298N
-		 (.oe(tmpOE__L298N_net),
+		Driv_inputs
+		 (.oe(tmpOE__Driv_inputs_net),
 		  .y({Net_6[5:0]}),
-		  .fb({tmpFB_5__L298N_net[5:0]}),
-		  .io({tmpIO_5__L298N_net[5:0]}),
-		  .siovref(tmpSIOVREF__L298N_net),
-		  .interrupt({tmpINTERRUPT_0__L298N_net[0:0]}),
+		  .fb({tmpFB_5__Driv_inputs_net[5:0]}),
+		  .io({tmpIO_5__Driv_inputs_net[5:0]}),
+		  .siovref(tmpSIOVREF__Driv_inputs_net),
+		  .interrupt({tmpINTERRUPT_0__Driv_inputs_net[0:0]}),
 		  .in_clock({1'b0}),
 		  .in_clock_en({1'b1}),
 		  .in_reset({1'b0}),
@@ -416,7 +431,7 @@ module top ;
 		  .out_clock_en({1'b1}),
 		  .out_reset({1'b0}));
 
-	assign tmpOE__L298N_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{6'b111111} : {6'b111111};
+	assign tmpOE__Driv_inputs_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{6'b111111} : {6'b111111};
 
 	wire [7:0] tmpOE__Opticos_net;
 	wire [7:0] tmpIO_7__Opticos_net;
@@ -479,7 +494,7 @@ module top ;
 		Opticos
 		 (.oe(tmpOE__Opticos_net),
 		  .y({8'b0}),
-		  .fb({Net_23[7:0]}),
+		  .fb({Net_21, Net_20, Net_19, Net_18, Net_16, Net_15, Net_14, Net_23}),
 		  .io({tmpIO_7__Opticos_net[7:0]}),
 		  .siovref(tmpSIOVREF__Opticos_net),
 		  .interrupt({tmpINTERRUPT_0__Opticos_net[0:0]}),
@@ -520,15 +535,15 @@ module top ;
     CyStatusReg_v1_90 SENSORES (
         .clock(Net_17),
         .intr(Net_22),
-        .status_0(1'b0),
-        .status_1(1'b0),
-        .status_2(1'b0),
-        .status_3(1'b0),
-        .status_4(1'b0),
-        .status_5(1'b0),
-        .status_6(1'b0),
-        .status_7(1'b0),
-        .status_bus(Net_23[7:0]));
+        .status_0(Net_23),
+        .status_1(Net_14),
+        .status_2(Net_15),
+        .status_3(Net_16),
+        .status_4(Net_18),
+        .status_5(Net_19),
+        .status_6(Net_20),
+        .status_7(Net_21),
+        .status_bus(8'b0));
     defparam SENSORES.Bit0Mode = 0;
     defparam SENSORES.Bit1Mode = 0;
     defparam SENSORES.Bit2Mode = 0;
@@ -537,7 +552,7 @@ module top ;
     defparam SENSORES.Bit5Mode = 0;
     defparam SENSORES.Bit6Mode = 0;
     defparam SENSORES.Bit7Mode = 0;
-    defparam SENSORES.BusDisplay = 1;
+    defparam SENSORES.BusDisplay = 0;
     defparam SENSORES.Interrupt = 0;
     defparam SENSORES.MaskValue = 0;
     defparam SENSORES.NumInputs = 8;
@@ -655,6 +670,26 @@ module top ;
 		Clock_1
 		 (.clock_out(Net_17));
 
+
+
+	cy_isr_v1_0
+		#(.int_type(2'b10))
+		isr_IZQ
+		 (.int_signal(Net_58));
+
+
+
+	cy_isr_v1_0
+		#(.int_type(2'b10))
+		isr_DER
+		 (.int_signal(Net_55));
+
+
+
+    assign Net_58 = ~Net_23;
+
+
+    assign Net_55 = ~Net_21;
 
 
 

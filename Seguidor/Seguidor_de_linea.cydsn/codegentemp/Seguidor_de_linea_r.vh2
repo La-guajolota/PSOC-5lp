@@ -1,15 +1,15 @@
 -- Project:   Seguidor_de_linea
--- Generated: 09/13/2023 08:47:59
+-- Generated: 09/13/2023 10:16:37
 -- PSoC Creator  4.4
 
 ENTITY Seguidor_de_linea IS
     PORT(
-        L298N(0)_PAD : OUT std_ulogic;
-        L298N(1)_PAD : OUT std_ulogic;
-        L298N(2)_PAD : OUT std_ulogic;
-        L298N(3)_PAD : OUT std_ulogic;
-        L298N(4)_PAD : OUT std_ulogic;
-        L298N(5)_PAD : OUT std_ulogic;
+        Driv_inputs(0)_PAD : OUT std_ulogic;
+        Driv_inputs(1)_PAD : OUT std_ulogic;
+        Driv_inputs(2)_PAD : OUT std_ulogic;
+        Driv_inputs(3)_PAD : OUT std_ulogic;
+        Driv_inputs(4)_PAD : OUT std_ulogic;
+        Driv_inputs(5)_PAD : OUT std_ulogic;
         Opticos(0)_PAD : IN std_ulogic;
         Opticos(1)_PAD : IN std_ulogic;
         Opticos(2)_PAD : IN std_ulogic;
@@ -42,26 +42,30 @@ ARCHITECTURE __DEFAULT__ OF Seguidor_de_linea IS
     SIGNAL ClockBlock_PLL_OUT : bit;
     SIGNAL ClockBlock_XTAL : bit;
     SIGNAL ClockBlock_XTAL_32KHZ : bit;
-    SIGNAL L298N(0)__PA : bit;
-    SIGNAL L298N(1)__PA : bit;
-    SIGNAL L298N(2)__PA : bit;
-    SIGNAL L298N(3)__PA : bit;
-    SIGNAL L298N(4)__PA : bit;
-    SIGNAL L298N(5)__PA : bit;
+    SIGNAL Driv_inputs(0)__PA : bit;
+    SIGNAL Driv_inputs(1)__PA : bit;
+    SIGNAL Driv_inputs(2)__PA : bit;
+    SIGNAL Driv_inputs(3)__PA : bit;
+    SIGNAL Driv_inputs(4)__PA : bit;
+    SIGNAL Driv_inputs(5)__PA : bit;
+    SIGNAL Net_14 : bit;
+    SIGNAL Net_15 : bit;
+    SIGNAL Net_16 : bit;
     SIGNAL Net_17 : bit;
     ATTRIBUTE global_signal OF Net_17 : SIGNAL IS true;
     SIGNAL Net_17_local : bit;
-    SIGNAL Net_23_0 : bit;
-    SIGNAL Net_23_1 : bit;
-    SIGNAL Net_23_2 : bit;
-    SIGNAL Net_23_3 : bit;
-    SIGNAL Net_23_4 : bit;
-    SIGNAL Net_23_5 : bit;
-    SIGNAL Net_23_6 : bit;
-    SIGNAL Net_23_7 : bit;
+    SIGNAL Net_18 : bit;
+    SIGNAL Net_19 : bit;
+    SIGNAL Net_20 : bit;
+    SIGNAL Net_21 : bit;
+    SIGNAL Net_23 : bit;
     SIGNAL Net_33 : bit;
-    ATTRIBUTE placement_force OF Net_33 : SIGNAL IS "U(3,4,A)2";
+    ATTRIBUTE placement_force OF Net_33 : SIGNAL IS "U(1,1,B)0";
     SIGNAL Net_37 : bit;
+    SIGNAL Net_55 : bit;
+    ATTRIBUTE placement_force OF Net_55 : SIGNAL IS "U(0,2,B)1";
+    SIGNAL Net_58 : bit;
+    ATTRIBUTE placement_force OF Net_58 : SIGNAL IS "U(0,2,A)2";
     SIGNAL Net_6_0 : bit;
     SIGNAL Net_6_1 : bit;
     SIGNAL Net_6_2 : bit;
@@ -80,26 +84,26 @@ ARCHITECTURE __DEFAULT__ OF Seguidor_de_linea IS
     SIGNAL \Control_DIRECCION:control_6\ : bit;
     SIGNAL \Control_DIRECCION:control_7\ : bit;
     SIGNAL \UART:BUART:counter_load_not\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:counter_load_not\ : SIGNAL IS "U(2,4,B)1";
+    ATTRIBUTE placement_force OF \UART:BUART:counter_load_not\ : SIGNAL IS "U(0,1,B)1";
     SIGNAL \UART:BUART:tx_bitclk\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_bitclk\ : SIGNAL IS "U(2,4,B)2";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_bitclk\ : SIGNAL IS "U(0,1,B)2";
     SIGNAL \UART:BUART:tx_bitclk_enable_pre\ : bit;
     SIGNAL \UART:BUART:tx_counter_dp\ : bit;
     SIGNAL \UART:BUART:tx_fifo_empty\ : bit;
     SIGNAL \UART:BUART:tx_fifo_notfull\ : bit;
     SIGNAL \UART:BUART:tx_shift_out\ : bit;
     SIGNAL \UART:BUART:tx_state_0\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_state_0\ : SIGNAL IS "U(3,4,A)0";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_state_0\ : SIGNAL IS "U(0,1,A)0";
     SIGNAL \UART:BUART:tx_state_1\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_state_1\ : SIGNAL IS "U(2,4,A)1";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_state_1\ : SIGNAL IS "U(0,1,A)2";
     SIGNAL \UART:BUART:tx_state_2\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_state_2\ : SIGNAL IS "U(2,4,B)0";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_state_2\ : SIGNAL IS "U(0,1,B)0";
     SIGNAL \UART:BUART:tx_status_0\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_status_0\ : SIGNAL IS "U(3,4,A)1";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_status_0\ : SIGNAL IS "U(0,1,A)1";
     SIGNAL \UART:BUART:tx_status_2\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:tx_status_2\ : SIGNAL IS "U(3,4,A)3";
+    ATTRIBUTE placement_force OF \UART:BUART:tx_status_2\ : SIGNAL IS "U(0,1,A)3";
     SIGNAL \UART:BUART:txn\ : bit;
-    ATTRIBUTE placement_force OF \UART:BUART:txn\ : SIGNAL IS "U(2,4,A)0";
+    ATTRIBUTE placement_force OF \UART:BUART:txn\ : SIGNAL IS "U(0,2,A)3";
     SIGNAL \UART:Net_9\ : bit;
     ATTRIBUTE udbclken_assigned OF \UART:Net_9\ : SIGNAL IS "True";
     ATTRIBUTE global_signal OF \UART:Net_9\ : SIGNAL IS true;
@@ -108,70 +112,76 @@ ARCHITECTURE __DEFAULT__ OF Seguidor_de_linea IS
     ATTRIBUTE POWER OF __ONE__ : SIGNAL IS true;
     SIGNAL __ZERO__ : bit;
     ATTRIBUTE GROUND OF __ZERO__ : SIGNAL IS true;
-    SIGNAL tmpOE__L298N_net_5 : bit;
-    ATTRIBUTE POWER OF tmpOE__L298N_net_5 : SIGNAL IS true;
+    SIGNAL tmpOE__Driv_inputs_net_5 : bit;
+    ATTRIBUTE POWER OF tmpOE__Driv_inputs_net_5 : SIGNAL IS true;
     SIGNAL zero : bit;
     ATTRIBUTE GROUND OF zero : SIGNAL IS true;
     ATTRIBUTE Location OF ClockBlock : LABEL IS "F(Clock,0)";
-    ATTRIBUTE lib_model OF L298N(0) : LABEL IS "iocell1";
-    ATTRIBUTE Location OF L298N(0) : LABEL IS "P0[7]";
-    ATTRIBUTE lib_model OF L298N(1) : LABEL IS "iocell2";
-    ATTRIBUTE Location OF L298N(1) : LABEL IS "P0[3]";
-    ATTRIBUTE lib_model OF L298N(2) : LABEL IS "iocell3";
-    ATTRIBUTE Location OF L298N(2) : LABEL IS "P0[1]";
-    ATTRIBUTE lib_model OF L298N(3) : LABEL IS "iocell4";
-    ATTRIBUTE Location OF L298N(3) : LABEL IS "P0[5]";
-    ATTRIBUTE lib_model OF L298N(4) : LABEL IS "iocell5";
-    ATTRIBUTE Location OF L298N(4) : LABEL IS "P0[4]";
-    ATTRIBUTE lib_model OF L298N(5) : LABEL IS "iocell6";
-    ATTRIBUTE Location OF L298N(5) : LABEL IS "P12[2]";
+    ATTRIBUTE lib_model OF Driv_inputs(0) : LABEL IS "iocell1";
+    ATTRIBUTE Location OF Driv_inputs(0) : LABEL IS "P12[3]";
+    ATTRIBUTE lib_model OF Driv_inputs(1) : LABEL IS "iocell2";
+    ATTRIBUTE Location OF Driv_inputs(1) : LABEL IS "P12[4]";
+    ATTRIBUTE lib_model OF Driv_inputs(2) : LABEL IS "iocell3";
+    ATTRIBUTE Location OF Driv_inputs(2) : LABEL IS "P12[5]";
+    ATTRIBUTE lib_model OF Driv_inputs(3) : LABEL IS "iocell4";
+    ATTRIBUTE Location OF Driv_inputs(3) : LABEL IS "P0[1]";
+    ATTRIBUTE lib_model OF Driv_inputs(4) : LABEL IS "iocell5";
+    ATTRIBUTE Location OF Driv_inputs(4) : LABEL IS "P0[2]";
+    ATTRIBUTE lib_model OF Driv_inputs(5) : LABEL IS "iocell6";
+    ATTRIBUTE Location OF Driv_inputs(5) : LABEL IS "P0[3]";
     ATTRIBUTE lib_model OF Opticos(0) : LABEL IS "iocell7";
-    ATTRIBUTE Location OF Opticos(0) : LABEL IS "P0[2]";
+    ATTRIBUTE Location OF Opticos(0) : LABEL IS "P0[4]";
     ATTRIBUTE lib_model OF Opticos(1) : LABEL IS "iocell8";
-    ATTRIBUTE Location OF Opticos(1) : LABEL IS "P2[5]";
+    ATTRIBUTE Location OF Opticos(1) : LABEL IS "P0[5]";
     ATTRIBUTE lib_model OF Opticos(2) : LABEL IS "iocell9";
-    ATTRIBUTE Location OF Opticos(2) : LABEL IS "P2[6]";
+    ATTRIBUTE Location OF Opticos(2) : LABEL IS "P0[6]";
     ATTRIBUTE lib_model OF Opticos(3) : LABEL IS "iocell10";
-    ATTRIBUTE Location OF Opticos(3) : LABEL IS "P1[5]";
+    ATTRIBUTE Location OF Opticos(3) : LABEL IS "P0[7]";
     ATTRIBUTE lib_model OF Opticos(4) : LABEL IS "iocell11";
-    ATTRIBUTE Location OF Opticos(4) : LABEL IS "P1[6]";
+    ATTRIBUTE Location OF Opticos(4) : LABEL IS "P2[3]";
     ATTRIBUTE lib_model OF Opticos(5) : LABEL IS "iocell12";
-    ATTRIBUTE Location OF Opticos(5) : LABEL IS "P2[0]";
+    ATTRIBUTE Location OF Opticos(5) : LABEL IS "P2[4]";
     ATTRIBUTE lib_model OF Opticos(6) : LABEL IS "iocell13";
-    ATTRIBUTE Location OF Opticos(6) : LABEL IS "P2[7]";
+    ATTRIBUTE Location OF Opticos(6) : LABEL IS "P2[5]";
     ATTRIBUTE lib_model OF Opticos(7) : LABEL IS "iocell14";
-    ATTRIBUTE Location OF Opticos(7) : LABEL IS "P2[1]";
+    ATTRIBUTE Location OF Opticos(7) : LABEL IS "P2[6]";
     ATTRIBUTE lib_model OF Tx_1(0) : LABEL IS "iocell15";
-    ATTRIBUTE Location OF Tx_1(0) : LABEL IS "P0[0]";
+    ATTRIBUTE Location OF Tx_1(0) : LABEL IS "P12[7]";
     ATTRIBUTE lib_model OF Net_33 : LABEL IS "macrocell1";
-    ATTRIBUTE Location OF Net_33 : LABEL IS "U(3,4)";
+    ATTRIBUTE Location OF Net_33 : LABEL IS "U(1,1)";
     ATTRIBUTE lib_model OF \UART:BUART:counter_load_not\ : LABEL IS "macrocell2";
-    ATTRIBUTE Location OF \UART:BUART:counter_load_not\ : LABEL IS "U(2,4)";
+    ATTRIBUTE Location OF \UART:BUART:counter_load_not\ : LABEL IS "U(0,1)";
     ATTRIBUTE lib_model OF \UART:BUART:tx_status_0\ : LABEL IS "macrocell3";
-    ATTRIBUTE Location OF \UART:BUART:tx_status_0\ : LABEL IS "U(3,4)";
+    ATTRIBUTE Location OF \UART:BUART:tx_status_0\ : LABEL IS "U(0,1)";
     ATTRIBUTE lib_model OF \UART:BUART:tx_status_2\ : LABEL IS "macrocell4";
-    ATTRIBUTE Location OF \UART:BUART:tx_status_2\ : LABEL IS "U(3,4)";
+    ATTRIBUTE Location OF \UART:BUART:tx_status_2\ : LABEL IS "U(0,1)";
+    ATTRIBUTE lib_model OF Net_58 : LABEL IS "macrocell5";
+    ATTRIBUTE Location OF Net_58 : LABEL IS "U(0,2)";
+    ATTRIBUTE lib_model OF Net_55 : LABEL IS "macrocell6";
+    ATTRIBUTE Location OF Net_55 : LABEL IS "U(0,2)";
     ATTRIBUTE lib_model OF \Control_DIRECCION:Sync:ctrl_reg\ : LABEL IS "controlcell1";
-    ATTRIBUTE Location OF \Control_DIRECCION:Sync:ctrl_reg\ : LABEL IS "U(2,4)";
+    ATTRIBUTE Location OF \Control_DIRECCION:Sync:ctrl_reg\ : LABEL IS "U(1,2)";
     ATTRIBUTE lib_model OF \SENSORES:sts:sts_reg\ : LABEL IS "statuscell1";
-    ATTRIBUTE Location OF \SENSORES:sts:sts_reg\ : LABEL IS "U(2,4)";
+    ATTRIBUTE Location OF \SENSORES:sts:sts_reg\ : LABEL IS "U(0,2)";
     ATTRIBUTE Location OF \UART:TXInternalInterrupt\ : LABEL IS "[IntrContainer=(0)][IntrId=(0)]";
     ATTRIBUTE lib_model OF \UART:BUART:sTX:TxShifter:u0\ : LABEL IS "datapathcell1";
-    ATTRIBUTE Location OF \UART:BUART:sTX:TxShifter:u0\ : LABEL IS "U(3,4)";
+    ATTRIBUTE Location OF \UART:BUART:sTX:TxShifter:u0\ : LABEL IS "U(0,2)";
     ATTRIBUTE lib_model OF \UART:BUART:sTX:sCLOCK:TxBitClkGen\ : LABEL IS "datapathcell2";
-    ATTRIBUTE Location OF \UART:BUART:sTX:sCLOCK:TxBitClkGen\ : LABEL IS "U(2,4)";
+    ATTRIBUTE Location OF \UART:BUART:sTX:sCLOCK:TxBitClkGen\ : LABEL IS "U(0,1)";
     ATTRIBUTE lib_model OF \UART:BUART:sTX:TxSts\ : LABEL IS "statusicell1";
-    ATTRIBUTE Location OF \UART:BUART:sTX:TxSts\ : LABEL IS "U(3,4)";
-    ATTRIBUTE lib_model OF \UART:BUART:txn\ : LABEL IS "macrocell5";
-    ATTRIBUTE Location OF \UART:BUART:txn\ : LABEL IS "U(2,4)";
-    ATTRIBUTE lib_model OF \UART:BUART:tx_state_1\ : LABEL IS "macrocell6";
-    ATTRIBUTE Location OF \UART:BUART:tx_state_1\ : LABEL IS "U(2,4)";
-    ATTRIBUTE lib_model OF \UART:BUART:tx_state_0\ : LABEL IS "macrocell7";
-    ATTRIBUTE Location OF \UART:BUART:tx_state_0\ : LABEL IS "U(3,4)";
-    ATTRIBUTE lib_model OF \UART:BUART:tx_state_2\ : LABEL IS "macrocell8";
-    ATTRIBUTE Location OF \UART:BUART:tx_state_2\ : LABEL IS "U(2,4)";
-    ATTRIBUTE lib_model OF \UART:BUART:tx_bitclk\ : LABEL IS "macrocell9";
-    ATTRIBUTE Location OF \UART:BUART:tx_bitclk\ : LABEL IS "U(2,4)";
+    ATTRIBUTE Location OF \UART:BUART:sTX:TxSts\ : LABEL IS "U(0,1)";
+    ATTRIBUTE Location OF isr_IZQ : LABEL IS "[IntrContainer=(0)][IntrId=(2)]";
+    ATTRIBUTE Location OF isr_DER : LABEL IS "[IntrContainer=(0)][IntrId=(1)]";
+    ATTRIBUTE lib_model OF \UART:BUART:txn\ : LABEL IS "macrocell7";
+    ATTRIBUTE Location OF \UART:BUART:txn\ : LABEL IS "U(0,2)";
+    ATTRIBUTE lib_model OF \UART:BUART:tx_state_1\ : LABEL IS "macrocell8";
+    ATTRIBUTE Location OF \UART:BUART:tx_state_1\ : LABEL IS "U(0,1)";
+    ATTRIBUTE lib_model OF \UART:BUART:tx_state_0\ : LABEL IS "macrocell9";
+    ATTRIBUTE Location OF \UART:BUART:tx_state_0\ : LABEL IS "U(0,1)";
+    ATTRIBUTE lib_model OF \UART:BUART:tx_state_2\ : LABEL IS "macrocell10";
+    ATTRIBUTE Location OF \UART:BUART:tx_state_2\ : LABEL IS "U(0,1)";
+    ATTRIBUTE lib_model OF \UART:BUART:tx_bitclk\ : LABEL IS "macrocell11";
+    ATTRIBUTE Location OF \UART:BUART:tx_bitclk\ : LABEL IS "U(0,1)";
     COMPONENT clockblockcell
         PORT (
             dclk_0 : OUT std_ulogic;
@@ -491,7 +501,7 @@ BEGIN
             dclk_glb_1 => Net_17,
             dclk_1 => Net_17_local);
 
-    L298N:logicalport
+    Driv_inputs:logicalport
         GENERIC MAP(
             drive_mode => "111111111111111111",
             ibuf_enabled => "111111",
@@ -562,20 +572,20 @@ BEGIN
             out_clock_en => open,
             out_reset => open);
 
-    L298N(0):iocell
+    Driv_inputs(0):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 0,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(0)__PA,
+            pa_out => Driv_inputs(0)__PA,
             oe => open,
             pin_input => Net_6_0,
-            pad_out => L298N(0)_PAD,
-            pad_in => L298N(0)_PAD,
+            pad_out => Driv_inputs(0)_PAD,
+            pad_in => Driv_inputs(0)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -583,20 +593,20 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    L298N(1):iocell
+    Driv_inputs(1):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 1,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(1)__PA,
+            pa_out => Driv_inputs(1)__PA,
             oe => open,
             pin_input => Net_6_1,
-            pad_out => L298N(1)_PAD,
-            pad_in => L298N(1)_PAD,
+            pad_out => Driv_inputs(1)_PAD,
+            pad_in => Driv_inputs(1)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -604,20 +614,20 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    L298N(2):iocell
+    Driv_inputs(2):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 2,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(2)__PA,
+            pa_out => Driv_inputs(2)__PA,
             oe => open,
             pin_input => Net_6_2,
-            pad_out => L298N(2)_PAD,
-            pad_in => L298N(2)_PAD,
+            pad_out => Driv_inputs(2)_PAD,
+            pad_in => Driv_inputs(2)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -625,20 +635,20 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    L298N(3):iocell
+    Driv_inputs(3):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 3,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(3)__PA,
+            pa_out => Driv_inputs(3)__PA,
             oe => open,
             pin_input => Net_6_3,
-            pad_out => L298N(3)_PAD,
-            pad_in => L298N(3)_PAD,
+            pad_out => Driv_inputs(3)_PAD,
+            pad_in => Driv_inputs(3)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -646,20 +656,20 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    L298N(4):iocell
+    Driv_inputs(4):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 4,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(4)__PA,
+            pa_out => Driv_inputs(4)__PA,
             oe => open,
             pin_input => Net_6_4,
-            pad_out => L298N(4)_PAD,
-            pad_in => L298N(4)_PAD,
+            pad_out => Driv_inputs(4)_PAD,
+            pad_in => Driv_inputs(4)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -667,20 +677,20 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    L298N(5):iocell
+    Driv_inputs(5):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "L298N",
+            logicalport => "Driv_inputs",
             logicalport_pin_id => 5,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => L298N(5)__PA,
+            pa_out => Driv_inputs(5)__PA,
             oe => open,
             pin_input => Net_6_5,
-            pad_out => L298N(5)_PAD,
-            pad_in => L298N(5)_PAD,
+            pad_out => Driv_inputs(5)_PAD,
+            pad_in => Driv_inputs(5)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -770,7 +780,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(0)__PA,
             oe => open,
-            fb => Net_23_0,
+            fb => Net_23,
             pad_in => Opticos(0)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -790,7 +800,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(1)__PA,
             oe => open,
-            fb => Net_23_1,
+            fb => Net_14,
             pad_in => Opticos(1)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -810,7 +820,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(2)__PA,
             oe => open,
-            fb => Net_23_2,
+            fb => Net_15,
             pad_in => Opticos(2)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -830,7 +840,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(3)__PA,
             oe => open,
-            fb => Net_23_3,
+            fb => Net_16,
             pad_in => Opticos(3)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -850,7 +860,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(4)__PA,
             oe => open,
-            fb => Net_23_4,
+            fb => Net_18,
             pad_in => Opticos(4)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -870,7 +880,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(5)__PA,
             oe => open,
-            fb => Net_23_5,
+            fb => Net_19,
             pad_in => Opticos(5)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -890,7 +900,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(6)__PA,
             oe => open,
-            fb => Net_23_6,
+            fb => Net_20,
             pad_in => Opticos(6)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -910,7 +920,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(7)__PA,
             oe => open,
-            fb => Net_23_7,
+            fb => Net_21,
             pad_in => Opticos(7)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -1054,6 +1064,24 @@ BEGIN
             q => \UART:BUART:tx_status_2\,
             main_0 => \UART:BUART:tx_fifo_notfull\);
 
+    Net_58:macrocell
+        GENERIC MAP(
+            eqn_main => "(!main_0)",
+            regmode => 0,
+            clken_mode => 1)
+        PORT MAP(
+            q => Net_58,
+            main_0 => Net_23);
+
+    Net_55:macrocell
+        GENERIC MAP(
+            eqn_main => "(!main_0)",
+            regmode => 0,
+            clken_mode => 1)
+        PORT MAP(
+            q => Net_55,
+            main_0 => Net_21);
+
     \Control_DIRECCION:Sync:ctrl_reg\:controlcell
         GENERIC MAP(
             cy_ctrl_mode_0 => "00000000",
@@ -1080,14 +1108,14 @@ BEGIN
             clken_mode => 1)
         PORT MAP(
             clock => open,
-            status_7 => Net_23_7,
-            status_6 => Net_23_6,
-            status_5 => Net_23_5,
-            status_4 => Net_23_4,
-            status_3 => Net_23_3,
-            status_2 => Net_23_2,
-            status_1 => Net_23_1,
-            status_0 => Net_23_0);
+            status_7 => Net_21,
+            status_6 => Net_20,
+            status_5 => Net_19,
+            status_4 => Net_18,
+            status_3 => Net_16,
+            status_2 => Net_15,
+            status_1 => Net_14,
+            status_0 => Net_23);
 
     \UART:TXInternalInterrupt\:interrupt
         GENERIC MAP(
@@ -1188,6 +1216,22 @@ BEGIN
             status_1 => \UART:BUART:tx_fifo_empty\,
             status_0 => \UART:BUART:tx_status_0\,
             interrupt => Net_37);
+
+    isr_IZQ:interrupt
+        GENERIC MAP(
+            int_type => "10",
+            is_nmi => 0)
+        PORT MAP(
+            interrupt => Net_58,
+            clock => ClockBlock_BUS_CLK);
+
+    isr_DER:interrupt
+        GENERIC MAP(
+            int_type => "10",
+            is_nmi => 0)
+        PORT MAP(
+            interrupt => Net_55,
+            clock => ClockBlock_BUS_CLK);
 
     \UART:BUART:txn\:macrocell
         GENERIC MAP(
