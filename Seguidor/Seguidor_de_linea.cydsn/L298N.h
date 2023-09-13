@@ -20,11 +20,20 @@
 
 //Combinaciones de la direcciones que puede tomar el seguidor 2 MOTORES
 /*
+                            MOTOR_b       MOTOR_a
+                            00000|||||||||ooooooo
+                            OOOOO|       |OOOOOOO
+                            OOOOO|       |OOOOOOO
+                                 |       |
+                                 |       |
+                                 |||||||||
+        
     En un registro de control
     8bits -->> x | x | ENB | IN_3 | IN_4| ENA | IN_1 | IN_2 
 */
-#define GO 0x36
-#define BACK 0x2D
-#define BREAK 0x24   
-#define RIGHT 0x34  //MB frente MA freno
-#define LEFT  0x26 //MB freno MA frente
+#define GO 0x36     //MB freno MA frente
+#define BACK 0x2D   //MB atras MA atras
+#define BREAK 0x24  //MB paro MA paro
+#define RIGHT 0x34  //MB frente MA par0
+#define LEFT  0x26  //MB paro MA frente
+

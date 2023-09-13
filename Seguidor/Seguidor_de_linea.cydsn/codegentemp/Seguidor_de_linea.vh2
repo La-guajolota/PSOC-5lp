@@ -2,7 +2,7 @@
 --	Conversion of Seguidor_de_linea.v to vh2:
 --
 --	Cypress Semiconductor - WARP Version 6.3 IR 41
---	Wed Sep 13 10:16:36 2023
+--	Wed Sep 13 16:07:23 2023
 --
 
 USE cypress.cypress.all;
@@ -50,7 +50,7 @@ SIGNAL tmpOE__Opticos_net_1 : bit;
 SIGNAL tmpOE__Opticos_net_0 : bit;
 SIGNAL Net_21 : bit;
 SIGNAL Net_20 : bit;
-SIGNAL Net_19 : bit;
+SIGNAL Net_65 : bit;
 SIGNAL Net_18 : bit;
 SIGNAL Net_16 : bit;
 SIGNAL Net_15 : bit;
@@ -210,8 +210,8 @@ SIGNAL tmpFB_0__Tx_1_net_0 : bit;
 SIGNAL tmpIO_0__Tx_1_net_0 : bit;
 TERMINAL tmpSIOVREF__Tx_1_net_0 : bit;
 SIGNAL tmpINTERRUPT_0__Tx_1_net_0 : bit;
-SIGNAL Net_58 : bit;
-SIGNAL Net_55 : bit;
+SIGNAL Net_66 : bit;
+SIGNAL Net_64 : bit;
 SIGNAL \UART:BUART:reset_reg\\D\ : bit;
 SIGNAL \UART:BUART:txn\\D\ : bit;
 SIGNAL \UART:BUART:tx_state_1\\D\ : bit;
@@ -273,9 +273,9 @@ Net_33 <= (not \UART:BUART:txn\);
 	OR (not \UART:BUART:tx_state_1\ and not \UART:BUART:tx_state_0\ and \UART:BUART:tx_parity_bit\)
 	OR \UART:BUART:tx_parity_bit\);
 
-Net_58 <= (not Net_23);
+Net_66 <= ((not Net_14 and not Net_23));
 
-Net_55 <= (not Net_21);
+Net_64 <= ((not Net_21 and not Net_20));
 
 Driv_inputs:cy_psoc3_pins_v1_10
 	GENERIC MAP(id=>"e851a3b9-efb8-48be-bbb8-b303b216c393",
@@ -413,7 +413,7 @@ Opticos:cy_psoc3_pins_v1_10
 			tmpOE__Driv_inputs_net_5, tmpOE__Driv_inputs_net_5, tmpOE__Driv_inputs_net_5, tmpOE__Driv_inputs_net_5),
 		y=>(zero, zero, zero, zero,
 			zero, zero, zero, zero),
-		fb=>(Net_21, Net_20, Net_19, Net_18,
+		fb=>(Net_21, Net_20, Net_65, Net_18,
 			Net_16, Net_15, Net_14, Net_23),
 		analog=>(open, open, open, open,
 			open, open, open, open),
@@ -444,7 +444,7 @@ Opticos:cy_psoc3_pins_v1_10
 		cy_md_select=>"00000000")
 	PORT MAP(reset=>zero,
 		clock=>Net_17,
-		status=>(Net_21, Net_20, Net_19, Net_18,
+		status=>(Net_21, Net_20, Net_65, Net_18,
 			Net_16, Net_15, Net_14, Net_23));
 \UART:TXInternalInterrupt\:cy_isr_v1_0
 	GENERIC MAP(int_type=>"10",
@@ -730,11 +730,11 @@ Clock_1:cy_clock_v1_0
 isr_IZQ:cy_isr_v1_0
 	GENERIC MAP(int_type=>"10",
 		is_nmi=>'0')
-	PORT MAP(int_signal=>Net_58);
+	PORT MAP(int_signal=>Net_66);
 isr_DER:cy_isr_v1_0
 	GENERIC MAP(int_type=>"10",
 		is_nmi=>'0')
-	PORT MAP(int_signal=>Net_55);
+	PORT MAP(int_signal=>Net_64);
 \UART:BUART:reset_reg\:cy_dff
 	PORT MAP(d=>zero,
 		clk=>\UART:BUART:clock_op\,

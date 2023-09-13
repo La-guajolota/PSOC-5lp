@@ -1,5 +1,5 @@
 -- Project:   Seguidor_de_linea
--- Generated: 09/13/2023 10:16:36
+-- Generated: 09/13/2023 16:07:24
 -- PSoC Creator  4.4
 
 ENTITY Seguidor_de_linea IS
@@ -55,14 +55,14 @@ ARCHITECTURE __DEFAULT__ OF Seguidor_de_linea IS
     ATTRIBUTE global_signal OF Net_17 : SIGNAL IS true;
     SIGNAL Net_17_local : bit;
     SIGNAL Net_18 : bit;
-    SIGNAL Net_19 : bit;
     SIGNAL Net_20 : bit;
     SIGNAL Net_21 : bit;
     SIGNAL Net_23 : bit;
     SIGNAL Net_33 : bit;
     SIGNAL Net_37 : bit;
-    SIGNAL Net_55 : bit;
-    SIGNAL Net_58 : bit;
+    SIGNAL Net_64 : bit;
+    SIGNAL Net_65 : bit;
+    SIGNAL Net_66 : bit;
     SIGNAL Net_6_0 : bit;
     SIGNAL Net_6_1 : bit;
     SIGNAL Net_6_2 : bit;
@@ -139,8 +139,8 @@ ARCHITECTURE __DEFAULT__ OF Seguidor_de_linea IS
     ATTRIBUTE lib_model OF \UART:BUART:counter_load_not\ : LABEL IS "macrocell2";
     ATTRIBUTE lib_model OF \UART:BUART:tx_status_0\ : LABEL IS "macrocell3";
     ATTRIBUTE lib_model OF \UART:BUART:tx_status_2\ : LABEL IS "macrocell4";
-    ATTRIBUTE lib_model OF Net_58 : LABEL IS "macrocell5";
-    ATTRIBUTE lib_model OF Net_55 : LABEL IS "macrocell6";
+    ATTRIBUTE lib_model OF Net_66 : LABEL IS "macrocell5";
+    ATTRIBUTE lib_model OF Net_64 : LABEL IS "macrocell6";
     ATTRIBUTE lib_model OF \Control_DIRECCION:Sync:ctrl_reg\ : LABEL IS "controlcell1";
     ATTRIBUTE lib_model OF \SENSORES:sts:sts_reg\ : LABEL IS "statuscell1";
     ATTRIBUTE lib_model OF \UART:BUART:sTX:TxShifter:u0\ : LABEL IS "datapathcell1";
@@ -871,7 +871,7 @@ BEGIN
         PORT MAP(
             pa_out => Opticos(5)__PA,
             oe => open,
-            fb => Net_19,
+            fb => Net_65,
             pad_in => Opticos(5)_PAD,
             in_clock => open,
             in_clock_en => '1',
@@ -1055,23 +1055,25 @@ BEGIN
             q => \UART:BUART:tx_status_2\,
             main_0 => \UART:BUART:tx_fifo_notfull\);
 
-    Net_58:macrocell
+    Net_66:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0)",
+            eqn_main => "(!main_0 * !main_1)",
             regmode => 0,
             clken_mode => 1)
         PORT MAP(
-            q => Net_58,
-            main_0 => Net_23);
+            q => Net_66,
+            main_0 => Net_14,
+            main_1 => Net_23);
 
-    Net_55:macrocell
+    Net_64:macrocell
         GENERIC MAP(
-            eqn_main => "(!main_0)",
+            eqn_main => "(!main_0 * !main_1)",
             regmode => 0,
             clken_mode => 1)
         PORT MAP(
-            q => Net_55,
-            main_0 => Net_21);
+            q => Net_64,
+            main_0 => Net_21,
+            main_1 => Net_20);
 
     \Control_DIRECCION:Sync:ctrl_reg\:controlcell
         GENERIC MAP(
@@ -1101,7 +1103,7 @@ BEGIN
             clock => open,
             status_7 => Net_21,
             status_6 => Net_20,
-            status_5 => Net_19,
+            status_5 => Net_65,
             status_4 => Net_18,
             status_3 => Net_16,
             status_2 => Net_15,
@@ -1213,7 +1215,7 @@ BEGIN
             int_type => "10",
             is_nmi => 0)
         PORT MAP(
-            interrupt => Net_58,
+            interrupt => Net_66,
             clock => ClockBlock_BUS_CLK);
 
     isr_DER:interrupt
@@ -1221,7 +1223,7 @@ BEGIN
             int_type => "10",
             is_nmi => 0)
         PORT MAP(
-            interrupt => Net_55,
+            interrupt => Net_64,
             clock => ClockBlock_BUS_CLK);
 
     \UART:BUART:txn\:macrocell

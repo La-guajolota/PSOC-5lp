@@ -1,6 +1,6 @@
 // ======================================================================
 // Seguidor_de_linea.v generated from TopDesign.cysch
-// 09/13/2023 at 10:16
+// 09/13/2023 at 16:07
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -303,17 +303,17 @@ module UART_v2_50_0 (
 
 endmodule
 
-// Component: not_v1_0
+// Component: nor_v1_0
 `ifdef CY_BLK_DIR
 `undef CY_BLK_DIR
 `endif
 
 `ifdef WARP
-`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0"
-`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0\not_v1_0.v"
+`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\nor_v1_0"
+`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\nor_v1_0\nor_v1_0.v"
 `else
-`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0"
-`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\not_v1_0\not_v1_0.v"
+`define CY_BLK_DIR "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\nor_v1_0"
+`include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\nor_v1_0\nor_v1_0.v"
 `endif
 
 // top
@@ -346,16 +346,16 @@ module top ;
           wire  Net_24;
           wire  Net_11;
           wire [5:0] Net_6;
-          wire  Net_55;
-          wire  Net_58;
           wire  Net_20;
-          wire  Net_19;
+          wire  Net_14;
+          wire  Net_23;
+          wire  Net_15;
+          wire  Net_66;
+          wire  Net_65;
+          wire  Net_64;
+          wire  Net_21;
           wire  Net_18;
           wire  Net_16;
-          wire  Net_15;
-          wire  Net_14;
-          wire  Net_21;
-          wire  Net_23;
           wire  Net_17;
 
 	wire [5:0] tmpOE__Driv_inputs_net;
@@ -494,7 +494,7 @@ module top ;
 		Opticos
 		 (.oe(tmpOE__Opticos_net),
 		  .y({8'b0}),
-		  .fb({Net_21, Net_20, Net_19, Net_18, Net_16, Net_15, Net_14, Net_23}),
+		  .fb({Net_21, Net_20, Net_65, Net_18, Net_16, Net_15, Net_14, Net_23}),
 		  .io({tmpIO_7__Opticos_net[7:0]}),
 		  .siovref(tmpSIOVREF__Opticos_net),
 		  .interrupt({tmpINTERRUPT_0__Opticos_net[0:0]}),
@@ -540,7 +540,7 @@ module top ;
         .status_2(Net_15),
         .status_3(Net_16),
         .status_4(Net_18),
-        .status_5(Net_19),
+        .status_5(Net_65),
         .status_6(Net_20),
         .status_7(Net_21),
         .status_bus(8'b0));
@@ -675,21 +675,21 @@ module top ;
 	cy_isr_v1_0
 		#(.int_type(2'b10))
 		isr_IZQ
-		 (.int_signal(Net_58));
+		 (.int_signal(Net_66));
 
 
 
 	cy_isr_v1_0
 		#(.int_type(2'b10))
 		isr_DER
-		 (.int_signal(Net_55));
+		 (.int_signal(Net_64));
 
 
 
-    assign Net_58 = ~Net_23;
+    assign Net_66 = ~(Net_23 | Net_14);
 
 
-    assign Net_55 = ~Net_21;
+    assign Net_64 = ~(Net_21 | Net_20);
 
 
 
