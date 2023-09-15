@@ -60,11 +60,11 @@ int main(void)
         uint8_t reg = Control_manual_Read();
         switch(reg){//LOS CAMBIOS DE VELOCIDAD SON POR POLLING
             case Mas:
-                if(cpp<=254){//La resolucion del pwm es de 255
+                if(cpp<=150){//La resolucion del pwm es de 255
                     cpp+=5;
                     PWM_Mosfet_WriteCompare(cpp);
                     LED_VELOCIDAD_Write7SegNumberDec(cpp,0,4,0);
-                    CyDelay(10);
+                    CyDelay(500);
                 }
                 break;
             case Menos:
@@ -72,7 +72,7 @@ int main(void)
                     cpp-=5;
                     PWM_Mosfet_WriteCompare(cpp);
                     LED_VELOCIDAD_Write7SegNumberDec(cpp,0,4,0);
-                    CyDelay(10);
+                    CyDelay(500);
                 }   
                 break;
         }
@@ -88,17 +88,16 @@ void RUTINA(uint8_t GIRO){
         
         PWM_Mosfet_WriteCompare(i);
         LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
-        CyDelay(20);
+        CyDelay(500);
     }
     
     Driver_RELAY_Write(GIRO);//Hacemos el cambio de direccion en reles
-    CyDelay(2000);
     
     for(int i=0; i<=cpp ;i++){//Subimos y regresamos a la velocidad anterior
     
     PWM_Mosfet_WriteCompare(i);
     LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
-    CyDelay(20);
+    CyDelay(500);
     }
     
 };
