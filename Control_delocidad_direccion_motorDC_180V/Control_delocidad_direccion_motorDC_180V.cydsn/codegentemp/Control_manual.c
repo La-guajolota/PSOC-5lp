@@ -17,7 +17,7 @@
 
 #include "Control_manual.h"
 
-#if !defined(Control_manual_sts_sts_reg__REMOVED) /* Check for removal by optimization */
+#if !defined(Control_manual_sts_intr_sts_reg__REMOVED) /* Check for removal by optimization */
 
 
 /*******************************************************************************

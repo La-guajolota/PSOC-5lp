@@ -72,10 +72,10 @@ uint8 Control_manual_ReadMask(void) ;
 ***************************************/
 
 /* Status Register */
-#define Control_manual_Status             (* (reg8 *) Control_manual_sts_sts_reg__STATUS_REG )
-#define Control_manual_Status_PTR         (  (reg8 *) Control_manual_sts_sts_reg__STATUS_REG )
-#define Control_manual_Status_Mask        (* (reg8 *) Control_manual_sts_sts_reg__MASK_REG )
-#define Control_manual_Status_Aux_Ctrl    (* (reg8 *) Control_manual_sts_sts_reg__STATUS_AUX_CTL_REG )
+#define Control_manual_Status             (* (reg8 *) Control_manual_sts_intr_sts_reg__STATUS_REG )
+#define Control_manual_Status_PTR         (  (reg8 *) Control_manual_sts_intr_sts_reg__STATUS_REG )
+#define Control_manual_Status_Mask        (* (reg8 *) Control_manual_sts_intr_sts_reg__MASK_REG )
+#define Control_manual_Status_Aux_Ctrl    (* (reg8 *) Control_manual_sts_intr_sts_reg__STATUS_AUX_CTL_REG )
 
 #endif /* End CY_STATUS_REG_Control_manual_H */
 

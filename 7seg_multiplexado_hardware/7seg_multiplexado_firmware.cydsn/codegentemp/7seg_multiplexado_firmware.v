@@ -1,6 +1,6 @@
 // ======================================================================
 // 7seg_multiplexado_firmware.v generated from TopDesign.cysch
-// 09/12/2023 at 02:54
+// 09/13/2023 at 20:25
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 

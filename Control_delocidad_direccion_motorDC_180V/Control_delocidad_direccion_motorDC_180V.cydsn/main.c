@@ -1,63 +1,105 @@
-
 #include "project.h"
-#include "Maniobras.h"
+#include "L293.h"
 
-//Variables globales
-uint8_t mando, mando_anterior=Paro;//Contiene los estados de las entradas de control
-uint8_t Potenccia=0;//Numero de conteo comparación del PWM
+#define Derecha 0x01
+#define Izquierda 0x02
+#define Mas 0x04
+#define Menos 0x08
+#define Quieto 0x80
+
+/**************************************/
+uint8_t REG;
+uint8_t flag = 0x00;
+CY_ISR(isr){
+    isr_ClearPending();
+    REG =  Control_manual_Read() - 0x80;
+    flag = ~flag;
+}
+
+void RUTINA(uint8_t GIRO);
 
 int main(void)
 {
     CyGlobalIntEnable;
-    //Perifericos
-    PWM_Mosfet_Start();
+    Control_manual_InterruptEnable();
+    isr_StartEx(isr);
+    isr_ClearPending();
+    
     LED_VELOCIDAD_Start();
     
-    //Condiciones iniciales
-    LED_VELOCIDAD_Write7SegNumberDec(0,0,4,0);//Mostramos la potecia inicial                                                                                                                                                                
-    PWM_Mosfet_WriteCompare(255);//Reteamos velocidad a 0
-    Driver_RELAY_Write(paro_total);//sETEAMOS LA SALIDA A PARO TOTAL
+    //CONDICIONES INCIALES
+    uint8_t cpp = 0x00;//INICIAMOS EN VELOCIDAD CERO
+    Driver_RELAY_Write(PARO);//Hacemos el cambio de direccion en reles
+    PWM_Mosfet_Start();
+    PWM_Mosfet_WriteCompare(cpp);
+    LED_VELOCIDAD_Write7SegNumberDec(cpp,0,4,0);
     
-    for(;;)
-    {
-      //checamos el registro de control
-       mando = Control_manual_Read();
-       
-      //Existió algún cambio del registro con su estado normal??
-    /*
-        El registro de control en los botones es
-        0b00011111  --> 0x1F
-      */
-      if(mando != 0x1F){
+    
+    
+    for(;;){
         
-          if(mando != mando_anterior){//Revisamos si la nueva accion no es el estado actual
-            switch(mando){
-            case Paro:
-                SENTIDO(paro_total);
-                break;
-            case Der:
-                SENTIDO(Derecha);
-                break;
-            case Izq:
-                SENTIDO(Izquierda);
-                break;
-            case Vmas:
-                if(Potenccia<100){
-                    Potenccia++;//Aumentamos potencia
-                    Velocidad(Potenccia);
+         // LOS CAMBIO DE IRECCIÓN SON POR INTERRUPCCIONES
+        if(flag){//Le apretó un boton?
+            flag = ~flag;//tiramos la bandera
+            switch (REG){//CUAL?
+                case Derecha:
+                    //RUTINA DE CAMBIO DE DIRECCION
+                    RUTINA(GIRO_1);
+                    break;
+                case Izquierda:
+                    //RUTINA DE CAMBIO DE DIRECCION
+                    RUTINA(GIRO_2);
+                    break;
+                case Quieto:
+                    //RUTINA DE PARO
+                    RUTINA(PARO);
+                    break;
+            }
+        }
+        
+        uint8_t reg = Control_manual_Read();
+        switch(reg){//LOS CAMBIOS DE VELOCIDAD SON POR POLLING
+            case Mas:
+                if(cpp<=254){//La resolucion del pwm es de 255
+                    cpp+=5;
+                    PWM_Mosfet_WriteCompare(cpp);
+                    LED_VELOCIDAD_Write7SegNumberDec(cpp,0,4,0);
+                    CyDelay(10);
                 }
                 break;
-            case Vmenos:
-                if(Potenccia>0){
-                    Potenccia--;//Disminuimos potencia potencia
-                    Velocidad(Potenccia);
-                }
-                break;  
-          }    
-    }
-        mando_anterior = mando;
-    }   
+            case Menos:
+                 if(cpp>=1){//La resolucion del pwm es de 255
+                    cpp-=5;
+                    PWM_Mosfet_WriteCompare(cpp);
+                    LED_VELOCIDAD_Write7SegNumberDec(cpp,0,4,0);
+                    CyDelay(10);
+                }   
+                break;
+        }
+        
     }
 }
 
+void RUTINA(uint8_t GIRO){
+    
+    uint8_t cpp = PWM_Mosfet_ReadCompare();
+    
+    for(int i=cpp; i>0 ;i--){//Bajamos de velocidad
+        
+        PWM_Mosfet_WriteCompare(i);
+        LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
+        CyDelay(20);
+    }
+    
+    Driver_RELAY_Write(GIRO);//Hacemos el cambio de direccion en reles
+    CyDelay(2000);
+    
+    for(int i=0; i<=cpp ;i++){//Subimos y regresamos a la velocidad anterior
+    
+    PWM_Mosfet_WriteCompare(i);
+    LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
+    CyDelay(20);
+    }
+    
+};
 

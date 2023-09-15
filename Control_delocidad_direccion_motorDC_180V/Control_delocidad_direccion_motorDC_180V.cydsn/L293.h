@@ -1,3 +1,5 @@
+//**************************************************************************************************
+//Control de giro de motores
 /*
     EN|1A|2A
     1 |0 |1     #define Derecha 0x05
@@ -41,3 +43,31 @@
 //MÁSCARAS PARA HACKS DE GIRO
 #define RIGHT_HACK 0X2E //MB frente MA atrás
 #define LEFT_HACK 0X35  //MB freno MA atrás
+
+//**************************************************************************************************
+//MÁSCARAS PARA UN CONTROL DE PUENTE H CON DOS RELEVADORES 
+/*Registro de control que es de 8bit los ultimos dos más significantes no importan
+                    
+                            180dc
+                              |
+                              |
+                              |
+               NC_rele1 ------------- NC_rele2
+                            
+            COMUN_rel1*-----MOTOR---*COMUN_rele2
+                              
+               NO_rele1 ------------- NO_rele2
+                              |
+                              |
+                              |GND
+    
+    Para un unico motor y un unico puente H con rlevadores
+    |x |x |x |x |x |bit2  |bit1  |bit0
+    . .            |ENa   |A1    |A2      Estos son los pines de Control del ic L293b
+    
+*/
+    
+#define GIRO_1 0x02
+#define GIRO_2 0x01
+#define PARO   0xFF
+#define DISABLE (~0x04)
