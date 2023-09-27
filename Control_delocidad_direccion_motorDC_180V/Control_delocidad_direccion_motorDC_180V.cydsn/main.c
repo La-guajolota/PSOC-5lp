@@ -88,16 +88,17 @@ void RUTINA(uint8_t GIRO){
         
         PWM_Mosfet_WriteCompare(i);
         LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
-        CyDelay(500);
+        CyDelay(750);
     }
     
     Driver_RELAY_Write(GIRO);//Hacemos el cambio de direccion en reles
+    CyDelay(3000);
     
     for(int i=0; i<=cpp ;i++){//Subimos y regresamos a la velocidad anterior
     
     PWM_Mosfet_WriteCompare(i);
     LED_VELOCIDAD_Write7SegNumberDec(i,0,4,0);
-    CyDelay(500);
+    CyDelay(750);
     }
     
 };
