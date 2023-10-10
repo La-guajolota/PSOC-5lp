@@ -1,6 +1,6 @@
 #include "project.h"
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
-#include "..\..\..\psoc\dSPLAYSS\Workspace01\LCD.cydsn\PSOC_LCD.h"
+#include "..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 
 uint8_t flag = 0x00;
 //Subrutina de interrupcción
@@ -35,6 +35,11 @@ int main(void)
     LCD_PrintString("DOMOTICA ");
     CyDelay(3000);
     LCD_ClearDisplay();
+    LCD_Position(0,0);
+    LCD_PrintString("TESTEO DE");
+    LCD_Position(1,0);
+    LCD_PrintString("ACTUADORES");
+    CyDelay(3000);
     
     
     //RUTINA DE PRUEBA DE CONTROL POR FASE Y VENTILADOR
@@ -85,6 +90,7 @@ int main(void)
         //Mostramos en la LCD
         
         //Enviamos info de sensados a la Dashboard
+        
     }
 }
 

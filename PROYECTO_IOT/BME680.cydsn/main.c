@@ -4,47 +4,70 @@ calidad del aire y temperatura ambiental e imprimirlos en el display LCD 16x2
 (polling de 1 segundo).
  * ========================================
 */
-
-//Librerias nativas de C y PSoC
-#include "project.h"
+//Librerias
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-//Librerias propias
+#include "project.h"
 #include "..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"//LCD
-#include "D:\design-mpu\source\ejemplos\BME680\bme680.h"//Sensor BME680
+#include "bme680.h"
 
-//Variables sensor
+/* Variables        --------------------------------*/
 int8_t error = 0;
 sdata_bme680 datos_bme680;
 
+uint32_t lecturas[4] = {0,0,0,0};
+void sense(void){
+    datos_bme680 = bme680_readData(&sensor_bme680);
+    
+    //Vaciamos
+    lecturas[0] = datos_bme680.gas_resistance;
+    lecturas[1] = datos_bme680.humidity;
+    lecturas[2] = datos_bme680.pressure;
+    lecturas[3] = datos_bme680.temperature;
+}
 
-//Varibles globlales
-char *Etiquetas[] = {"Humedad:", "Presion atm:", "Calidad de aire:", "Temperatura amb:"};
-int lecturas[4] = {0,0,0,0}; 
-
-//Función para motrado de datos
-void SHOW(){
-    for(int i=0;i<=3;i++){
+char *etiquetas[4] = {"Calidad de aire","Humedad","Presion","Temperatura"};
+void show(void){
+    
+    for(int i=0;i<4;i++){
         LCD_ClearDisplay();
         LCD_Position(0,0);
-        LCD_PrintString(Etiquetas[i]);
+        LCD_PrintString(etiquetas[i]);
         LCD_Position(1,0);
         LCD_PrintNumber(lecturas[i]);
         CyDelay(1000);
     }
+
 }
 
-char LCD_msg[16];
-//Funcion para captura de datos del sensor en I2C
-void SENS(){
+void TEST(void){
+    //Testeo de Periferico con interfaz de I2C
+    uint8_t ERR=0,data[2];//vALOR DIFERENTE A 0 ES UN ERROR
     
-    datos_bme680 = bme680_readData(&sensor_bme680);//Optenemos las lecturas 
+    uint8_t REG = 0xD0;//REGISTRO A LEER
     
-    //sprintf(LCD_msg,"T: %d degC, P: %d hPa, H: %d %%rH, G: %d ohms\r\n", datos_bme680.temperature /*/ 100*/,
-    //datos_bme680.pressure /*/ 100*/, datos_bme680.humidity /*/ 1000*/, datos_bme680.gas_resistance);
+    //Mandamos address en WR=0
+    ERR = I2C_MasterSendStart(0x76,0);//adress
+    ERR = I2C_MasterWriteByte(REG);//CHIP ID
+    //Mandamos address en WR=1
+    ERR = I2C_MasterSendRestart(0x76,1);//adress
+    
+    //Leemos los registros
+    char i = 0;
+    while(i < (3 - 1)) {
+        data[i] = I2C_MasterReadByte(I2C_ACK_DATA);//ACK para continuar con el siguiente registro
+        i++;
+    }
+    //Siempre el ultimo registro a leer manda un NAK
+    data[i] = I2C_MasterReadByte(I2C_NAK_DATA);
+    
+    ERR = I2C_MasterSendStop();//Paramos la actividad e lectura de registros
+   
+    LCD_Position(0,0);
+    LCD_PrintNumber(ERR);//Estaus si hay errores en la comunicacion
+    LCD_Position(1,0);
+    LCD_PrintHex16(data[0]);//INfo capturada
+    LCD_Position(1,5);
+    LCD_PrintHex16(data[1]);//INfo capturada
 }
 
 int main(void)
@@ -55,15 +78,19 @@ int main(void)
     LCD_Start();
     I2C_Start();
     
+    //FUNCION DE TESTE
+    //TEST();
+    
+    //Inicializamos el BME con su configuraciones
     error = bme680_Start(&sensor_bme680);
     
     for(;;)
     {
-        //Sensamos
-        SENS();
+        //SENSAMOS
+        sense();
         
-        //Mostramos
-        SHOW();
+        //MOSTRAMOS DATOS SENSADOS
+        show();
     }
 }
 
