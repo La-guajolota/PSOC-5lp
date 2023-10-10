@@ -8,28 +8,25 @@ int main(void)
     UART_Start();
     UART_ClearTxBuffer();
     SPIM_Start();
-  
-    uint8_t error = MAX_INIT();
     
     //Variables
     uint16_t temp=0;//Variable alamacena la temperatura 
     char lec[32];//Buffer a mostrar en pantalla
     
-    
-    sprintf(lec,"Estado del bit tests %d \n\r",error);
-    UART_PutString(lec);
-    CyDelay(5000);
-    
+    //sprintf(lec,"Estado del bit tests %d \n\r",error);
+    //UART_PutString(lec);
+    //CyDelay(5000);
     for(;;)
     {
         //Sensamos
-        temp = sens();
+        temp = raw();
         
         //Un segundo de poleo
-        CyDelay(10);
+        CyDelay(500);
         
         //Mostramos 
-        sprintf(lec,"Temperatura: %d degC\n\r",temp);        
+        //sprintf(lec,"Temperatura: %d degC\n\r",temp);
+        sprintf(lec,"%d\n\r",temp);
         UART_PutString(lec);
     }
 }

@@ -25,3 +25,5 @@
 uint8_t MAX_INIT(void);//Testea el el sensor
 
 uint16_t sens(void);//Cpatura la última temperatura medida por el sensor
+
+uint16_t raw(void);

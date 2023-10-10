@@ -1,6 +1,6 @@
 -- ======================================================================
 -- MAX6675.ctl generated from MAX6675
--- 10/09/2023 at 19:25
+-- 10/10/2023 at 17:39
 -- This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 -- ======================================================================
 
