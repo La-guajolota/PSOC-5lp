@@ -35,7 +35,7 @@ uint8_t MAX_INIT(void){
         ERROR |= id;
     }
     
-    return ERROR;
+    return ERROR;  
 }
 
 //Captura de temperatura
@@ -49,7 +49,7 @@ uint16_t sens(void){
     
     //Separamos los bits BIT14--BIT3
     temp = word >> 3;
-    temp = map(temp,0,4095,0,1023);
+    temp = map(temp,0,4095,0,1024);
         
     return temp;
 }
@@ -59,7 +59,8 @@ uint16_t raw(void){
     uint16_t word;//Lectura recuperada del sensor
     
     //Por comunicacion ISP
-    SPIM_WriteTxData(0x0000);
+    SPIM_WriteTxData(0xFFFF);
+    CyDelay(1000);
     word = SPIM_ReadRxData();
     
     return word;
