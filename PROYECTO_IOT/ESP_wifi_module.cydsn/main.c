@@ -21,6 +21,8 @@ int main(void)
     //Perifericos
     UART_Start();
     UART_ClearRxBuffer();
+    //UART_PC_Start();
+    //UART_PC_ClearRxBuffer();
     LCD_Start();
     esp_wifi_Start();
     

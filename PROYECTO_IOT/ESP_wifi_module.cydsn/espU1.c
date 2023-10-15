@@ -32,78 +32,81 @@ Los datos recibidos serán mostrados en la interfaz serial automáticamente si e
 6. Cierre de la Conexión:
 AT+CIPCLOSE: Este comando cerrará la conexión UDP.
 */
-char buffer[32],i=0;
-
-//Funcion con metodos para confirmación bilateral
-/*
-void esp_wifi() {
-    // Enviar el comando "AT" con saltos de línea
-    UART_PutString("AT");
-    UART_PutChar(0x0A); // Salto de línea
-    UART_PutChar(0x0D); // Vuelta de carro
-    
-    // Esperar la confirmación
-    while (1) {
-        buffer[i] = UART_GetByte();
-        i++;
-        if (!strcmp("OK", buffer)) {
-            break;
-        }
-    }
-    
-    // Configurar el modo WiFi
-    UART_PutString("AT+CWMODE=3");
-    UART_PutChar(0x0A); // Salto de línea
-    UART_PutChar(0x0D); // Vuelta de carro
-
-    // Conectar a la red WiFi
-    UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\""); // Nombre de red y contraseña
-    UART_PutChar(0x0A); // Salto de línea
-    UART_PutChar(0x0D); // Vuelta de carro
-
-    
-    AT+CWJAP="FOCOS","focointeligente"
-    WIFI CONNECTED
-    WIFI GOT IP
-    OK
-    */
-    
-    // Obtener la dirección IP
-    //UART_PutString("AT+CIFSR");
-    //UART_PutChar(0x0A); // Salto de línea
-    //UART_PutChar(0x0D); // Vuelta de carro
-
-    // Capturar la dirección IP
-    //char *IP[16];
-    
-    // Iniciar una conexión UDP
-    //UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.100.55\",8085,8081,2");
-    //UART_PutChar(0x0A); // Salto de línea
-    //UART_PutChar(0x0D); // Vuelta de carro
-
-    // Cerrar la conexión
-    //UART_PutString("AT+CIPCLOSE");
-//}
-
 
 //Funcion de inicializacion sin tanto shitpost
 void esp_wifi_Start(){
     
-    UART_PutString("AT+CWMODE=3");
-    UART_PutChar(0x0A);
-    UART_PutChar(0x0D);
-    CyDelay(250);
+    UART_PutString("AT\r\n");
+    //UART_PC_PutString("AT\r\n");
+    LCD_ClearDisplay();
+    LCD_Position(0,0);
+    LCD_PrintString("AT\r\n");
+    CyDelay(1500);
     
-     UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"");//MICANTON}
-    //UART_PutString("AT+CWJAP=\"moto\",\"729edb6b0e42\"");//MICUERNOFONO
-    UART_PutChar(0x0A);
-    UART_PutChar(0x0D);
-    CyDelay(250);
+    wait();
     
-    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.100.55\",8085,8081,2");
-    UART_PutChar(0x0A);
-    UART_PutChar(0x0D);
-    CyDelay(250);
+    UART_PutString("AT+CWMODE=3\r\n");
+    //UART_PC_PutString("AT+CWMODE=3\r\n");
+    LCD_ClearDisplay();
+    LCD_Position(0,0);
+    LCD_PrintString("AT\r\n");
+    CyDelay(1500);
+    
+    wait();
+    
+    UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
+    LCD_ClearDisplay();
+    LCD_Position(0,0);
+    LCD_PrintString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");
+    //UART_PutString("AT+CWJAP=\"moto\",\"729edb6b0e42\"\r\n");//MICUERNOFONO
+    
+    //UART_PC_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
+    
+    CyDelay(1500);
+    
+    wait();
+    
+    //UART_PutString("AT+CIFSR\r\n");//MICUERNOFONO
+    //CyDelay(5000);
+    
+    //wait();
+    
+    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8080,8081,2\r\n");
+    LCD_ClearDisplay();
+    LCD_Position(0,0);
+    LCD_PrintString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8080,8081,2\r\n");
+        //UART_PC_PutString("AT+CIPSTART=\"UDP\",\"192.168.123.228\",8051,8081,2\r\n");
+    
+    CyDelay(1500);
+    
+    wait();
+    
+    //SALUDO
+    //UART_PutString("AT+CIPSEND=4\r\n");
+    //CyDelay(5000);
+    
+    //wait();
+    
+    //UART_PutString("owo\r\n");
+    //CyDelay(5000);
+    
+    //wait();
 }
 
 //Funcion para mandar string de informacion
+void wait(){
+    char buffer[64],i=0;
+    while(i<64){
+        buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
+        if(buffer[i]!=_NULL){
+            //UART_PC_PutChar(buffer[i]);
+            LCD_Position(1,0);
+            LCD_PrintString(buffer);
+        }
+        i++;
+    }
+    
+    for(int a=0;a<64;a++){
+        buffer[a] = _NULL;
+    }
+};
