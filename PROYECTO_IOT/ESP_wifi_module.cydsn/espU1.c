@@ -38,59 +38,29 @@ void esp_wifi_Start(){
     
     UART_PutString("AT\r\n");
     //UART_PC_PutString("AT\r\n");
-    LCD_ClearDisplay();
-    LCD_Position(0,0);
-    LCD_PrintString("AT\r\n");
-    CyDelay(1500);
+    CyDelay(1000);
     
-    wait();
     
     UART_PutString("AT+CWMODE=3\r\n");
     //UART_PC_PutString("AT+CWMODE=3\r\n");
-    LCD_ClearDisplay();
-    LCD_Position(0,0);
-    LCD_PrintString("AT\r\n");
-    CyDelay(1500);
+    CyDelay(1000);
     
-    wait();
     
     UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
-    LCD_ClearDisplay();
-    LCD_Position(0,0);
-    LCD_PrintString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");
     //UART_PutString("AT+CWJAP=\"moto\",\"729edb6b0e42\"\r\n");//MICUERNOFONO
     
     //UART_PC_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
+    CyDelay(1000);
     
-    CyDelay(1500);
-    
-    wait();
     
     //UART_PutString("AT+CIFSR\r\n");//MICUERNOFONO
     //CyDelay(5000);
-    
     //wait();
     
-    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8080,8081,2\r\n");
-    LCD_ClearDisplay();
-    LCD_Position(0,0);
-    LCD_PrintString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8080,8081,2\r\n");
-        //UART_PC_PutString("AT+CIPSTART=\"UDP\",\"192.168.123.228\",8051,8081,2\r\n");
+    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8051,8080,2\r\n");
+    //UART_PC_PutString("AT+CIPSTART=\"UDP\",\"192.168.123.228\",8051,8081,2\r\n");
+    CyDelay(1000);
     
-    CyDelay(1500);
-    
-    wait();
-    
-    //SALUDO
-    //UART_PutString("AT+CIPSEND=4\r\n");
-    //CyDelay(5000);
-    
-    //wait();
-    
-    //UART_PutString("owo\r\n");
-    //CyDelay(5000);
-    
-    //wait();
 }
 
 //Funcion para mandar string de informacion
@@ -99,14 +69,8 @@ void wait(){
     while(i<64){
         buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
         if(buffer[i]!=_NULL){
-            //UART_PC_PutChar(buffer[i]);
-            LCD_Position(1,0);
-            LCD_PrintString(buffer);
+            UART_PC_PutChar(buffer[i]);
         }
         i++;
-    }
-    
-    for(int a=0;a<64;a++){
-        buffer[a] = _NULL;
     }
 };

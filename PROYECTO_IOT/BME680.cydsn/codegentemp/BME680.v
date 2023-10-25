@@ -1,6 +1,6 @@
 // ======================================================================
 // BME680.v generated from TopDesign.cysch
-// 10/06/2023 at 22:31
+// 10/15/2023 at 20:12
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -196,7 +196,7 @@
 `include "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v"
 `endif
 
-// I2C_v3_50(Address_Decode=1, BusSpeed_kHz=50, ClockInputVisibility=false, CtlModeReplacementString=SyncCtl, EnableWakeup=false, ExternalBuffer=false, Externi2cIntrHandler=false, ExternTmoutIntrHandler=false, FF=true, Hex=false, I2C_Mode=2, I2cBusPort=0, Implementation=1, InternalUdbClockToleranceMinus=25, InternalUdbClockTolerancePlus=5, NotSlaveClockMinusTolerance=25, NotSlaveClockPlusTolerance=5, PrescalerEnabled=false, PrescalerPeriod=3, Psoc3ffSelected=false, Psoc5AffSelected=false, Psoc5lpffSelected=true, RemoveI2cff=false, RemoveI2cUdb=true, RemoveIntClock=true, RemoveTimeoutTimer=true, SclTimeoutEnabled=false, SdaTimeoutEnabled=false, Slave_Address=8, SlaveClockMinusTolerance=5, SlaveClockPlusTolerance=50, TimeoutEnabled=false, TimeoutImplementation=0, TimeOutms=25, TimeoutPeriodff=39999, TimeoutPeriodUdb=39999, UDB_MSTR=false, UDB_MULTI_MASTER_SLAVE=false, UDB_SLV=false, UdbInternalClock=false, UdbRequiredClock=800, UdbSlaveFixedPlacementEnable=false, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMMENT=, CY_COMPONENT_NAME=I2C_v3_50, CY_CONFIG_TITLE=I2C, CY_CONST_CONFIG=true, CY_CONTROL_FILE=I2C_Slave_DefaultPlacement.ctl, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=I2C, CY_INSTANCE_SHORT_NAME=I2C, CY_MAJOR_VERSION=3, CY_MINOR_VERSION=50, CY_PDL_DRIVER_NAME=, CY_PDL_DRIVER_REQ_VERSION=, CY_PDL_DRIVER_SUBGROUP=, CY_PDL_DRIVER_VARIANT=, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  4.4, INSTANCE_NAME=I2C, )
+// I2C_v3_50(Address_Decode=1, BusSpeed_kHz=100, ClockInputVisibility=false, CtlModeReplacementString=SyncCtl, EnableWakeup=false, ExternalBuffer=false, Externi2cIntrHandler=false, ExternTmoutIntrHandler=false, FF=true, Hex=false, I2C_Mode=2, I2cBusPort=0, Implementation=1, InternalUdbClockToleranceMinus=25, InternalUdbClockTolerancePlus=5, NotSlaveClockMinusTolerance=25, NotSlaveClockPlusTolerance=5, PrescalerEnabled=false, PrescalerPeriod=3, Psoc3ffSelected=false, Psoc5AffSelected=false, Psoc5lpffSelected=true, RemoveI2cff=false, RemoveI2cUdb=true, RemoveIntClock=true, RemoveTimeoutTimer=true, SclTimeoutEnabled=false, SdaTimeoutEnabled=false, Slave_Address=8, SlaveClockMinusTolerance=5, SlaveClockPlusTolerance=50, TimeoutEnabled=false, TimeoutImplementation=0, TimeOutms=25, TimeoutPeriodff=39999, TimeoutPeriodUdb=39999, UDB_MSTR=false, UDB_MULTI_MASTER_SLAVE=false, UDB_SLV=false, UdbInternalClock=false, UdbRequiredClock=1600, UdbSlaveFixedPlacementEnable=false, CY_API_CALLBACK_HEADER_INCLUDE=#include "cyapicallbacks.h", CY_COMMENT=, CY_COMPONENT_NAME=I2C_v3_50, CY_CONFIG_TITLE=I2C, CY_CONST_CONFIG=true, CY_CONTROL_FILE=I2C_Slave_DefaultPlacement.ctl, CY_DATASHEET_FILE=<:default:>, CY_FITTER_NAME=I2C, CY_INSTANCE_SHORT_NAME=I2C, CY_MAJOR_VERSION=3, CY_MINOR_VERSION=50, CY_PDL_DRIVER_NAME=, CY_PDL_DRIVER_REQ_VERSION=, CY_PDL_DRIVER_SUBGROUP=, CY_PDL_DRIVER_VARIANT=, CY_REMOVE=false, CY_SUPPRESS_API_GEN=false, CY_VERSION=PSoC Creator  4.4, INSTANCE_NAME=I2C, )
 module I2C_v3_50_0 (
     bclk,
     clock,
@@ -371,22 +371,22 @@ module top ;
           wire  Net_26;
           wire  Net_27;
           wire  Net_28;
-          wire  Net_11;
-          wire  Net_10;
-          wire  Net_9;
-          wire  Net_8;
-          wire  Net_7;
-          wire  Net_6;
-          wire  Net_5;
-          wire  Net_4;
-          wire  Net_3;
-          wire  Net_2;
-          wire  Net_1;
+          wire  Net_42;
+          wire  Net_41;
+          wire  Net_40;
+          wire  Net_39;
+          wire  Net_33;
+          wire  Net_38;
+          wire  Net_37;
+          wire  Net_36;
+          wire  Net_35;
+          wire  Net_34;
+          wire  Net_32;
 
-	wire [0:0] tmpOE__SDA_net;
-	wire [0:0] tmpFB_0__SDA_net;
-	wire [0:0] tmpINTERRUPT_0__SDA_net;
-	electrical [0:0] tmpSIOVREF__SDA_net;
+	wire [0:0] tmpOE__SDA_1_net;
+	wire [0:0] tmpFB_0__SDA_1_net;
+	wire [0:0] tmpINTERRUPT_0__SDA_1_net;
+	electrical [0:0] tmpSIOVREF__SDA_1_net;
 
 	cy_psoc3_pins_v1_10
 		#(.id("22863ebe-a37b-476f-b252-6e49a8c00b12"),
@@ -441,13 +441,13 @@ module top ;
 		  .ovt_needed(1'b0),
 		  .ovt_slew_control(2'b00),
 		  .input_buffer_sel(2'b00))
-		SDA
-		 (.oe(tmpOE__SDA_net),
+		SDA_1
+		 (.oe(tmpOE__SDA_1_net),
 		  .y({1'b0}),
-		  .fb({tmpFB_0__SDA_net[0:0]}),
-		  .io({Net_1}),
-		  .siovref(tmpSIOVREF__SDA_net),
-		  .interrupt({tmpINTERRUPT_0__SDA_net[0:0]}),
+		  .fb({tmpFB_0__SDA_1_net[0:0]}),
+		  .io({Net_32}),
+		  .siovref(tmpSIOVREF__SDA_1_net),
+		  .interrupt({tmpINTERRUPT_0__SDA_1_net[0:0]}),
 		  .in_clock({1'b0}),
 		  .in_clock_en({1'b1}),
 		  .in_reset({1'b0}),
@@ -455,12 +455,25 @@ module top ;
 		  .out_clock_en({1'b1}),
 		  .out_reset({1'b0}));
 
-	assign tmpOE__SDA_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
+	assign tmpOE__SDA_1_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
 
-	wire [0:0] tmpOE__SCL_net;
-	wire [0:0] tmpFB_0__SCL_net;
-	wire [0:0] tmpINTERRUPT_0__SCL_net;
-	electrical [0:0] tmpSIOVREF__SCL_net;
+    I2C_v3_50_0 I2C (
+        .bclk(Net_34),
+        .clock(1'b0),
+        .iclk(Net_36),
+        .itclk(Net_37),
+        .reset(1'b0),
+        .scl(Net_33),
+        .scl_i(1'b0),
+        .scl_o(Net_40),
+        .sda(Net_32),
+        .sda_i(1'b0),
+        .sda_o(Net_42));
+
+	wire [0:0] tmpOE__SCL_1_net;
+	wire [0:0] tmpFB_0__SCL_1_net;
+	wire [0:0] tmpINTERRUPT_0__SCL_1_net;
+	electrical [0:0] tmpSIOVREF__SCL_1_net;
 
 	cy_psoc3_pins_v1_10
 		#(.id("02f2cf2c-2c7a-49df-9246-7a3435c21be3"),
@@ -515,13 +528,13 @@ module top ;
 		  .ovt_needed(1'b0),
 		  .ovt_slew_control(2'b00),
 		  .input_buffer_sel(2'b00))
-		SCL
-		 (.oe(tmpOE__SCL_net),
+		SCL_1
+		 (.oe(tmpOE__SCL_1_net),
 		  .y({1'b0}),
-		  .fb({tmpFB_0__SCL_net[0:0]}),
-		  .io({Net_2}),
-		  .siovref(tmpSIOVREF__SCL_net),
-		  .interrupt({tmpINTERRUPT_0__SCL_net[0:0]}),
+		  .fb({tmpFB_0__SCL_1_net[0:0]}),
+		  .io({Net_33}),
+		  .siovref(tmpSIOVREF__SCL_1_net),
+		  .interrupt({tmpINTERRUPT_0__SCL_1_net[0:0]}),
 		  .in_clock({1'b0}),
 		  .in_clock_en({1'b1}),
 		  .in_reset({1'b0}),
@@ -529,20 +542,7 @@ module top ;
 		  .out_clock_en({1'b1}),
 		  .out_reset({1'b0}));
 
-	assign tmpOE__SCL_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
-
-    I2C_v3_50_0 I2C (
-        .bclk(Net_3),
-        .clock(1'b0),
-        .iclk(Net_5),
-        .itclk(Net_6),
-        .reset(1'b0),
-        .scl(Net_2),
-        .scl_i(1'b0),
-        .scl_o(Net_9),
-        .sda(Net_1),
-        .sda_i(1'b0),
-        .sda_o(Net_11));
+	assign tmpOE__SCL_1_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
 
 	wire [0:0] tmpOE__RS_net;
 	wire [0:0] tmpFB_0__RS_net;

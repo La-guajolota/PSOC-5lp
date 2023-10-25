@@ -6,7 +6,7 @@
 
 
 //Variables para filtros
-#define ventana 3
+#define ventana 15
 int cont=0;
 uint16 suma = 0;
 

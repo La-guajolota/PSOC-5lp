@@ -43,7 +43,9 @@ void TEST(void){
     //Testeo de Periferico con interfaz de I2C
     uint8_t ERR=0,data[2];//vALOR DIFERENTE A 0 ES UN ERROR
     
-    uint8_t REG = 0xD0;//REGISTRO A LEER
+    //0xD0 ID
+    //
+    uint8_t REG = 0x1D;//REGISTRO A LEER
     
     //Mandamos address en WR=0
     ERR = I2C_MasterSendStart(0x76,0);//adress
@@ -53,7 +55,7 @@ void TEST(void){
     
     //Leemos los registros
     char i = 0;
-    while(i < (3 - 1)) {
+    while(i < (2 - 1)) {
         data[i] = I2C_MasterReadByte(I2C_ACK_DATA);//ACK para continuar con el siguiente registro
         i++;
     }
@@ -79,18 +81,20 @@ int main(void)
     I2C_Start();
     
     //FUNCION DE TESTE
-    //TEST();
+    TEST();
     
     //Inicializamos el BME con su configuraciones
-    error = bme680_Start(&sensor_bme680);
+    //error = bme680_Start(&sensor_bme680);
     
     for(;;)
     {
         //SENSAMOS
-        sense();
+        //sense();
         
         //MOSTRAMOS DATOS SENSADOS
-        show();
+        //show();
+        
+        //TEST();
     }
 }
 

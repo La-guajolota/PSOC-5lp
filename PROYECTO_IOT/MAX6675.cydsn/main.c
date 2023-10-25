@@ -12,34 +12,45 @@ int main(void)
     SPIM_Start();
     
     //Variables
-    uint16_t temp,error;//Variable alamacena la temperatura 
+    uint16_t temp,error,R;//Variable alamacena la temperatura 
     
     char lec[16];//Buffer a mostrar en pantalla
     
     for(;;)
     {
-        //SENSAMOS 
-        CyDelay(250);
-        error = MAX_INIT();
-        temp = sens();
+        error = test();//Extraemos bits de testeo
+        temp = sens();//sensamos
+        R = raw();//lectrua en crudo
         
-        if (error == 0){
-            //Mostramos temp si no hay errror de comunicacion
-            LCD_Position(0,0);
-            LCD_PrintString("TEMPERATURA");
-            LCD_Position(1,0);
-            LCD_PrintNumber(temp);
-            sprintf(lec,"%d\n\r",temp);
-            UART_PutString(lec);
-        }else{
-            //MOSTRAMOS ERROR 
-            LCD_ClearDisplay();
-            LCD_Position(0,0);
-            LCD_PrintString("ERRORES:");
-            LCD_Position(1,0);
-            LCD_PrintHex8(error);
-            CyDelay(3000);
-        }
+        //Mostramos temp si no hay errror de comunicacion
+        LCD_ClearDisplay();
+        LCD_Position(0,0);
+        LCD_PrintString("TEMPERATURA");
+        LCD_Position(1,0);
+        LCD_PrintNumber(temp);
+        sprintf(lec,"TEM: %d\n\r",temp);
+        UART_PutString(lec);
+        CyDelay(500);      
+        
+        //MOSTRAMOS ERROR 
+        LCD_ClearDisplay();
+        LCD_Position(0,0);
+        LCD_PrintString("ERRORES:");
+        LCD_Position(1,0);
+        sprintf(lec,"ERROR: %d\n\r",error);
+        UART_PutString(lec);
+        LCD_PrintNumber(error);
+        CyDelay(500);
+        
+        //MOSTRAMOS lectrura de la palabras del modulo 
+        LCD_ClearDisplay();
+        LCD_Position(0,0);
+        LCD_PrintString("raw:");
+        LCD_Position(1,0);
+        sprintf(lec,"raw en hexa %x\n\r",R);
+        UART_PutString(lec);
+        LCD_PrintHex16(R);
+        CyDelay(500);
         
     }
 }

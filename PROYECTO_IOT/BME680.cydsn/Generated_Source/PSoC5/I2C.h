@@ -253,7 +253,7 @@ extern uint8 I2C_initVar;
 *   Initial Parameter Constants
 ***************************************/
 
-#define I2C_DATA_RATE          (50u)
+#define I2C_DATA_RATE          (100u)
 #define I2C_DEFAULT_ADDR       (8u)
 #define I2C_I2C_PAIR_SELECTED  (0u)
 

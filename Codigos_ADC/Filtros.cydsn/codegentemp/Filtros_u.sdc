@@ -1,3 +1,3 @@
-# Component constraints for D:\Control digital\Filtros_FIR\Filtros.cydsn\TopDesign\TopDesign.cysch
-# Project: D:\Control digital\Filtros_FIR\Filtros.cydsn\Filtros.cyprj
-# Date: Wed, 30 Aug 2023 18:14:35 GMT
+# Component constraints for C:\Users\adria\OneDrive\Documents\psoc\Codigos_ADC\Filtros.cydsn\TopDesign\TopDesign.cysch
+# Project: C:\Users\adria\OneDrive\Documents\psoc\Codigos_ADC\Filtros.cydsn\Filtros.cyprj
+# Date: Wed, 18 Oct 2023 14:31:27 GMT

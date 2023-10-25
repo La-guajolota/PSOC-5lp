@@ -159,19 +159,19 @@ CYPACKED typedef struct
 #define cy_cfg_data_table ((const cy_cfg_addrvalue_t CYFAR *)0x48000050u)
 
 /* UDB_1_1_1_CONFIG Address: CYDEV_UCFG_B1_P3_U0_BASE Size (bytes): 128 */
-#define BS_UDB_1_1_1_CONFIG_VAL ((const uint8 CYFAR *)0x480003A8u)
+#define BS_UDB_1_1_1_CONFIG_VAL ((const uint8 CYFAR *)0x480003CCu)
 
 /* IOPINS0_7 Address: CYREG_PRT12_DR Size (bytes): 10 */
-#define BS_IOPINS0_7_VAL ((const uint8 CYFAR *)0x48000428u)
+#define BS_IOPINS0_7_VAL ((const uint8 CYFAR *)0x4800044Cu)
 
 /* IOPINS0_8 Address: CYREG_PRT15_DR Size (bytes): 10 */
-#define BS_IOPINS0_8_VAL ((const uint8 CYFAR *)0x48000434u)
+#define BS_IOPINS0_8_VAL ((const uint8 CYFAR *)0x48000458u)
 
 /* IOPINS0_1 Address: CYREG_PRT1_DM0 Size (bytes): 8 */
-#define BS_IOPINS0_1_VAL ((const uint8 CYFAR *)0x48000440u)
+#define BS_IOPINS0_1_VAL ((const uint8 CYFAR *)0x48000464u)
 
 /* IOPINS0_3 Address: CYREG_PRT3_DM0 Size (bytes): 8 */
-#define BS_IOPINS0_3_VAL ((const uint8 CYFAR *)0x48000448u)
+#define BS_IOPINS0_3_VAL ((const uint8 CYFAR *)0x4800046Cu)
 
 
 /*******************************************************************************
@@ -231,7 +231,7 @@ static void ClockSetup(void)
 
 
 	/* Configure Digital Clocks based on settings from Clock DWR */
-	CY_SET_XTND_REG16((void CYFAR *)(CYREG_CLKDIST_DCFG0_CFG0), 0x000Bu);
+	CY_SET_XTND_REG16((void CYFAR *)(CYREG_CLKDIST_DCFG0_CFG0), 0x0005u);
 	CY_SET_XTND_REG8((void CYFAR *)(CYREG_CLKDIST_DCFG0_CFG0 + 0x2u), 0x18u);
 	CY_SET_XTND_REG16((void CYFAR *)(CYREG_CLKDIST_DCFG1_CFG0), 0x0138u);
 	CY_SET_XTND_REG8((void CYFAR *)(CYREG_CLKDIST_DCFG1_CFG0 + 0x2u), 0x18u);

@@ -39,7 +39,13 @@ int main(void)
             
             //Cortamos al detectar el caracter
             if(buffer[i-1] == ' ') {
- 
+                
+            LCD_ClearDisplay();
+            LCD_Position(0,0);
+            LCD_PrintString(buffer);
+            LCD_Position(1,0);
+            LCD_PrintString(buffer[16]);
+             
             //char *leds[4]={"red ","green ","blue ","orange "};   
             //******TOGGLES segun los botones del streamlit
             /*

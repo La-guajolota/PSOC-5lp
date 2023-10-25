@@ -16,13 +16,12 @@
 #define State 0X01 //Tristate
 
 //Macros de errores
-#define OK 0x00
 #define dummy 0x01
 #define Cupla 0x02
 #define id 0x04
 
 //Funciones
-uint8_t MAX_INIT(void);//Testea el el sensor
+uint8_t test(void);//Testea el el sensor
 
 uint16_t sens(void);//Cpatura la última temperatura medida por el sensor
 
