@@ -1,5 +1,4 @@
 #include "espU1.h"
-#include "..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 #include "project.h"
 /*
 --- Ejemplo UDP ---
@@ -36,41 +35,15 @@ AT+CIPCLOSE: Este comando cerrará la conexión UDP.
 //Funcion de inicializacion sin tanto shitpost
 void esp_wifi_Start(){
     
-    UART_PutString("AT\r\n");
-    //UART_PC_PutString("AT\r\n");
-    CyDelay(1000);
-    
-    
     UART_PutString("AT+CWMODE=3\r\n");
     //UART_PC_PutString("AT+CWMODE=3\r\n");
     CyDelay(1000);
     
-    
-    UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
-    //UART_PutString("AT+CWJAP=\"moto\",\"729edb6b0e42\"\r\n");//MICUERNOFONO
-    
-    //UART_PC_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\n\r");//MICANTON}
+    UART_PutString("AT+CWJAP=\"IET501_Psoc>Arduino_2.4\",\"Lo_toco_araiza?\"\r\n");
+    //UART_PutString("AT+CWJAP=\"IET501_Psoc>Arduino_2.4\",\"Lo_toco_araiza?\"\r\n");
     CyDelay(1000);
     
-    
-    //UART_PutString("AT+CIFSR\r\n");//MICUERNOFONO
-    //CyDelay(5000);
-    //wait();
-    
-    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.18\",8051,8080,2\r\n");
+    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.101\",8051,8080,2\r\n");
     //UART_PC_PutString("AT+CIPSTART=\"UDP\",\"192.168.123.228\",8051,8081,2\r\n");
     CyDelay(1000);
-    
 }
-
-//Funcion para mandar string de informacion
-void wait(){
-    char buffer[64],i=0;
-    while(i<64){
-        buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
-        if(buffer[i]!=_NULL){
-            UART_PC_PutChar(buffer[i]);
-        }
-        i++;
-    }
-};
