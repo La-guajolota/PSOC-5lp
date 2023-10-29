@@ -1,5 +1,4 @@
 #include "espU1.h"
-#include "project.h"
 /*
 --- Ejemplo UDP ---
 
@@ -31,19 +30,38 @@ Los datos recibidos serán mostrados en la interfaz serial automáticamente si e
 6. Cierre de la Conexión:
 AT+CIPCLOSE: Este comando cerrará la conexión UDP.
 */
-
 //Funcion de inicializacion sin tanto shitpost
-void esp_wifi_Start(){
+
+/*
+11:53:55.304 -> +IPD,8:FOCO255+
+11:53:55.304 -> +IPD,14:VENTILADOR255*
+*/
+
+uint8_t esp_wifi_Start(uint8_t ROUTER){
     
+    UART_PutString("AT+CIPCLOSE\r\n");
+    CyDelay(3000);
     UART_PutString("AT+CWMODE=3\r\n");
-    //UART_PC_PutString("AT+CWMODE=3\r\n");
-    CyDelay(1000);
+    CyDelay(3000);
     
-    UART_PutString("AT+CWJAP=\"IET501_Psoc>Arduino_2.4\",\"Lo_toco_araiza?\"\r\n");
-    //UART_PutString("AT+CWJAP=\"IET501_Psoc>Arduino_2.4\",\"Lo_toco_araiza?\"\r\n");
-    CyDelay(1000);
+    if (ROUTER ==0){//VILCHIS
+    }
     
-    UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.101\",8051,8080,2\r\n");
-    //UART_PC_PutString("AT+CIPSTART=\"UDP\",\"192.168.123.228\",8051,8081,2\r\n");
-    CyDelay(1000);
+    if (ROUTER ==1){//cuernofono
+    }
+    
+    if(ROUTER ==2){//CANTON
+        UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\r\n");
+        CyDelay(15000);
+        
+        UART_PutString("AT+CIFSR\r\n");
+        CyDelay(15000);
+        
+        UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.25\",8501,8081,2\r\n");
+    }
+
+    INDICADORES_Write(BIT0);//El buzzer indica el fin de la inicializacion
+    CyDelay(500);
+    INDICADORES_Write(~BIT0);//El buzzer indica el fin de la inicializacion
+    return 0;
 }

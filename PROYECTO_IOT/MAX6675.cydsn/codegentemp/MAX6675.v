@@ -1,6 +1,6 @@
 // ======================================================================
 // MAX6675.v generated from TopDesign.cysch
-// 10/15/2023 at 19:33
+// 10/28/2023 at 16:38
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -429,8 +429,8 @@ module top ;
           wire  Net_31;
           wire  Net_34;
           wire  Net_33;
-          wire  Net_102;
           wire  Net_32;
+          wire  Net_102;
 
     UART_v2_50_0 UART (
         .clock(1'b0),

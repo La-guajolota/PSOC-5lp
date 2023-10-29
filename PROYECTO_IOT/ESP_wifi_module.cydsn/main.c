@@ -24,10 +24,10 @@ int main(void)
     //UART_PC_Start();
     //UART_PC_ClearRxBuffer();
     LCD_Start();
-    esp_wifi_Start();
+    esp_wifi_Start(2);
     
     int i=0;//Contador para leer el buffer de la UART
-    uint8_t colores = 0xFF;//inicialmente todos apagados
+    uint8_t colores = 0xFF &~BIT4;//inicialmente todos apagados
     for(;;)
     {
         //RUTINA PARA CAPTURAR EL DATO ENVIADO POR EL uart
@@ -59,15 +59,23 @@ int main(void)
             
             if(strstr(buffer,"red")!= NULL){//rojo
                 colores ^= BIT0;
+                LCD_ClearDisplay();
+                LCD_PrintString("ROJO!");
             }
             if(strstr(buffer,"green")!= NULL){//verde
                 colores ^= BIT1;
+                LCD_ClearDisplay();
+                LCD_PrintString("VERDE!");
             }  
             if(strstr(buffer,"blue")!= NULL){//azul
                 colores ^= BIT2;
+                LCD_ClearDisplay();
+                LCD_PrintString("AZUL!");
             }  
             if(strstr(buffer,"orange")!= NULL){//naranja
                 colores ^= BIT3;
+                LCD_ClearDisplay();
+                LCD_PrintString("NARANJA!");
             }     
              
             //ACTUALIZAMOS COLORES

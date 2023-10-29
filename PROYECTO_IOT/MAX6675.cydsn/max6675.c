@@ -41,12 +41,12 @@ uint8_t test(void){
 
 //Captura de temperatura
 uint16_t sens(void){
-    uint16_t temp=0x0000,word=0;//Lectura recuperada del sensor
+    uint16_t temp=0x0000;//Lectura recuperada del sensor
     //Por comunicacion ISP
-    word = raw();
-    
     //Separamos los bits BIT14--BIT3
-    temp = word >> 3;
+    temp = raw();
+    temp  >>= 3;
+   
     temp = map(temp,0,4095,0,1024);
         
     return temp;
