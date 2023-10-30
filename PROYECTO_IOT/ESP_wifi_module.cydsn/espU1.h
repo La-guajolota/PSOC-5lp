@@ -6,4 +6,4 @@
 uint8_t esp_wifi_Start(uint8_t ROUTER);
 
 //Esperamos una respuesta del modulo, si no concuerda con lo esperado... se cicla en error 
-void wait();
+void send(uint8_t len, char *msg);

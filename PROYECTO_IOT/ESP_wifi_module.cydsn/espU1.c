@@ -1,4 +1,5 @@
 #include "espU1.h"
+#include <stdio.h>
 /*
 --- Ejemplo UDP ---
 
@@ -32,10 +33,6 @@ AT+CIPCLOSE: Este comando cerrará la conexión UDP.
 */
 //Funcion de inicializacion sin tanto shitpost
 
-/*
-11:53:55.304 -> +IPD,8:FOCO255+
-11:53:55.304 -> +IPD,14:VENTILADOR255*
-*/
 
 uint8_t esp_wifi_Start(uint8_t ROUTER){
     
@@ -52,16 +49,27 @@ uint8_t esp_wifi_Start(uint8_t ROUTER){
     
     if(ROUTER ==2){//CANTON
         UART_PutString("AT+CWJAP=\"FOCOS\",\"focointeligente\"\r\n");
-        CyDelay(15000);
+        CyDelay(10000);
         
         UART_PutString("AT+CIFSR\r\n");
-        CyDelay(15000);
+        CyDelay(1000);
         
         UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.25\",8501,8081,2\r\n");
     }
 
     INDICADORES_Write(BIT0);//El buzzer indica el fin de la inicializacion
-    CyDelay(500);
+    CyDelay(150);
     INDICADORES_Write(~BIT0);//El buzzer indica el fin de la inicializacion
+    
     return 0;
+}
+
+void send(uint8_t len, char *msg){
+    char *send;
+    sprintf(send,"AT+CIPSEND=%d\r\n",len);
+    
+    UART_PutString(send);
+    CyDelay(5000);
+    UART_PutString(msg);
+    UART_PutString("\r\n");
 }
