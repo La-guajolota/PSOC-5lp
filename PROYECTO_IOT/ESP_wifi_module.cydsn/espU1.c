@@ -41,7 +41,7 @@ uint8_t esp_wifi_Start(uint8_t ROUTER){
     UART_PutString("AT+CWMODE=3\r\n");
     CyDelay(3000);
     
-    if (ROUTER ==0){//VILCHIS
+    if (ROUTER ==0){//VILCHISs
     }
     
     if (ROUTER ==1){//cuernofono
