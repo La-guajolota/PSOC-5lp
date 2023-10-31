@@ -21,6 +21,7 @@ uint8_t address = 0x76;
 uint8_t flag = 0;//Bandera de interrupión de la uart
 int i=0;//Contador para leer el buffer de la UART
 char buffer[64];//Buffer para lectura
+char buffer_Tx[3];// Buffer para transmisión de datos UART
 CY_ISR(isr){
     isr_ClearPending();  // Limpieza de interrupción
     
@@ -97,8 +98,7 @@ int main(void)
     isr_ClearPending();// Limpiar por primera vez la interrupción
     
     //wifi con esp
-    esp_wifi_Start(2);
-    send(4,"hola");
+    esp_wifi_Start(0);
     
     //sensores
     error = bme680_Start(&sensor_bme680);
@@ -107,6 +107,7 @@ int main(void)
     //Parse de streamlit a psoc
     size_t numNumeros;
     uint8_t *p_numeros;
+    
     for(;;)
     {
         
@@ -114,11 +115,38 @@ int main(void)
         thermo = sens();//Optenemos valores del thermopar
         
         //MANDAMOS INFO
+        sprintf(buffer_Tx,"%d",thermo);
+        UART_PC_PutChar('T');
+        UART_PC_PutString(buffer_Tx);//Enviamos dato
+        UART_PC_PutChar('t');
+        
+        
+        sprintf(buffer_Tx,"%d",datos_bme680.pressure); //100
+        UART_PC_PutChar('R');
+        UART_PC_PutString(buffer_Tx);//Enviamos presion
+        UART_PC_PutChar('r');
+        
+        sprintf(buffer_Tx,"%d",datos_bme680.temperature); //100
+        UART_PC_PutChar('G');
+        UART_PC_PutString(buffer_Tx);//Enviamos presion
+        UART_PC_PutChar('g');
+        
+        sprintf(buffer_Tx,"%d",datos_bme680.humidity); //1000
+        UART_PC_PutChar('A');
+        UART_PC_PutString(buffer_Tx);//Enviamos humedad
+        UART_PC_PutChar('a');
+        
+         sprintf(buffer_Tx,"%d",datos_bme680.gas_resistance);//1000
+        UART_PC_PutChar('P');
+        UART_PC_PutString(buffer_Tx);//Enviamos aire
+        UART_PC_PutString("p\r\n");
+        
         
         CyDelay(100);//POLLING DE 3 SEGUNDO EN SENSAR TODO
+      
         
         //DESCOMENTAR PARA DEBUGUEAR
-        /*
+        
         LCD_Position(0,0);
         LCD_PrintString("Temperatura:    ");
         LCD_Position(1,0);
@@ -161,7 +189,7 @@ int main(void)
         LCD_PrintNumber(thermo);
         LCD_PrintString(" degC              ");
         CyDelay(500);
-        */
+        
         
         
         //RECIVIMOS INFO
@@ -175,7 +203,7 @@ int main(void)
             //DESCOMENTAR PARA DEBUGUEAR
             
             //PARA EL EL FOCO
-            /*
+            
             LCD_Position(0,0);//Mostramos info en LCD
             LCD_PrintString("FOCO:           ");
             LCD_Position(1,0);
@@ -190,7 +218,7 @@ int main(void)
             LCD_PrintNumber(p_numeros[1]);
             LCD_PrintString("bits               ");
             CyDelay(2000);
-            */
+            
             
             //ACTUALIZAMOS Plantas
             Counter_WriteCompare(p_numeros[0]-20);

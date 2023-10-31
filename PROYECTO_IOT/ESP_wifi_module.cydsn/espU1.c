@@ -42,6 +42,13 @@ uint8_t esp_wifi_Start(uint8_t ROUTER){
     CyDelay(3000);
     
     if (ROUTER ==0){//VILCHISs
+        UART_PutString("AT+CWJAP=\"IET501_Psoc>Arduino_2.4\",\"Lo_toco_araiza?\"\r\n");
+        CyDelay(10000);
+        
+        UART_PutString("AT+CIFSR\r\n");
+        CyDelay(1000);
+        
+        UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.102\",8501,8081,2\r\n");
     }
     
     if (ROUTER ==1){//cuernofono
