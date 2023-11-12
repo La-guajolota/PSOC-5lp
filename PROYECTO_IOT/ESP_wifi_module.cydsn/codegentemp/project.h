@@ -48,6 +48,7 @@
 #include "UART.h"
 #include "buzzer_aliases.h"
 #include "buzzer.h"
+#include "INDICADORES.h"
 #include "UART_PC_IntClock.h"
 #include "UART_IntClock.h"
 #include "core_cm3_psoc5.h"

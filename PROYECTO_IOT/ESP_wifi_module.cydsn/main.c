@@ -5,12 +5,22 @@
 #include "string.h"//Funciones para Cadenas de texto
 
 //Rutina de interrrupción
+int i=0;//Contador para leer el buffer de la UART
 uint8_t flag = 0x00;//Bandera de interrupión de la uart
+char buffer[32];//Buffer para lectura
 CY_ISR(isr){
     isr_ClearPending();  // Limpieza de interrupción
-    flag |= BIT0;// Bandera de dato recibido  
+    //flag |= BIT0;// Bandera de dato recibido  
+
+    buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
+    UART_PC_PutChar(buffer[i]);
+    i++;
+    
+    if(buffer[i-1] == ' '){
+        flag |= BIT0;// Bandera de dato recibido  
+    }
 }
-char buffer[32];//Buffer para lectura
+
 
 int main(void)
 {
@@ -24,9 +34,9 @@ int main(void)
     //UART_PC_Start();
     //UART_PC_ClearRxBuffer();
     LCD_Start();
-    esp_wifi_Start(2);
+    esp_wifi_Start(0);
     
-    int i=0;//Contador para leer el buffer de la UART
+    //int i=0;//Contador para leer el buffer de la UART
     uint8_t colores = 0xFF &~BIT4;//inicialmente todos apagados
     for(;;)
     {
@@ -34,11 +44,12 @@ int main(void)
         if(flag){//Se envió un mensaje por la UART
             flag &= ~BIT0;//Tiramos la bandera
             
-            buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
-            i++;
+            //buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
+            //i++;
             
             //Cortamos al detectar el caracter
-            if(buffer[i-1] == ' ') {
+            
+            //if(buffer[i-1] == ' ') {
                 
             //char *leds[4]={"red ","green ","blue ","orange "};   
             //******TOGGLES segun los botones del streamlit
@@ -87,7 +98,7 @@ int main(void)
             }
                 
             i=0;//Seteamos
-            }
+            //}
         }
         
     }

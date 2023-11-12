@@ -48,7 +48,7 @@ uint8_t esp_wifi_Start(uint8_t ROUTER){
         UART_PutString("AT+CIFSR\r\n");
         CyDelay(1000);
         
-        UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.102\",8501,8081,2\r\n");
+        UART_PutString("AT+CIPSTART=\"UDP\",\"192.168.0.100\",8501,8081,2\r\n");
     }
     
     if (ROUTER ==1){//cuernofono

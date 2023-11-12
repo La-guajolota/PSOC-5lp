@@ -1,5 +1,5 @@
 -- Project:   ESP_wifi_module
--- Generated: 10/29/2023 12:10:29
+-- Generated: 10/31/2023 09:44:22
 -- PSoC Creator  4.4
 
 ENTITY ESP_wifi_module IS
@@ -58,6 +58,7 @@ ARCHITECTURE __DEFAULT__ OF ESP_wifi_module IS
     SIGNAL Net_1 : bit;
     SIGNAL Net_15 : bit;
     SIGNAL Net_18 : bit;
+    SIGNAL Net_188 : bit;
     SIGNAL Net_2 : bit;
     SIGNAL Net_23 : bit;
     SIGNAL Net_24 : bit;
@@ -69,7 +70,6 @@ ARCHITECTURE __DEFAULT__ OF ESP_wifi_module IS
     SIGNAL Net_31 : bit;
     SIGNAL Net_32 : bit;
     SIGNAL Net_4 : bit;
-    SIGNAL Net_5 : bit;
     SIGNAL Net_53 : bit;
     SIGNAL Net_56 : bit;
     SIGNAL Net_57 : bit;
@@ -81,8 +81,16 @@ ARCHITECTURE __DEFAULT__ OF ESP_wifi_module IS
     SIGNAL Tx_1(0)__PA : bit;
     SIGNAL Tx_2(0)__PA : bit;
     SIGNAL Verde(0)__PA : bit;
+    SIGNAL \INDICADORES:control_1\ : bit;
+    SIGNAL \INDICADORES:control_2\ : bit;
+    SIGNAL \INDICADORES:control_3\ : bit;
+    SIGNAL \INDICADORES:control_4\ : bit;
+    SIGNAL \INDICADORES:control_5\ : bit;
+    SIGNAL \INDICADORES:control_6\ : bit;
+    SIGNAL \INDICADORES:control_7\ : bit;
     SIGNAL \LCD:control_6\ : bit;
     SIGNAL \LCD:control_7\ : bit;
+    SIGNAL \LEDS:control_4\ : bit;
     SIGNAL \LEDS:control_5\ : bit;
     SIGNAL \LEDS:control_6\ : bit;
     SIGNAL \LEDS:control_7\ : bit;
@@ -231,6 +239,7 @@ ARCHITECTURE __DEFAULT__ OF ESP_wifi_module IS
     ATTRIBUTE lib_model OF \UART:BUART:sTX:TxSts\ : LABEL IS "statusicell3";
     ATTRIBUTE lib_model OF \UART:BUART:sRX:RxShifter:u0\ : LABEL IS "datapathcell6";
     ATTRIBUTE lib_model OF \UART:BUART:sRX:RxSts\ : LABEL IS "statusicell4";
+    ATTRIBUTE lib_model OF \INDICADORES:Sync:ctrl_reg\ : LABEL IS "controlcell3";
     ATTRIBUTE lib_model OF \UART_PC:BUART:txn\ : LABEL IS "macrocell17";
     ATTRIBUTE lib_model OF \UART_PC:BUART:tx_state_1\ : LABEL IS "macrocell18";
     ATTRIBUTE lib_model OF \UART_PC:BUART:tx_state_0\ : LABEL IS "macrocell19";
@@ -1979,7 +1988,7 @@ BEGIN
         PORT MAP(
             pa_out => buzzer(0)__PA,
             oe => open,
-            pin_input => Net_5,
+            pin_input => Net_188,
             pad_out => buzzer(0)_PAD,
             pad_in => buzzer(0)_PAD,
             in_clock => open,
@@ -2173,7 +2182,7 @@ BEGIN
             control_7 => \LEDS:control_7\,
             control_6 => \LEDS:control_6\,
             control_5 => \LEDS:control_5\,
-            control_4 => Net_5,
+            control_4 => \LEDS:control_4\,
             control_3 => Net_3,
             control_2 => Net_2,
             control_1 => Net_1,
@@ -2584,6 +2593,25 @@ BEGIN
             status_1 => open,
             status_0 => open,
             interrupt => Net_56);
+
+    \INDICADORES:Sync:ctrl_reg\:controlcell
+        GENERIC MAP(
+            cy_ctrl_mode_0 => "00000000",
+            cy_ctrl_mode_1 => "00000000",
+            cy_ext_reset => 0,
+            cy_force_order => 1,
+            cy_init_value => "00000000",
+            clken_mode => 1)
+        PORT MAP(
+            control_7 => \INDICADORES:control_7\,
+            control_6 => \INDICADORES:control_6\,
+            control_5 => \INDICADORES:control_5\,
+            control_4 => \INDICADORES:control_4\,
+            control_3 => \INDICADORES:control_3\,
+            control_2 => \INDICADORES:control_2\,
+            control_1 => \INDICADORES:control_1\,
+            control_0 => Net_188,
+            busclk => ClockBlock_BUS_CLK);
 
     \UART_PC:BUART:txn\:macrocell
         GENERIC MAP(

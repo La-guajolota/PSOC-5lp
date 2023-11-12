@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 1
 
 
    1              		.syntax unified
@@ -19,13 +19,13 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
   16              		.text
   17              	.Ltext0:
   18              		.cfi_sections	.debug_frame
-  19              		.section	.text.UART_TXISR,"ax",%progbits
+  19              		.section	.text.UART_RXISR,"ax",%progbits
   20              		.align	2
-  21              		.global	UART_TXISR
+  21              		.global	UART_RXISR
   22              		.thumb
   23              		.thumb_func
-  24              		.type	UART_TXISR, %function
-  25              	UART_TXISR:
+  24              		.type	UART_RXISR, %function
+  25              	UART_RXISR:
   26              	.LFB0:
   27              		.file 1 "Generated_Source\\PSoC5\\UART_INT.c"
    1:Generated_Source\PSoC5/UART_INT.c **** /*******************************************************************************
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
   28:Generated_Source\PSoC5/UART_INT.c ****     * Function Name: UART_RXISR
   29:Generated_Source\PSoC5/UART_INT.c ****     ********************************************************************************
   30:Generated_Source\PSoC5/UART_INT.c ****     *
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 2
 
 
   31:Generated_Source\PSoC5/UART_INT.c ****     * Summary:
@@ -91,6 +91,12 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
   58:Generated_Source\PSoC5/UART_INT.c ****     *******************************************************************************/
   59:Generated_Source\PSoC5/UART_INT.c ****     CY_ISR(UART_RXISR)
   60:Generated_Source\PSoC5/UART_INT.c ****     {
+  28              		.loc 1 60 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33              	.L6:
   61:Generated_Source\PSoC5/UART_INT.c ****         uint8 readData;
   62:Generated_Source\PSoC5/UART_INT.c ****         uint8 readStatus;
   63:Generated_Source\PSoC5/UART_INT.c ****         uint8 increment_pointer = 0u;
@@ -112,26 +118,43 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
   79:Generated_Source\PSoC5/UART_INT.c ****         int_en = EA;
   80:Generated_Source\PSoC5/UART_INT.c ****         CyGlobalIntEnable;
   81:Generated_Source\PSoC5/UART_INT.c ****     #endif /* (CY_PSOC3) */
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 3
+
+
   82:Generated_Source\PSoC5/UART_INT.c **** 
   83:Generated_Source\PSoC5/UART_INT.c ****         do
   84:Generated_Source\PSoC5/UART_INT.c ****         {
   85:Generated_Source\PSoC5/UART_INT.c ****             /* Read receiver status register */
   86:Generated_Source\PSoC5/UART_INT.c ****             readStatus = UART_RXSTATUS_REG;
+  34              		.loc 1 86 0
+  35 0000 1D4B     		ldr	r3, .L7
+  36 0002 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  37 0004 DBB2     		uxtb	r3, r3
+  38              	.LVL0:
   87:Generated_Source\PSoC5/UART_INT.c ****             /* Copy the same status to readData variable for backward compatibility support 
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 3
-
-
   88:Generated_Source\PSoC5/UART_INT.c ****             *  of the user code in UART_RXISR_ERROR` section. 
   89:Generated_Source\PSoC5/UART_INT.c ****             */
   90:Generated_Source\PSoC5/UART_INT.c ****             readData = readStatus;
   91:Generated_Source\PSoC5/UART_INT.c **** 
   92:Generated_Source\PSoC5/UART_INT.c ****             if((readStatus & (UART_RX_STS_BREAK | 
+  39              		.loc 1 92 0
+  40 0006 13F01E0F 		tst	r3, #30
+  41 000a 05D0     		beq	.L2
   93:Generated_Source\PSoC5/UART_INT.c ****                             UART_RX_STS_PAR_ERROR |
   94:Generated_Source\PSoC5/UART_INT.c ****                             UART_RX_STS_STOP_ERROR | 
   95:Generated_Source\PSoC5/UART_INT.c ****                             UART_RX_STS_OVERRUN)) != 0u)
   96:Generated_Source\PSoC5/UART_INT.c ****             {
   97:Generated_Source\PSoC5/UART_INT.c ****                 /* ERROR handling. */
   98:Generated_Source\PSoC5/UART_INT.c ****                 UART_errorStatus |= readStatus & ( UART_RX_STS_BREAK | 
+  42              		.loc 1 98 0
+  43 000c 1B48     		ldr	r0, .L7+4
+  44 000e 03F01E02 		and	r2, r3, #30
+  45 0012 0178     		ldrb	r1, [r0]	@ zero_extendqisi2
+  46 0014 0A43     		orrs	r2, r2, r1
+  47 0016 0270     		strb	r2, [r0]
+  48              	.L2:
+  49 0018 03F02003 		and	r3, r3, #32
+  50              	.LVL1:
   99:Generated_Source\PSoC5/UART_INT.c ****                                                             UART_RX_STS_PAR_ERROR | 
  100:Generated_Source\PSoC5/UART_INT.c ****                                                             UART_RX_STS_STOP_ERROR | 
  101:Generated_Source\PSoC5/UART_INT.c ****                                                             UART_RX_STS_OVERRUN);
@@ -145,9 +168,20 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  109:Generated_Source\PSoC5/UART_INT.c ****             }
  110:Generated_Source\PSoC5/UART_INT.c ****             
  111:Generated_Source\PSoC5/UART_INT.c ****             if((readStatus & UART_RX_STS_FIFO_NOTEMPTY) != 0u)
+  51              		.loc 1 111 0
+  52 001c 03F0FF02 		and	r2, r3, #255
+  53 0020 33B3     		cbz	r3, .L3
  112:Generated_Source\PSoC5/UART_INT.c ****             {
  113:Generated_Source\PSoC5/UART_INT.c ****                 /* Read data from the RX data register */
  114:Generated_Source\PSoC5/UART_INT.c ****                 readData = UART_RXDATA_REG;
+  54              		.loc 1 114 0
+  55 0022 174B     		ldr	r3, .L7+8
+  56 0024 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+  57 0026 C9B2     		uxtb	r1, r1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 4
+
+
+  58              	.LVL2:
  115:Generated_Source\PSoC5/UART_INT.c ****             #if (UART_RXHW_ADDRESS_ENABLED)
  116:Generated_Source\PSoC5/UART_INT.c ****                 if(UART_rxAddressMode == (uint8)UART__B_UART__AM_SW_DETECT_TO_BUFFER)
  117:Generated_Source\PSoC5/UART_INT.c ****                 {
@@ -175,32 +209,81 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  139:Generated_Source\PSoC5/UART_INT.c ****                 }
  140:Generated_Source\PSoC5/UART_INT.c ****             #else  /* Without addressing */
  141:Generated_Source\PSoC5/UART_INT.c ****                 UART_rxBuffer[UART_rxBufferWrite] = readData;
+  59              		.loc 1 141 0
+  60 0028 164B     		ldr	r3, .L7+12
+  61 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  62 002c DBB2     		uxtb	r3, r3
+  63 002e 1648     		ldr	r0, .L7+16
+  64 0030 C154     		strb	r1, [r0, r3]
+  65              	.LVL3:
  142:Generated_Source\PSoC5/UART_INT.c ****                 increment_pointer = 1u;
  143:Generated_Source\PSoC5/UART_INT.c ****             #endif /* (UART_RXHW_ADDRESS_ENABLED) */
  144:Generated_Source\PSoC5/UART_INT.c **** 
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 4
-
-
  145:Generated_Source\PSoC5/UART_INT.c ****                 /* Do not increment buffer pointer when skip not addressed data */
  146:Generated_Source\PSoC5/UART_INT.c ****                 if(increment_pointer != 0u)
  147:Generated_Source\PSoC5/UART_INT.c ****                 {
  148:Generated_Source\PSoC5/UART_INT.c ****                     if(UART_rxBufferLoopDetect != 0u)
+  66              		.loc 1 148 0
+  67 0032 164B     		ldr	r3, .L7+20
+  68 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  69 0036 13F0FF0F 		tst	r3, #255
+  70 003a 02D0     		beq	.L4
  149:Generated_Source\PSoC5/UART_INT.c ****                     {   /* Set Software Buffer status Overflow */
  150:Generated_Source\PSoC5/UART_INT.c ****                         UART_rxBufferOverflow = 1u;
+  71              		.loc 1 150 0
+  72 003c 0121     		movs	r1, #1
+  73              	.LVL4:
+  74 003e 144B     		ldr	r3, .L7+24
+  75 0040 1970     		strb	r1, [r3]
+  76              	.L4:
  151:Generated_Source\PSoC5/UART_INT.c ****                     }
  152:Generated_Source\PSoC5/UART_INT.c ****                     /* Set next pointer. */
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 5
+
+
  153:Generated_Source\PSoC5/UART_INT.c ****                     UART_rxBufferWrite++;
+  77              		.loc 1 153 0
+  78 0042 1049     		ldr	r1, .L7+12
+  79 0044 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  80 0046 0133     		adds	r3, r3, #1
+  81 0048 DBB2     		uxtb	r3, r3
+  82 004a 0B70     		strb	r3, [r1]
  154:Generated_Source\PSoC5/UART_INT.c **** 
  155:Generated_Source\PSoC5/UART_INT.c ****                     /* Check pointer for a loop condition */
  156:Generated_Source\PSoC5/UART_INT.c ****                     if(UART_rxBufferWrite >= UART_RX_BUFFER_SIZE)
+  83              		.loc 1 156 0
+  84 004c 0B78     		ldrb	r3, [r1]	@ zero_extendqisi2
+  85 004e DBB2     		uxtb	r3, r3
+  86 0050 042B     		cmp	r3, #4
+  87 0052 02D9     		bls	.L5
  157:Generated_Source\PSoC5/UART_INT.c ****                     {
  158:Generated_Source\PSoC5/UART_INT.c ****                         UART_rxBufferWrite = 0u;
+  88              		.loc 1 158 0
+  89 0054 0021     		movs	r1, #0
+  90 0056 0B4B     		ldr	r3, .L7+12
+  91 0058 1970     		strb	r1, [r3]
+  92              	.L5:
  159:Generated_Source\PSoC5/UART_INT.c ****                     }
  160:Generated_Source\PSoC5/UART_INT.c **** 
  161:Generated_Source\PSoC5/UART_INT.c ****                     /* Detect pre-overload condition and set flag */
  162:Generated_Source\PSoC5/UART_INT.c ****                     if(UART_rxBufferWrite == UART_rxBufferRead)
+  93              		.loc 1 162 0
+  94 005a 0A4B     		ldr	r3, .L7+12
+  95 005c 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+  96 005e C9B2     		uxtb	r1, r1
+  97 0060 0C4B     		ldr	r3, .L7+28
+  98 0062 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  99 0064 DBB2     		uxtb	r3, r3
+ 100 0066 9942     		cmp	r1, r3
+ 101 0068 02D1     		bne	.L3
  163:Generated_Source\PSoC5/UART_INT.c ****                     {
  164:Generated_Source\PSoC5/UART_INT.c ****                         UART_rxBufferLoopDetect = 1u;
+ 102              		.loc 1 164 0
+ 103 006a 0121     		movs	r1, #1
+ 104 006c 074B     		ldr	r3, .L7+20
+ 105 006e 1970     		strb	r1, [r3]
+ 106              	.LVL5:
+ 107              	.L3:
  165:Generated_Source\PSoC5/UART_INT.c ****                         /* When Hardware Flow Control selected */
  166:Generated_Source\PSoC5/UART_INT.c ****                         #if (UART_FLOW_CONTROL != 0u)
  167:Generated_Source\PSoC5/UART_INT.c ****                             /* Disable RX interrupt mask, it is enabled when user read data from th
@@ -212,6 +295,12 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  173:Generated_Source\PSoC5/UART_INT.c ****                 }
  174:Generated_Source\PSoC5/UART_INT.c ****             }
  175:Generated_Source\PSoC5/UART_INT.c ****         }while((readStatus & UART_RX_STS_FIFO_NOTEMPTY) != 0u);
+ 108              		.loc 1 175 0
+ 109 0070 002A     		cmp	r2, #0
+ 110 0072 C5D1     		bne	.L6
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 6
+
+
  176:Generated_Source\PSoC5/UART_INT.c **** 
  177:Generated_Source\PSoC5/UART_INT.c ****         /* User code required at end of ISR (Optional) */
  178:Generated_Source\PSoC5/UART_INT.c ****         /* `#START UART_RXISR_END` */
@@ -226,6 +315,30 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  187:Generated_Source\PSoC5/UART_INT.c ****         EA = int_en;
  188:Generated_Source\PSoC5/UART_INT.c ****     #endif /* (CY_PSOC3) */
  189:Generated_Source\PSoC5/UART_INT.c ****     }
+ 111              		.loc 1 189 0
+ 112 0074 7047     		bx	lr
+ 113              	.L8:
+ 114 0076 00BF     		.align	2
+ 115              	.L7:
+ 116 0078 69640040 		.word	1073767529
+ 117 007c 00000000 		.word	UART_errorStatus
+ 118 0080 49650040 		.word	1073767753
+ 119 0084 00000000 		.word	UART_rxBufferWrite
+ 120 0088 00000000 		.word	UART_rxBuffer
+ 121 008c 00000000 		.word	UART_rxBufferLoopDetect
+ 122 0090 00000000 		.word	UART_rxBufferOverflow
+ 123 0094 00000000 		.word	UART_rxBufferRead
+ 124              		.cfi_endproc
+ 125              	.LFE0:
+ 126              		.size	UART_RXISR, .-UART_RXISR
+ 127              		.section	.text.UART_TXISR,"ax",%progbits
+ 128              		.align	2
+ 129              		.global	UART_TXISR
+ 130              		.thumb
+ 131              		.thumb_func
+ 132              		.type	UART_TXISR, %function
+ 133              	UART_TXISR:
+ 134              	.LFB1:
  190:Generated_Source\PSoC5/UART_INT.c ****     
  191:Generated_Source\PSoC5/UART_INT.c **** #endif /* (UART_RX_INTERRUPT_ENABLED && (UART_RX_ENABLED || UART_HD_ENABLED)) */
  192:Generated_Source\PSoC5/UART_INT.c **** 
@@ -238,9 +351,6 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  199:Generated_Source\PSoC5/UART_INT.c ****     * Summary:
  200:Generated_Source\PSoC5/UART_INT.c ****     * Interrupt Service Routine for the TX portion of the UART
  201:Generated_Source\PSoC5/UART_INT.c ****     *
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 5
-
-
  202:Generated_Source\PSoC5/UART_INT.c ****     * Parameters:
  203:Generated_Source\PSoC5/UART_INT.c ****     *  None.
  204:Generated_Source\PSoC5/UART_INT.c ****     *
@@ -248,6 +358,9 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  206:Generated_Source\PSoC5/UART_INT.c ****     *  None.
  207:Generated_Source\PSoC5/UART_INT.c ****     *
  208:Generated_Source\PSoC5/UART_INT.c ****     * Global Variables:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 7
+
+
  209:Generated_Source\PSoC5/UART_INT.c ****     *  UART_txBuffer - RAM buffer pointer for transmit data from.
  210:Generated_Source\PSoC5/UART_INT.c ****     *  UART_txBufferRead - cyclic index for read and transmit data
  211:Generated_Source\PSoC5/UART_INT.c ****     *     from txBuffer, increments after each transmitted byte.
@@ -257,11 +370,11 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  215:Generated_Source\PSoC5/UART_INT.c ****     *******************************************************************************/
  216:Generated_Source\PSoC5/UART_INT.c ****     CY_ISR(UART_TXISR)
  217:Generated_Source\PSoC5/UART_INT.c ****     {
-  28              		.loc 1 217 0
-  29              		.cfi_startproc
-  30              		@ args = 0, pretend = 0, frame = 0
-  31              		@ frame_needed = 0, uses_anonymous_args = 0
-  32              		@ link register save eliminated.
+ 135              		.loc 1 217 0
+ 136              		.cfi_startproc
+ 137              		@ args = 0, pretend = 0, frame = 0
+ 138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139              		@ link register save eliminated.
  218:Generated_Source\PSoC5/UART_INT.c ****     #if(CY_PSOC3)
  219:Generated_Source\PSoC5/UART_INT.c ****         uint8 int_en;
  220:Generated_Source\PSoC5/UART_INT.c ****     #endif /* (CY_PSOC3) */
@@ -281,491 +394,695 @@ ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 1
  234:Generated_Source\PSoC5/UART_INT.c ****     #endif /* (CY_PSOC3) */
  235:Generated_Source\PSoC5/UART_INT.c **** 
  236:Generated_Source\PSoC5/UART_INT.c ****         while((UART_txBufferRead != UART_txBufferWrite) &&
-  33              		.loc 1 236 0
-  34 0000 13E0     		b	.L2
-  35              	.L5:
+ 140              		.loc 1 236 0
+ 141 0000 13E0     		b	.L10
+ 142              	.L13:
  237:Generated_Source\PSoC5/UART_INT.c ****              ((UART_TXSTATUS_REG & UART_TX_STS_FIFO_FULL) == 0u))
  238:Generated_Source\PSoC5/UART_INT.c ****         {
  239:Generated_Source\PSoC5/UART_INT.c ****             /* Check pointer wrap around */
  240:Generated_Source\PSoC5/UART_INT.c ****             if(UART_txBufferRead >= UART_TX_BUFFER_SIZE)
-  36              		.loc 1 240 0
-  37 0002 104B     		ldr	r3, .L6
-  38 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
-  39 0006 DBB2     		uxtb	r3, r3
-  40 0008 0F2B     		cmp	r3, #15
-  41 000a 02D9     		bls	.L3
+ 143              		.loc 1 240 0
+ 144 0002 104B     		ldr	r3, .L14
+ 145 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 146 0006 DBB2     		uxtb	r3, r3
+ 147 0008 0F2B     		cmp	r3, #15
+ 148 000a 02D9     		bls	.L11
  241:Generated_Source\PSoC5/UART_INT.c ****             {
  242:Generated_Source\PSoC5/UART_INT.c ****                 UART_txBufferRead = 0u;
-  42              		.loc 1 242 0
-  43 000c 0022     		movs	r2, #0
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 6
-
-
-  44 000e 0D4B     		ldr	r3, .L6
-  45 0010 1A70     		strb	r2, [r3]
-  46              	.L3:
+ 149              		.loc 1 242 0
+ 150 000c 0022     		movs	r2, #0
+ 151 000e 0D4B     		ldr	r3, .L14
+ 152 0010 1A70     		strb	r2, [r3]
+ 153              	.L11:
  243:Generated_Source\PSoC5/UART_INT.c ****             }
  244:Generated_Source\PSoC5/UART_INT.c **** 
  245:Generated_Source\PSoC5/UART_INT.c ****             UART_TXDATA_REG = UART_txBuffer[UART_txBufferRead];
-  47              		.loc 1 245 0
-  48 0012 0C4A     		ldr	r2, .L6
-  49 0014 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  50 0016 DBB2     		uxtb	r3, r3
-  51 0018 0B49     		ldr	r1, .L6+4
-  52 001a CB5C     		ldrb	r3, [r1, r3]	@ zero_extendqisi2
-  53 001c DBB2     		uxtb	r3, r3
-  54 001e 0B49     		ldr	r1, .L6+8
-  55 0020 0B70     		strb	r3, [r1]
+ 154              		.loc 1 245 0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 8
+
+
+ 155 0012 0C4A     		ldr	r2, .L14
+ 156 0014 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 157 0016 DBB2     		uxtb	r3, r3
+ 158 0018 0B49     		ldr	r1, .L14+4
+ 159 001a CB5C     		ldrb	r3, [r1, r3]	@ zero_extendqisi2
+ 160 001c DBB2     		uxtb	r3, r3
+ 161 001e 0B49     		ldr	r1, .L14+8
+ 162 0020 0B70     		strb	r3, [r1]
  246:Generated_Source\PSoC5/UART_INT.c **** 
  247:Generated_Source\PSoC5/UART_INT.c ****             /* Set next pointer */
  248:Generated_Source\PSoC5/UART_INT.c ****             UART_txBufferRead++;
-  56              		.loc 1 248 0
-  57 0022 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  58 0024 0133     		adds	r3, r3, #1
-  59 0026 DBB2     		uxtb	r3, r3
-  60 0028 1370     		strb	r3, [r2]
-  61              	.L2:
+ 163              		.loc 1 248 0
+ 164 0022 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 165 0024 0133     		adds	r3, r3, #1
+ 166 0026 DBB2     		uxtb	r3, r3
+ 167 0028 1370     		strb	r3, [r2]
+ 168              	.L10:
  236:Generated_Source\PSoC5/UART_INT.c ****              ((UART_TXSTATUS_REG & UART_TX_STS_FIFO_FULL) == 0u))
-  62              		.loc 1 236 0
-  63 002a 064B     		ldr	r3, .L6
-  64 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
-  65 002e DBB2     		uxtb	r3, r3
-  66 0030 074A     		ldr	r2, .L6+12
-  67 0032 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
-  68 0034 9342     		cmp	r3, r2
-  69 0036 04D0     		beq	.L1
+ 169              		.loc 1 236 0
+ 170 002a 064B     		ldr	r3, .L14
+ 171 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 172 002e DBB2     		uxtb	r3, r3
+ 173 0030 074A     		ldr	r2, .L14+12
+ 174 0032 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 175 0034 9342     		cmp	r3, r2
+ 176 0036 04D0     		beq	.L9
  237:Generated_Source\PSoC5/UART_INT.c ****         {
-  70              		.loc 1 237 0 discriminator 1
-  71 0038 064B     		ldr	r3, .L6+16
-  72 003a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 177              		.loc 1 237 0 discriminator 1
+ 178 0038 064B     		ldr	r3, .L14+16
+ 179 003a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  236:Generated_Source\PSoC5/UART_INT.c ****              ((UART_TXSTATUS_REG & UART_TX_STS_FIFO_FULL) == 0u))
-  73              		.loc 1 236 0 discriminator 1
-  74 003c 13F0040F 		tst	r3, #4
-  75 0040 DFD0     		beq	.L5
-  76              	.L1:
-  77 0042 7047     		bx	lr
-  78              	.L7:
-  79              		.align	2
-  80              	.L6:
-  81 0044 00000000 		.word	UART_txBufferRead
-  82 0048 00000000 		.word	UART_txBuffer
-  83 004c 47640040 		.word	1073767495
-  84 0050 00000000 		.word	UART_txBufferWrite
-  85 0054 67640040 		.word	1073767527
-  86              		.cfi_endproc
-  87              	.LFE0:
-  88              		.size	UART_TXISR, .-UART_TXISR
-  89              		.text
-  90              	.Letext0:
-  91              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 7
+ 180              		.loc 1 236 0 discriminator 1
+ 181 003c 13F0040F 		tst	r3, #4
+ 182 0040 DFD0     		beq	.L13
+ 183              	.L9:
+ 184 0042 7047     		bx	lr
+ 185              	.L15:
+ 186              		.align	2
+ 187              	.L14:
+ 188 0044 00000000 		.word	UART_txBufferRead
+ 189 0048 00000000 		.word	UART_txBuffer
+ 190 004c 48640040 		.word	1073767496
+ 191 0050 00000000 		.word	UART_txBufferWrite
+ 192 0054 68640040 		.word	1073767528
+ 193              		.cfi_endproc
+ 194              	.LFE1:
+ 195              		.size	UART_TXISR, .-UART_TXISR
+ 196              		.text
+ 197              	.Letext0:
+ 198              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 199              		.file 3 "Generated_Source\\PSoC5\\UART.h"
+ 200              		.section	.debug_info,"",%progbits
+ 201              	.Ldebug_info0:
+ 202 0000 92010000 		.4byte	0x192
+ 203 0004 0400     		.2byte	0x4
+ 204 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 205 000a 04       		.byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 9
 
 
-  92              		.file 3 "Generated_Source\\PSoC5\\UART.h"
-  93              		.section	.debug_info,"",%progbits
-  94              	.Ldebug_info0:
-  95 0000 F2000000 		.4byte	0xf2
-  96 0004 0400     		.2byte	0x4
-  97 0006 00000000 		.4byte	.Ldebug_abbrev0
-  98 000a 04       		.byte	0x4
-  99 000b 01       		.uleb128 0x1
- 100 000c 2E000000 		.4byte	.LASF19
- 101 0010 0C       		.byte	0xc
- 102 0011 EB000000 		.4byte	.LASF20
- 103 0015 48010000 		.4byte	.LASF21
- 104 0019 00000000 		.4byte	.Ldebug_ranges0+0
- 105 001d 00000000 		.4byte	0
- 106 0021 00000000 		.4byte	.Ldebug_line0
- 107 0025 02       		.uleb128 0x2
- 108 0026 01       		.byte	0x1
- 109 0027 06       		.byte	0x6
- 110 0028 A5010000 		.4byte	.LASF0
- 111 002c 02       		.uleb128 0x2
- 112 002d 01       		.byte	0x1
- 113 002e 08       		.byte	0x8
- 114 002f 13010000 		.4byte	.LASF1
- 115 0033 02       		.uleb128 0x2
- 116 0034 02       		.byte	0x2
- 117 0035 05       		.byte	0x5
- 118 0036 C8010000 		.4byte	.LASF2
- 119 003a 02       		.uleb128 0x2
- 120 003b 02       		.byte	0x2
- 121 003c 07       		.byte	0x7
- 122 003d 92010000 		.4byte	.LASF3
- 123 0041 02       		.uleb128 0x2
- 124 0042 04       		.byte	0x4
- 125 0043 05       		.byte	0x5
- 126 0044 26010000 		.4byte	.LASF4
- 127 0048 02       		.uleb128 0x2
- 128 0049 04       		.byte	0x4
- 129 004a 07       		.byte	0x7
- 130 004b C2000000 		.4byte	.LASF5
- 131 004f 02       		.uleb128 0x2
- 132 0050 08       		.byte	0x8
- 133 0051 05       		.byte	0x5
- 134 0052 00000000 		.4byte	.LASF6
- 135 0056 02       		.uleb128 0x2
- 136 0057 08       		.byte	0x8
- 137 0058 07       		.byte	0x7
- 138 0059 D4000000 		.4byte	.LASF7
- 139 005d 03       		.uleb128 0x3
- 140 005e 04       		.byte	0x4
- 141 005f 05       		.byte	0x5
- 142 0060 696E7400 		.ascii	"int\000"
- 143 0064 02       		.uleb128 0x2
- 144 0065 04       		.byte	0x4
- 145 0066 07       		.byte	0x7
- 146 0067 0E000000 		.4byte	.LASF8
- 147 006b 04       		.uleb128 0x4
- 148 006c BC000000 		.4byte	.LASF12
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 8
+ 206 000b 01       		.uleb128 0x1
+ 207 000c 5D000000 		.4byte	.LASF28
+ 208 0010 0C       		.byte	0xc
+ 209 0011 5E020000 		.4byte	.LASF29
+ 210 0015 02010000 		.4byte	.LASF30
+ 211 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 212 001d 00000000 		.4byte	0
+ 213 0021 00000000 		.4byte	.Ldebug_line0
+ 214 0025 02       		.uleb128 0x2
+ 215 0026 01       		.byte	0x1
+ 216 0027 06       		.byte	0x6
+ 217 0028 52020000 		.4byte	.LASF0
+ 218 002c 02       		.uleb128 0x2
+ 219 002d 01       		.byte	0x1
+ 220 002e 08       		.byte	0x8
+ 221 002f 4F000000 		.4byte	.LASF1
+ 222 0033 02       		.uleb128 0x2
+ 223 0034 02       		.byte	0x2
+ 224 0035 05       		.byte	0x5
+ 225 0036 15020000 		.4byte	.LASF2
+ 226 003a 02       		.uleb128 0x2
+ 227 003b 02       		.byte	0x2
+ 228 003c 07       		.byte	0x7
+ 229 003d 26000000 		.4byte	.LASF3
+ 230 0041 02       		.uleb128 0x2
+ 231 0042 04       		.byte	0x4
+ 232 0043 05       		.byte	0x5
+ 233 0044 32020000 		.4byte	.LASF4
+ 234 0048 02       		.uleb128 0x2
+ 235 0049 04       		.byte	0x4
+ 236 004a 07       		.byte	0x7
+ 237 004b F0000000 		.4byte	.LASF5
+ 238 004f 02       		.uleb128 0x2
+ 239 0050 08       		.byte	0x8
+ 240 0051 05       		.byte	0x5
+ 241 0052 D2010000 		.4byte	.LASF6
+ 242 0056 02       		.uleb128 0x2
+ 243 0057 08       		.byte	0x8
+ 244 0058 07       		.byte	0x7
+ 245 0059 90010000 		.4byte	.LASF7
+ 246 005d 03       		.uleb128 0x3
+ 247 005e 04       		.byte	0x4
+ 248 005f 05       		.byte	0x5
+ 249 0060 696E7400 		.ascii	"int\000"
+ 250 0064 02       		.uleb128 0x2
+ 251 0065 04       		.byte	0x4
+ 252 0066 07       		.byte	0x7
+ 253 0067 83010000 		.4byte	.LASF8
+ 254 006b 04       		.uleb128 0x4
+ 255 006c 44010000 		.4byte	.LASF12
+ 256 0070 02       		.byte	0x2
+ 257 0071 E801     		.2byte	0x1e8
+ 258 0073 2C000000 		.4byte	0x2c
+ 259 0077 02       		.uleb128 0x2
+ 260 0078 04       		.byte	0x4
+ 261 0079 04       		.byte	0x4
+ 262 007a 12000000 		.4byte	.LASF9
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 10
 
 
- 149 0070 02       		.byte	0x2
- 150 0071 E801     		.2byte	0x1e8
- 151 0073 2C000000 		.4byte	0x2c
- 152 0077 02       		.uleb128 0x2
- 153 0078 04       		.byte	0x4
- 154 0079 04       		.byte	0x4
- 155 007a 0D010000 		.4byte	.LASF9
- 156 007e 02       		.uleb128 0x2
- 157 007f 08       		.byte	0x8
- 158 0080 04       		.byte	0x4
- 159 0081 41010000 		.4byte	.LASF10
- 160 0085 02       		.uleb128 0x2
- 161 0086 01       		.byte	0x1
- 162 0087 08       		.byte	0x8
- 163 0088 21010000 		.4byte	.LASF11
- 164 008c 04       		.uleb128 0x4
- 165 008d D2010000 		.4byte	.LASF13
- 166 0091 02       		.byte	0x2
- 167 0092 9202     		.2byte	0x292
- 168 0094 98000000 		.4byte	0x98
- 169 0098 05       		.uleb128 0x5
- 170 0099 6B000000 		.4byte	0x6b
- 171 009d 02       		.uleb128 0x2
- 172 009e 08       		.byte	0x8
- 173 009f 04       		.byte	0x4
- 174 00a0 BC010000 		.4byte	.LASF14
- 175 00a4 02       		.uleb128 0x2
- 176 00a5 04       		.byte	0x4
- 177 00a6 07       		.byte	0x7
- 178 00a7 D7010000 		.4byte	.LASF15
- 179 00ab 06       		.uleb128 0x6
- 180 00ac B1010000 		.4byte	.LASF22
- 181 00b0 01       		.byte	0x1
- 182 00b1 D8       		.byte	0xd8
- 183 00b2 00000000 		.4byte	.LFB0
- 184 00b6 58000000 		.4byte	.LFE0-.LFB0
- 185 00ba 01       		.uleb128 0x1
- 186 00bb 9C       		.byte	0x9c
- 187 00bc 07       		.uleb128 0x7
- 188 00bd 98000000 		.4byte	0x98
- 189 00c1 CC000000 		.4byte	0xcc
- 190 00c5 08       		.uleb128 0x8
- 191 00c6 A4000000 		.4byte	0xa4
- 192 00ca 0F       		.byte	0xf
- 193 00cb 00       		.byte	0
- 194 00cc 09       		.uleb128 0x9
- 195 00cd E0010000 		.4byte	.LASF16
- 196 00d1 03       		.byte	0x3
- 197 00d2 3801     		.2byte	0x138
- 198 00d4 D8000000 		.4byte	0xd8
- 199 00d8 05       		.uleb128 0x5
- 200 00d9 BC000000 		.4byte	0xbc
- 201 00dd 09       		.uleb128 0x9
- 202 00de 2F010000 		.4byte	.LASF17
- 203 00e2 03       		.byte	0x3
- 204 00e3 3901     		.2byte	0x139
- 205 00e5 98000000 		.4byte	0x98
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 9
+ 263 007e 02       		.uleb128 0x2
+ 264 007f 08       		.byte	0x8
+ 265 0080 04       		.byte	0x4
+ 266 0081 58010000 		.4byte	.LASF10
+ 267 0085 02       		.uleb128 0x2
+ 268 0086 01       		.byte	0x1
+ 269 0087 08       		.byte	0x8
+ 270 0088 3B020000 		.4byte	.LASF11
+ 271 008c 04       		.uleb128 0x4
+ 272 008d EB000000 		.4byte	.LASF13
+ 273 0091 02       		.byte	0x2
+ 274 0092 9202     		.2byte	0x292
+ 275 0094 98000000 		.4byte	0x98
+ 276 0098 05       		.uleb128 0x5
+ 277 0099 6B000000 		.4byte	0x6b
+ 278 009d 02       		.uleb128 0x2
+ 279 009e 08       		.byte	0x8
+ 280 009f 04       		.byte	0x4
+ 281 00a0 BD010000 		.4byte	.LASF14
+ 282 00a4 02       		.uleb128 0x2
+ 283 00a5 04       		.byte	0x4
+ 284 00a6 07       		.byte	0x7
+ 285 00a7 C9010000 		.4byte	.LASF15
+ 286 00ab 06       		.uleb128 0x6
+ 287 00ac 39000000 		.4byte	.LASF31
+ 288 00b0 01       		.byte	0x1
+ 289 00b1 3B       		.byte	0x3b
+ 290 00b2 00000000 		.4byte	.LFB0
+ 291 00b6 98000000 		.4byte	.LFE0-.LFB0
+ 292 00ba 01       		.uleb128 0x1
+ 293 00bb 9C       		.byte	0x9c
+ 294 00bc EE000000 		.4byte	0xee
+ 295 00c0 07       		.uleb128 0x7
+ 296 00c1 80020000 		.4byte	.LASF16
+ 297 00c5 01       		.byte	0x1
+ 298 00c6 3D       		.byte	0x3d
+ 299 00c7 6B000000 		.4byte	0x6b
+ 300 00cb 00000000 		.4byte	.LLST0
+ 301 00cf 07       		.uleb128 0x7
+ 302 00d0 44000000 		.4byte	.LASF17
+ 303 00d4 01       		.byte	0x1
+ 304 00d5 3E       		.byte	0x3e
+ 305 00d6 6B000000 		.4byte	0x6b
+ 306 00da 1E000000 		.4byte	.LLST1
+ 307 00de 07       		.uleb128 0x7
+ 308 00df EB010000 		.4byte	.LASF18
+ 309 00e3 01       		.byte	0x1
+ 310 00e4 3F       		.byte	0x3f
+ 311 00e5 6B000000 		.4byte	0x6b
+ 312 00e9 31000000 		.4byte	.LLST2
+ 313 00ed 00       		.byte	0
+ 314 00ee 08       		.uleb128 0x8
+ 315 00ef E0010000 		.4byte	.LASF32
+ 316 00f3 01       		.byte	0x1
+ 317 00f4 D8       		.byte	0xd8
+ 318 00f5 00000000 		.4byte	.LFB1
+ 319 00f9 58000000 		.4byte	.LFE1-.LFB1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 11
 
 
- 206 00e9 09       		.uleb128 0x9
- 207 00ea 1B000000 		.4byte	.LASF18
- 208 00ee 03       		.byte	0x3
- 209 00ef 3A01     		.2byte	0x13a
- 210 00f1 6B000000 		.4byte	0x6b
- 211 00f5 00       		.byte	0
- 212              		.section	.debug_abbrev,"",%progbits
- 213              	.Ldebug_abbrev0:
- 214 0000 01       		.uleb128 0x1
- 215 0001 11       		.uleb128 0x11
- 216 0002 01       		.byte	0x1
- 217 0003 25       		.uleb128 0x25
- 218 0004 0E       		.uleb128 0xe
- 219 0005 13       		.uleb128 0x13
- 220 0006 0B       		.uleb128 0xb
- 221 0007 03       		.uleb128 0x3
- 222 0008 0E       		.uleb128 0xe
- 223 0009 1B       		.uleb128 0x1b
- 224 000a 0E       		.uleb128 0xe
- 225 000b 55       		.uleb128 0x55
- 226 000c 17       		.uleb128 0x17
- 227 000d 11       		.uleb128 0x11
- 228 000e 01       		.uleb128 0x1
- 229 000f 10       		.uleb128 0x10
- 230 0010 17       		.uleb128 0x17
- 231 0011 00       		.byte	0
- 232 0012 00       		.byte	0
- 233 0013 02       		.uleb128 0x2
- 234 0014 24       		.uleb128 0x24
- 235 0015 00       		.byte	0
- 236 0016 0B       		.uleb128 0xb
- 237 0017 0B       		.uleb128 0xb
- 238 0018 3E       		.uleb128 0x3e
- 239 0019 0B       		.uleb128 0xb
- 240 001a 03       		.uleb128 0x3
- 241 001b 0E       		.uleb128 0xe
- 242 001c 00       		.byte	0
- 243 001d 00       		.byte	0
- 244 001e 03       		.uleb128 0x3
- 245 001f 24       		.uleb128 0x24
- 246 0020 00       		.byte	0
- 247 0021 0B       		.uleb128 0xb
- 248 0022 0B       		.uleb128 0xb
- 249 0023 3E       		.uleb128 0x3e
- 250 0024 0B       		.uleb128 0xb
- 251 0025 03       		.uleb128 0x3
- 252 0026 08       		.uleb128 0x8
- 253 0027 00       		.byte	0
- 254 0028 00       		.byte	0
- 255 0029 04       		.uleb128 0x4
- 256 002a 16       		.uleb128 0x16
- 257 002b 00       		.byte	0
- 258 002c 03       		.uleb128 0x3
- 259 002d 0E       		.uleb128 0xe
- 260 002e 3A       		.uleb128 0x3a
- 261 002f 0B       		.uleb128 0xb
- 262 0030 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 10
+ 320 00fd 01       		.uleb128 0x1
+ 321 00fe 9C       		.byte	0x9c
+ 322 00ff 09       		.uleb128 0x9
+ 323 0100 98000000 		.4byte	0x98
+ 324 0104 0F010000 		.4byte	0x10f
+ 325 0108 0A       		.uleb128 0xa
+ 326 0109 A4000000 		.4byte	0xa4
+ 327 010d 0F       		.byte	0xf
+ 328 010e 00       		.byte	0
+ 329 010f 0B       		.uleb128 0xb
+ 330 0110 18000000 		.4byte	.LASF19
+ 331 0114 03       		.byte	0x3
+ 332 0115 3801     		.2byte	0x138
+ 333 0117 1B010000 		.4byte	0x11b
+ 334 011b 05       		.uleb128 0x5
+ 335 011c FF000000 		.4byte	0xff
+ 336 0120 0B       		.uleb128 0xb
+ 337 0121 40020000 		.4byte	.LASF20
+ 338 0125 03       		.byte	0x3
+ 339 0126 3901     		.2byte	0x139
+ 340 0128 98000000 		.4byte	0x98
+ 341 012c 0B       		.uleb128 0xb
+ 342 012d 1F020000 		.4byte	.LASF21
+ 343 0131 03       		.byte	0x3
+ 344 0132 3A01     		.2byte	0x13a
+ 345 0134 6B000000 		.4byte	0x6b
+ 346 0138 0B       		.uleb128 0xb
+ 347 0139 5F010000 		.4byte	.LASF22
+ 348 013d 03       		.byte	0x3
+ 349 013e 3D01     		.2byte	0x13d
+ 350 0140 6B000000 		.4byte	0x6b
+ 351 0144 09       		.uleb128 0x9
+ 352 0145 98000000 		.4byte	0x98
+ 353 0149 54010000 		.4byte	0x154
+ 354 014d 0A       		.uleb128 0xa
+ 355 014e A4000000 		.4byte	0xa4
+ 356 0152 04       		.byte	0x4
+ 357 0153 00       		.byte	0
+ 358 0154 0B       		.uleb128 0xb
+ 359 0155 4A010000 		.4byte	.LASF23
+ 360 0159 03       		.byte	0x3
+ 361 015a 3E01     		.2byte	0x13e
+ 362 015c 60010000 		.4byte	0x160
+ 363 0160 05       		.uleb128 0x5
+ 364 0161 44010000 		.4byte	0x144
+ 365 0165 0B       		.uleb128 0xb
+ 366 0166 00000000 		.4byte	.LASF24
+ 367 016a 03       		.byte	0x3
+ 368 016b 3F01     		.2byte	0x13f
+ 369 016d 98000000 		.4byte	0x98
+ 370 0171 0B       		.uleb128 0xb
+ 371 0172 70010000 		.4byte	.LASF25
+ 372 0176 03       		.byte	0x3
+ 373 0177 4001     		.2byte	0x140
+ 374 0179 98000000 		.4byte	0x98
+ 375 017d 0B       		.uleb128 0xb
+ 376 017e FD010000 		.4byte	.LASF26
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 12
 
 
- 263 0031 05       		.uleb128 0x5
- 264 0032 49       		.uleb128 0x49
- 265 0033 13       		.uleb128 0x13
- 266 0034 00       		.byte	0
- 267 0035 00       		.byte	0
- 268 0036 05       		.uleb128 0x5
- 269 0037 35       		.uleb128 0x35
- 270 0038 00       		.byte	0
- 271 0039 49       		.uleb128 0x49
- 272 003a 13       		.uleb128 0x13
- 273 003b 00       		.byte	0
- 274 003c 00       		.byte	0
- 275 003d 06       		.uleb128 0x6
- 276 003e 2E       		.uleb128 0x2e
- 277 003f 00       		.byte	0
- 278 0040 3F       		.uleb128 0x3f
- 279 0041 19       		.uleb128 0x19
- 280 0042 03       		.uleb128 0x3
- 281 0043 0E       		.uleb128 0xe
- 282 0044 3A       		.uleb128 0x3a
- 283 0045 0B       		.uleb128 0xb
- 284 0046 3B       		.uleb128 0x3b
- 285 0047 0B       		.uleb128 0xb
- 286 0048 27       		.uleb128 0x27
- 287 0049 19       		.uleb128 0x19
- 288 004a 11       		.uleb128 0x11
- 289 004b 01       		.uleb128 0x1
- 290 004c 12       		.uleb128 0x12
- 291 004d 06       		.uleb128 0x6
- 292 004e 40       		.uleb128 0x40
- 293 004f 18       		.uleb128 0x18
- 294 0050 9742     		.uleb128 0x2117
- 295 0052 19       		.uleb128 0x19
- 296 0053 00       		.byte	0
- 297 0054 00       		.byte	0
- 298 0055 07       		.uleb128 0x7
- 299 0056 01       		.uleb128 0x1
- 300 0057 01       		.byte	0x1
- 301 0058 49       		.uleb128 0x49
- 302 0059 13       		.uleb128 0x13
- 303 005a 01       		.uleb128 0x1
- 304 005b 13       		.uleb128 0x13
- 305 005c 00       		.byte	0
- 306 005d 00       		.byte	0
- 307 005e 08       		.uleb128 0x8
- 308 005f 21       		.uleb128 0x21
- 309 0060 00       		.byte	0
- 310 0061 49       		.uleb128 0x49
- 311 0062 13       		.uleb128 0x13
- 312 0063 2F       		.uleb128 0x2f
- 313 0064 0B       		.uleb128 0xb
- 314 0065 00       		.byte	0
- 315 0066 00       		.byte	0
- 316 0067 09       		.uleb128 0x9
- 317 0068 34       		.uleb128 0x34
- 318 0069 00       		.byte	0
- 319 006a 03       		.uleb128 0x3
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 11
+ 377 0182 03       		.byte	0x3
+ 378 0183 4101     		.2byte	0x141
+ 379 0185 98000000 		.4byte	0x98
+ 380 0189 0B       		.uleb128 0xb
+ 381 018a A7010000 		.4byte	.LASF27
+ 382 018e 03       		.byte	0x3
+ 383 018f 4201     		.2byte	0x142
+ 384 0191 98000000 		.4byte	0x98
+ 385 0195 00       		.byte	0
+ 386              		.section	.debug_abbrev,"",%progbits
+ 387              	.Ldebug_abbrev0:
+ 388 0000 01       		.uleb128 0x1
+ 389 0001 11       		.uleb128 0x11
+ 390 0002 01       		.byte	0x1
+ 391 0003 25       		.uleb128 0x25
+ 392 0004 0E       		.uleb128 0xe
+ 393 0005 13       		.uleb128 0x13
+ 394 0006 0B       		.uleb128 0xb
+ 395 0007 03       		.uleb128 0x3
+ 396 0008 0E       		.uleb128 0xe
+ 397 0009 1B       		.uleb128 0x1b
+ 398 000a 0E       		.uleb128 0xe
+ 399 000b 55       		.uleb128 0x55
+ 400 000c 17       		.uleb128 0x17
+ 401 000d 11       		.uleb128 0x11
+ 402 000e 01       		.uleb128 0x1
+ 403 000f 10       		.uleb128 0x10
+ 404 0010 17       		.uleb128 0x17
+ 405 0011 00       		.byte	0
+ 406 0012 00       		.byte	0
+ 407 0013 02       		.uleb128 0x2
+ 408 0014 24       		.uleb128 0x24
+ 409 0015 00       		.byte	0
+ 410 0016 0B       		.uleb128 0xb
+ 411 0017 0B       		.uleb128 0xb
+ 412 0018 3E       		.uleb128 0x3e
+ 413 0019 0B       		.uleb128 0xb
+ 414 001a 03       		.uleb128 0x3
+ 415 001b 0E       		.uleb128 0xe
+ 416 001c 00       		.byte	0
+ 417 001d 00       		.byte	0
+ 418 001e 03       		.uleb128 0x3
+ 419 001f 24       		.uleb128 0x24
+ 420 0020 00       		.byte	0
+ 421 0021 0B       		.uleb128 0xb
+ 422 0022 0B       		.uleb128 0xb
+ 423 0023 3E       		.uleb128 0x3e
+ 424 0024 0B       		.uleb128 0xb
+ 425 0025 03       		.uleb128 0x3
+ 426 0026 08       		.uleb128 0x8
+ 427 0027 00       		.byte	0
+ 428 0028 00       		.byte	0
+ 429 0029 04       		.uleb128 0x4
+ 430 002a 16       		.uleb128 0x16
+ 431 002b 00       		.byte	0
+ 432 002c 03       		.uleb128 0x3
+ 433 002d 0E       		.uleb128 0xe
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 13
 
 
- 320 006b 0E       		.uleb128 0xe
- 321 006c 3A       		.uleb128 0x3a
- 322 006d 0B       		.uleb128 0xb
- 323 006e 3B       		.uleb128 0x3b
- 324 006f 05       		.uleb128 0x5
- 325 0070 49       		.uleb128 0x49
- 326 0071 13       		.uleb128 0x13
- 327 0072 3F       		.uleb128 0x3f
- 328 0073 19       		.uleb128 0x19
- 329 0074 3C       		.uleb128 0x3c
- 330 0075 19       		.uleb128 0x19
- 331 0076 00       		.byte	0
- 332 0077 00       		.byte	0
- 333 0078 00       		.byte	0
- 334              		.section	.debug_aranges,"",%progbits
- 335 0000 1C000000 		.4byte	0x1c
- 336 0004 0200     		.2byte	0x2
- 337 0006 00000000 		.4byte	.Ldebug_info0
- 338 000a 04       		.byte	0x4
- 339 000b 00       		.byte	0
- 340 000c 0000     		.2byte	0
- 341 000e 0000     		.2byte	0
- 342 0010 00000000 		.4byte	.LFB0
- 343 0014 58000000 		.4byte	.LFE0-.LFB0
- 344 0018 00000000 		.4byte	0
- 345 001c 00000000 		.4byte	0
- 346              		.section	.debug_ranges,"",%progbits
- 347              	.Ldebug_ranges0:
- 348 0000 00000000 		.4byte	.LFB0
- 349 0004 58000000 		.4byte	.LFE0
- 350 0008 00000000 		.4byte	0
- 351 000c 00000000 		.4byte	0
- 352              		.section	.debug_line,"",%progbits
- 353              	.Ldebug_line0:
- 354 0000 79000000 		.section	.debug_str,"MS",%progbits,1
- 354      02004F00 
- 354      00000201 
- 354      FB0E0D00 
- 354      01010101 
- 355              	.LASF6:
- 356 0000 6C6F6E67 		.ascii	"long long int\000"
- 356      206C6F6E 
- 356      6720696E 
- 356      7400
- 357              	.LASF8:
- 358 000e 756E7369 		.ascii	"unsigned int\000"
- 358      676E6564 
- 358      20696E74 
- 358      00
- 359              	.LASF18:
- 360 001b 55415254 		.ascii	"UART_txBufferWrite\000"
- 360      5F747842 
- 360      75666665 
- 360      72577269 
- 360      746500
- 361              	.LASF19:
- 362 002e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 12
+ 434 002e 3A       		.uleb128 0x3a
+ 435 002f 0B       		.uleb128 0xb
+ 436 0030 3B       		.uleb128 0x3b
+ 437 0031 05       		.uleb128 0x5
+ 438 0032 49       		.uleb128 0x49
+ 439 0033 13       		.uleb128 0x13
+ 440 0034 00       		.byte	0
+ 441 0035 00       		.byte	0
+ 442 0036 05       		.uleb128 0x5
+ 443 0037 35       		.uleb128 0x35
+ 444 0038 00       		.byte	0
+ 445 0039 49       		.uleb128 0x49
+ 446 003a 13       		.uleb128 0x13
+ 447 003b 00       		.byte	0
+ 448 003c 00       		.byte	0
+ 449 003d 06       		.uleb128 0x6
+ 450 003e 2E       		.uleb128 0x2e
+ 451 003f 01       		.byte	0x1
+ 452 0040 3F       		.uleb128 0x3f
+ 453 0041 19       		.uleb128 0x19
+ 454 0042 03       		.uleb128 0x3
+ 455 0043 0E       		.uleb128 0xe
+ 456 0044 3A       		.uleb128 0x3a
+ 457 0045 0B       		.uleb128 0xb
+ 458 0046 3B       		.uleb128 0x3b
+ 459 0047 0B       		.uleb128 0xb
+ 460 0048 27       		.uleb128 0x27
+ 461 0049 19       		.uleb128 0x19
+ 462 004a 11       		.uleb128 0x11
+ 463 004b 01       		.uleb128 0x1
+ 464 004c 12       		.uleb128 0x12
+ 465 004d 06       		.uleb128 0x6
+ 466 004e 40       		.uleb128 0x40
+ 467 004f 18       		.uleb128 0x18
+ 468 0050 9742     		.uleb128 0x2117
+ 469 0052 19       		.uleb128 0x19
+ 470 0053 01       		.uleb128 0x1
+ 471 0054 13       		.uleb128 0x13
+ 472 0055 00       		.byte	0
+ 473 0056 00       		.byte	0
+ 474 0057 07       		.uleb128 0x7
+ 475 0058 34       		.uleb128 0x34
+ 476 0059 00       		.byte	0
+ 477 005a 03       		.uleb128 0x3
+ 478 005b 0E       		.uleb128 0xe
+ 479 005c 3A       		.uleb128 0x3a
+ 480 005d 0B       		.uleb128 0xb
+ 481 005e 3B       		.uleb128 0x3b
+ 482 005f 0B       		.uleb128 0xb
+ 483 0060 49       		.uleb128 0x49
+ 484 0061 13       		.uleb128 0x13
+ 485 0062 02       		.uleb128 0x2
+ 486 0063 17       		.uleb128 0x17
+ 487 0064 00       		.byte	0
+ 488 0065 00       		.byte	0
+ 489 0066 08       		.uleb128 0x8
+ 490 0067 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 14
 
 
- 362      43313120 
- 362      352E342E 
- 362      31203230 
- 362      31363036 
- 363 0061 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 363      20726576 
- 363      6973696F 
- 363      6E203233 
- 363      37373135 
- 364 0094 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
- 364      66756E63 
- 364      74696F6E 
- 364      2D736563 
- 364      74696F6E 
- 365              	.LASF12:
- 366 00bc 75696E74 		.ascii	"uint8\000"
- 366      3800
- 367              	.LASF5:
- 368 00c2 6C6F6E67 		.ascii	"long unsigned int\000"
- 368      20756E73 
- 368      69676E65 
- 368      6420696E 
- 368      7400
- 369              	.LASF7:
- 370 00d4 6C6F6E67 		.ascii	"long long unsigned int\000"
- 370      206C6F6E 
- 370      6720756E 
- 370      7369676E 
- 370      65642069 
- 371              	.LASF20:
- 372 00eb 47656E65 		.ascii	"Generated_Source\\PSoC5\\UART_INT.c\000"
- 372      72617465 
- 372      645F536F 
- 372      75726365 
- 372      5C50536F 
- 373              	.LASF9:
- 374 010d 666C6F61 		.ascii	"float\000"
- 374      7400
- 375              	.LASF1:
- 376 0113 756E7369 		.ascii	"unsigned char\000"
- 376      676E6564 
- 376      20636861 
- 376      7200
- 377              	.LASF11:
- 378 0121 63686172 		.ascii	"char\000"
- 378      00
- 379              	.LASF4:
- 380 0126 6C6F6E67 		.ascii	"long int\000"
- 380      20696E74 
- 380      00
- 381              	.LASF17:
- 382 012f 55415254 		.ascii	"UART_txBufferRead\000"
- 382      5F747842 
- 382      75666665 
- 382      72526561 
- 382      6400
- 383              	.LASF10:
-ARM GAS  C:\Users\adria\AppData\Local\Temp\ccrT2zh2.s 			page 13
+ 491 0068 00       		.byte	0
+ 492 0069 3F       		.uleb128 0x3f
+ 493 006a 19       		.uleb128 0x19
+ 494 006b 03       		.uleb128 0x3
+ 495 006c 0E       		.uleb128 0xe
+ 496 006d 3A       		.uleb128 0x3a
+ 497 006e 0B       		.uleb128 0xb
+ 498 006f 3B       		.uleb128 0x3b
+ 499 0070 0B       		.uleb128 0xb
+ 500 0071 27       		.uleb128 0x27
+ 501 0072 19       		.uleb128 0x19
+ 502 0073 11       		.uleb128 0x11
+ 503 0074 01       		.uleb128 0x1
+ 504 0075 12       		.uleb128 0x12
+ 505 0076 06       		.uleb128 0x6
+ 506 0077 40       		.uleb128 0x40
+ 507 0078 18       		.uleb128 0x18
+ 508 0079 9742     		.uleb128 0x2117
+ 509 007b 19       		.uleb128 0x19
+ 510 007c 00       		.byte	0
+ 511 007d 00       		.byte	0
+ 512 007e 09       		.uleb128 0x9
+ 513 007f 01       		.uleb128 0x1
+ 514 0080 01       		.byte	0x1
+ 515 0081 49       		.uleb128 0x49
+ 516 0082 13       		.uleb128 0x13
+ 517 0083 01       		.uleb128 0x1
+ 518 0084 13       		.uleb128 0x13
+ 519 0085 00       		.byte	0
+ 520 0086 00       		.byte	0
+ 521 0087 0A       		.uleb128 0xa
+ 522 0088 21       		.uleb128 0x21
+ 523 0089 00       		.byte	0
+ 524 008a 49       		.uleb128 0x49
+ 525 008b 13       		.uleb128 0x13
+ 526 008c 2F       		.uleb128 0x2f
+ 527 008d 0B       		.uleb128 0xb
+ 528 008e 00       		.byte	0
+ 529 008f 00       		.byte	0
+ 530 0090 0B       		.uleb128 0xb
+ 531 0091 34       		.uleb128 0x34
+ 532 0092 00       		.byte	0
+ 533 0093 03       		.uleb128 0x3
+ 534 0094 0E       		.uleb128 0xe
+ 535 0095 3A       		.uleb128 0x3a
+ 536 0096 0B       		.uleb128 0xb
+ 537 0097 3B       		.uleb128 0x3b
+ 538 0098 05       		.uleb128 0x5
+ 539 0099 49       		.uleb128 0x49
+ 540 009a 13       		.uleb128 0x13
+ 541 009b 3F       		.uleb128 0x3f
+ 542 009c 19       		.uleb128 0x19
+ 543 009d 3C       		.uleb128 0x3c
+ 544 009e 19       		.uleb128 0x19
+ 545 009f 00       		.byte	0
+ 546 00a0 00       		.byte	0
+ 547 00a1 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 15
 
 
- 384 0141 646F7562 		.ascii	"double\000"
- 384      6C6500
- 385              	.LASF21:
- 386 0148 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\PSoC Creator"
- 386      73657273 
- 386      5C616472 
- 386      69615C4F 
- 386      6E654472 
- 387 0176 5C50524F 		.ascii	"\\PROYECTO_IOT\\MAX6675.cydsn\000"
- 387      59454354 
- 387      4F5F494F 
- 387      545C4D41 
- 387      58363637 
- 388              	.LASF3:
- 389 0192 73686F72 		.ascii	"short unsigned int\000"
- 389      7420756E 
- 389      7369676E 
- 389      65642069 
- 389      6E7400
- 390              	.LASF0:
- 391 01a5 7369676E 		.ascii	"signed char\000"
- 391      65642063 
- 391      68617200 
- 392              	.LASF22:
- 393 01b1 55415254 		.ascii	"UART_TXISR\000"
- 393      5F545849 
- 393      535200
- 394              	.LASF14:
- 395 01bc 6C6F6E67 		.ascii	"long double\000"
- 395      20646F75 
- 395      626C6500 
- 396              	.LASF2:
- 397 01c8 73686F72 		.ascii	"short int\000"
- 397      7420696E 
- 397      7400
- 398              	.LASF13:
- 399 01d2 72656738 		.ascii	"reg8\000"
- 399      00
- 400              	.LASF15:
- 401 01d7 73697A65 		.ascii	"sizetype\000"
- 401      74797065 
- 401      00
- 402              	.LASF16:
- 403 01e0 55415254 		.ascii	"UART_txBuffer\000"
- 403      5F747842 
- 403      75666665 
- 403      7200
- 404              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+ 548              		.section	.debug_loc,"",%progbits
+ 549              	.Ldebug_loc0:
+ 550              	.LLST0:
+ 551 0000 06000000 		.4byte	.LVL0
+ 552 0004 1C000000 		.4byte	.LVL1
+ 553 0008 0100     		.2byte	0x1
+ 554 000a 53       		.byte	0x53
+ 555 000b 28000000 		.4byte	.LVL2
+ 556 000f 3E000000 		.4byte	.LVL4
+ 557 0013 0100     		.2byte	0x1
+ 558 0015 51       		.byte	0x51
+ 559 0016 00000000 		.4byte	0
+ 560 001a 00000000 		.4byte	0
+ 561              	.LLST1:
+ 562 001e 06000000 		.4byte	.LVL0
+ 563 0022 1C000000 		.4byte	.LVL1
+ 564 0026 0100     		.2byte	0x1
+ 565 0028 53       		.byte	0x53
+ 566 0029 00000000 		.4byte	0
+ 567 002d 00000000 		.4byte	0
+ 568              	.LLST2:
+ 569 0031 32000000 		.4byte	.LVL3
+ 570 0035 70000000 		.4byte	.LVL5
+ 571 0039 0200     		.2byte	0x2
+ 572 003b 31       		.byte	0x31
+ 573 003c 9F       		.byte	0x9f
+ 574 003d 00000000 		.4byte	0
+ 575 0041 00000000 		.4byte	0
+ 576              		.section	.debug_aranges,"",%progbits
+ 577 0000 24000000 		.4byte	0x24
+ 578 0004 0200     		.2byte	0x2
+ 579 0006 00000000 		.4byte	.Ldebug_info0
+ 580 000a 04       		.byte	0x4
+ 581 000b 00       		.byte	0
+ 582 000c 0000     		.2byte	0
+ 583 000e 0000     		.2byte	0
+ 584 0010 00000000 		.4byte	.LFB0
+ 585 0014 98000000 		.4byte	.LFE0-.LFB0
+ 586 0018 00000000 		.4byte	.LFB1
+ 587 001c 58000000 		.4byte	.LFE1-.LFB1
+ 588 0020 00000000 		.4byte	0
+ 589 0024 00000000 		.4byte	0
+ 590              		.section	.debug_ranges,"",%progbits
+ 591              	.Ldebug_ranges0:
+ 592 0000 00000000 		.4byte	.LFB0
+ 593 0004 98000000 		.4byte	.LFE0
+ 594 0008 00000000 		.4byte	.LFB1
+ 595 000c 58000000 		.4byte	.LFE1
+ 596 0010 00000000 		.4byte	0
+ 597 0014 00000000 		.4byte	0
+ 598              		.section	.debug_line,"",%progbits
+ 599              	.Ldebug_line0:
+ 600 0000 A1000000 		.section	.debug_str,"MS",%progbits,1
+ 600      02004F00 
+ 600      00000201 
+ 600      FB0E0D00 
+ 600      01010101 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 16
+
+
+ 601              	.LASF24:
+ 602 0000 55415254 		.ascii	"UART_rxBufferRead\000"
+ 602      5F727842 
+ 602      75666665 
+ 602      72526561 
+ 602      6400
+ 603              	.LASF9:
+ 604 0012 666C6F61 		.ascii	"float\000"
+ 604      7400
+ 605              	.LASF19:
+ 606 0018 55415254 		.ascii	"UART_txBuffer\000"
+ 606      5F747842 
+ 606      75666665 
+ 606      7200
+ 607              	.LASF3:
+ 608 0026 73686F72 		.ascii	"short unsigned int\000"
+ 608      7420756E 
+ 608      7369676E 
+ 608      65642069 
+ 608      6E7400
+ 609              	.LASF31:
+ 610 0039 55415254 		.ascii	"UART_RXISR\000"
+ 610      5F525849 
+ 610      535200
+ 611              	.LASF17:
+ 612 0044 72656164 		.ascii	"readStatus\000"
+ 612      53746174 
+ 612      757300
+ 613              	.LASF1:
+ 614 004f 756E7369 		.ascii	"unsigned char\000"
+ 614      676E6564 
+ 614      20636861 
+ 614      7200
+ 615              	.LASF28:
+ 616 005d 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 616      43313120 
+ 616      352E342E 
+ 616      31203230 
+ 616      31363036 
+ 617 0090 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 617      20726576 
+ 617      6973696F 
+ 617      6E203233 
+ 617      37373135 
+ 618 00c3 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 618      66756E63 
+ 618      74696F6E 
+ 618      2D736563 
+ 618      74696F6E 
+ 619              	.LASF13:
+ 620 00eb 72656738 		.ascii	"reg8\000"
+ 620      00
+ 621              	.LASF5:
+ 622 00f0 6C6F6E67 		.ascii	"long unsigned int\000"
+ 622      20756E73 
+ 622      69676E65 
+ 622      6420696E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 17
+
+
+ 622      7400
+ 623              	.LASF30:
+ 624 0102 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\psoc\\PROYEC"
+ 624      73657273 
+ 624      5C616472 
+ 624      69615C4F 
+ 624      6E654472 
+ 625 012f 544F5F49 		.ascii	"TO_IOT\\MAX6675.cydsn\000"
+ 625      4F545C4D 
+ 625      41583636 
+ 625      37352E63 
+ 625      7964736E 
+ 626              	.LASF12:
+ 627 0144 75696E74 		.ascii	"uint8\000"
+ 627      3800
+ 628              	.LASF23:
+ 629 014a 55415254 		.ascii	"UART_rxBuffer\000"
+ 629      5F727842 
+ 629      75666665 
+ 629      7200
+ 630              	.LASF10:
+ 631 0158 646F7562 		.ascii	"double\000"
+ 631      6C6500
+ 632              	.LASF22:
+ 633 015f 55415254 		.ascii	"UART_errorStatus\000"
+ 633      5F657272 
+ 633      6F725374 
+ 633      61747573 
+ 633      00
+ 634              	.LASF25:
+ 635 0170 55415254 		.ascii	"UART_rxBufferWrite\000"
+ 635      5F727842 
+ 635      75666665 
+ 635      72577269 
+ 635      746500
+ 636              	.LASF8:
+ 637 0183 756E7369 		.ascii	"unsigned int\000"
+ 637      676E6564 
+ 637      20696E74 
+ 637      00
+ 638              	.LASF7:
+ 639 0190 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 639      206C6F6E 
+ 639      6720756E 
+ 639      7369676E 
+ 639      65642069 
+ 640              	.LASF27:
+ 641 01a7 55415254 		.ascii	"UART_rxBufferOverflow\000"
+ 641      5F727842 
+ 641      75666665 
+ 641      724F7665 
+ 641      72666C6F 
+ 642              	.LASF14:
+ 643 01bd 6C6F6E67 		.ascii	"long double\000"
+ 643      20646F75 
+ 643      626C6500 
+ 644              	.LASF15:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 18
+
+
+ 645 01c9 73697A65 		.ascii	"sizetype\000"
+ 645      74797065 
+ 645      00
+ 646              	.LASF6:
+ 647 01d2 6C6F6E67 		.ascii	"long long int\000"
+ 647      206C6F6E 
+ 647      6720696E 
+ 647      7400
+ 648              	.LASF32:
+ 649 01e0 55415254 		.ascii	"UART_TXISR\000"
+ 649      5F545849 
+ 649      535200
+ 650              	.LASF18:
+ 651 01eb 696E6372 		.ascii	"increment_pointer\000"
+ 651      656D656E 
+ 651      745F706F 
+ 651      696E7465 
+ 651      7200
+ 652              	.LASF26:
+ 653 01fd 55415254 		.ascii	"UART_rxBufferLoopDetect\000"
+ 653      5F727842 
+ 653      75666665 
+ 653      724C6F6F 
+ 653      70446574 
+ 654              	.LASF2:
+ 655 0215 73686F72 		.ascii	"short int\000"
+ 655      7420696E 
+ 655      7400
+ 656              	.LASF21:
+ 657 021f 55415254 		.ascii	"UART_txBufferWrite\000"
+ 657      5F747842 
+ 657      75666665 
+ 657      72577269 
+ 657      746500
+ 658              	.LASF4:
+ 659 0232 6C6F6E67 		.ascii	"long int\000"
+ 659      20696E74 
+ 659      00
+ 660              	.LASF11:
+ 661 023b 63686172 		.ascii	"char\000"
+ 661      00
+ 662              	.LASF20:
+ 663 0240 55415254 		.ascii	"UART_txBufferRead\000"
+ 663      5F747842 
+ 663      75666665 
+ 663      72526561 
+ 663      6400
+ 664              	.LASF0:
+ 665 0252 7369676E 		.ascii	"signed char\000"
+ 665      65642063 
+ 665      68617200 
+ 666              	.LASF29:
+ 667 025e 47656E65 		.ascii	"Generated_Source\\PSoC5\\UART_INT.c\000"
+ 667      72617465 
+ 667      645F536F 
+ 667      75726365 
+ 667      5C50536F 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccR10q6n.s 			page 19
+
+
+ 668              	.LASF16:
+ 669 0280 72656164 		.ascii	"readData\000"
+ 669      44617461 
+ 669      00
+ 670              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

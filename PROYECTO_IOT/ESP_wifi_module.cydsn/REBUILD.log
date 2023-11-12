@@ -1,4 +1,4 @@
---------------- Rebuild Started: 10/16/2023 00:12:49 Project: ESP_wifi_module, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+--------------- Rebuild Started: 10/31/2023 09:44:14 Project: ESP_wifi_module, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\main.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\LIB_psoc.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\espU1.o"
@@ -40,6 +40,9 @@ Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_PC_PM.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_PC_INT.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_PC_BOOT.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_PC_IntClock.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\buzzer.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\INDICADORES.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\INDICADORES_PM.o"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.hex"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.map"
@@ -49,7 +52,7 @@ Deleting file ".\ESP_wifi_module.rpt"
 Deleting file ".\ESP_wifi_module_timing.html"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\.deps\SOURCE_C__ARM_GCC_GENERIC.P"
 Deleting file ".\CortexM3\ARM_GCC_541\Debug\.deps\SOURCE_ASM__ARM_GCC_GENERIC.P"
-cydsfit.exe -.appdatapath "C:\Users\adria\AppData\Local\Cypress Semiconductor\PSoC Creator\4.4" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p "C:\Users\adria\OneDrive\Documents\PSoC Creator\PROYECTO_IOT\ESP_wifi_module.cydsn\ESP_wifi_module.cyprj" -d CY8C5888LTI-LP097 -s "C:\Users\adria\OneDrive\Documents\PSoC Creator\PROYECTO_IOT\ESP_wifi_module.cydsn\Generated_Source\PSoC5" -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+cydsfit.exe -.appdatapath "C:\Users\adria\AppData\Local\Cypress Semiconductor\PSoC Creator\4.4" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\adria\OneDrive\Documents\psoc\PROYECTO_IOT\ESP_wifi_module.cydsn\ESP_wifi_module.cyprj -d CY8C5888LTI-LP097 -s C:\Users\adria\OneDrive\Documents\psoc\PROYECTO_IOT\ESP_wifi_module.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 Elaborating Design...
 HDL Generation...
 Synthesis...
@@ -68,17 +71,11 @@ Cleanup...
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/LIB_psoc.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.c -o .\CortexM3\ARM_GCC_541\Debug\LIB_psoc.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/espU1.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c espU1.c -o .\CortexM3\ARM_GCC_541\Debug\espU1.o
-espU1.c: In function 'wait':
-espU1.c:84:15: warning: array subscript has type 'char' [-Wchar-subscripts]
-         buffer[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
-               ^
-espU1.c:85:18: warning: array subscript has type 'char' [-Wchar-subscripts]
-         if(buffer[i]!=_NULL){
-                  ^
-espU1.c:86:35: warning: array subscript has type 'char' [-Wchar-subscripts]
-             UART_PC_PutChar(buffer[i]);
-                                   ^
-arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/PSOC_LDC.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c ..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LDC.c -o .\CortexM3\ARM_GCC_541\Debug\PSOC_LDC.o
+espU1.c: In function 'send':
+espU1.c:76:5: warning: 'send' is used uninitialized in this function [-Wuninitialized]
+     sprintf(send,"AT+CIPSEND=%d\r\n",len);
+     ^
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/PSOC_LDC.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c ..\..\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LDC.c -o .\CortexM3\ARM_GCC_541\Debug\PSOC_LDC.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/cyfitter_cfg.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\cyfitter_cfg.c -o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/cymetadata.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\cymetadata.c -o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/LEDS.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\LEDS.c -o .\CortexM3\ARM_GCC_541\Debug\LEDS.o
@@ -115,15 +112,18 @@ arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/UART_PC_INT.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\UART_PC_INT.c -o .\CortexM3\ARM_GCC_541\Debug\UART_PC_INT.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/UART_PC_BOOT.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\UART_PC_BOOT.c -o .\CortexM3\ARM_GCC_541\Debug\UART_PC_BOOT.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/UART_PC_IntClock.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\UART_PC_IntClock.c -o .\CortexM3\ARM_GCC_541\Debug\UART_PC_IntClock.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/buzzer.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\buzzer.c -o .\CortexM3\ARM_GCC_541\Debug\buzzer.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/INDICADORES.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\INDICADORES.c -o .\CortexM3\ARM_GCC_541\Debug\INDICADORES.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/INDICADORES_PM.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC5\INDICADORES_PM.c -o .\CortexM3\ARM_GCC_541\Debug\INDICADORES_PM.o
 arm-none-eabi-as.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -alh=.\CortexM3\ARM_GCC_541\Debug/CyBootAsmGnu.lst -g -W -o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o Generated_Source\PSoC5\CyBootAsmGnu.s
-arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.a .\CortexM3\ARM_GCC_541\Debug\LEDS.o .\CortexM3\ARM_GCC_541\Debug\LEDS_PM.o .\CortexM3\ARM_GCC_541\Debug\UART.o .\CortexM3\ARM_GCC_541\Debug\UART_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\Rojo.o .\CortexM3\ARM_GCC_541\Debug\Verde.o .\CortexM3\ARM_GCC_541\Debug\Azul.o .\CortexM3\ARM_GCC_541\Debug\UART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\isr.o .\CortexM3\ARM_GCC_541\Debug\Tx_1.o .\CortexM3\ARM_GCC_541\Debug\Naranja.o .\CortexM3\ARM_GCC_541\Debug\LCD.o .\CortexM3\ARM_GCC_541\Debug\LCD_PM.o .\CortexM3\ARM_GCC_541\Debug\D4.o .\CortexM3\ARM_GCC_541\Debug\D5.o .\CortexM3\ARM_GCC_541\Debug\D6.o .\CortexM3\ARM_GCC_541\Debug\D7.o .\CortexM3\ARM_GCC_541\Debug\E.o .\CortexM3\ARM_GCC_541\Debug\RS.o .\CortexM3\ARM_GCC_541\Debug\UART_PC.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_BOOT.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_IntClock.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
+arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.a .\CortexM3\ARM_GCC_541\Debug\LEDS.o .\CortexM3\ARM_GCC_541\Debug\LEDS_PM.o .\CortexM3\ARM_GCC_541\Debug\UART.o .\CortexM3\ARM_GCC_541\Debug\UART_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\Rojo.o .\CortexM3\ARM_GCC_541\Debug\Verde.o .\CortexM3\ARM_GCC_541\Debug\Azul.o .\CortexM3\ARM_GCC_541\Debug\UART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\isr.o .\CortexM3\ARM_GCC_541\Debug\Tx_1.o .\CortexM3\ARM_GCC_541\Debug\Naranja.o .\CortexM3\ARM_GCC_541\Debug\LCD.o .\CortexM3\ARM_GCC_541\Debug\LCD_PM.o .\CortexM3\ARM_GCC_541\Debug\D4.o .\CortexM3\ARM_GCC_541\Debug\D5.o .\CortexM3\ARM_GCC_541\Debug\D6.o .\CortexM3\ARM_GCC_541\Debug\D7.o .\CortexM3\ARM_GCC_541\Debug\E.o .\CortexM3\ARM_GCC_541\Debug\RS.o .\CortexM3\ARM_GCC_541\Debug\UART_PC.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_BOOT.o .\CortexM3\ARM_GCC_541\Debug\UART_PC_IntClock.o .\CortexM3\ARM_GCC_541\Debug\buzzer.o .\CortexM3\ARM_GCC_541\Debug\INDICADORES.o .\CortexM3\ARM_GCC_541\Debug\INDICADORES_PM.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
 arm-none-eabi-ar.exe: creating .\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.a
-arm-none-eabi-gcc.exe -Wl,--start-group -o "C:\Users\adria\OneDrive\Documents\PSoC Creator\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf" .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\LIB_psoc.o .\CortexM3\ARM_GCC_541\Debug\espU1.o .\CortexM3\ARM_GCC_541\Debug\PSOC_LDC.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/ESP_wifi_module.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
-cyelftool.exe -C "C:\Users\adria\OneDrive\Documents\PSoC Creator\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf" --flash_row_size 256 --flash_size 262144 --flash_offset 0x00000000
+arm-none-eabi-gcc.exe -Wl,--start-group -o C:\Users\adria\OneDrive\Documents\psoc\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\LIB_psoc.o .\CortexM3\ARM_GCC_541\Debug\espU1.o .\CortexM3\ARM_GCC_541\Debug\PSOC_LDC.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/ESP_wifi_module.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
+cyelftool.exe -C C:\Users\adria\OneDrive\Documents\psoc\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf --flash_row_size 256 --flash_size 262144 --flash_offset 0x00000000
 No ELF section .cychecksum found, creating one
 Application checksum calculated and stored in ELF section .cychecksum
 Checksum calculated and stored in ELF section .cymeta
-cyelftool.exe -S "C:\Users\adria\OneDrive\Documents\PSoC Creator\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf"
-Flash used: 3286 of 262144 bytes (1.3 %).
-SRAM used: 2825 of 65536 bytes (4.3 %). Stack: 2048 bytes. Heap: 128 bytes.
---------------- Rebuild Succeeded: 10/16/2023 00:13:17 ---------------
+cyelftool.exe -S C:\Users\adria\OneDrive\Documents\psoc\PROYECTO_IOT\ESP_wifi_module.cydsn\CortexM3\ARM_GCC_541\Debug\ESP_wifi_module.elf
+Flash used: 3654 of 262144 bytes (1.4 %).
+SRAM used: 2833 of 65536 bytes (4.3 %). Stack: 2048 bytes. Heap: 128 bytes.
+--------------- Rebuild Succeeded: 10/31/2023 09:44:41 ---------------

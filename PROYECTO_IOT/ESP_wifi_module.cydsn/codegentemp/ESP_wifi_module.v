@@ -1,6 +1,6 @@
 // ======================================================================
 // ESP_wifi_module.v generated from TopDesign.cysch
-// 10/29/2023 at 12:10
+// 10/31/2023 at 09:44
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -414,6 +414,15 @@ endmodule
 // top
 module top ;
 
+          wire  Net_70;
+          wire  Net_69;
+          wire  Net_68;
+          wire  Net_67;
+          wire  Net_66;
+          wire  Net_65;
+          wire  Net_64;
+          wire  Net_63;
+          wire  Net_62;
           wire  Net_61;
           wire  Net_60;
           wire  Net_59;
@@ -453,12 +462,13 @@ module top ;
           wire  Net_8;
           wire  Net_7;
           wire  Net_6;
-          wire  Net_5;
+          wire  Net_71;
           wire  Net_3;
           wire  Net_2;
           wire  Net_1;
           wire  Net_4;
           wire  Net_9;
+          wire  Net_188;
           wire  Net_56;
 
     CyControlReg_v1_80 LEDS (
@@ -467,7 +477,7 @@ module top ;
         .control_1(Net_1),
         .control_2(Net_2),
         .control_3(Net_3),
-        .control_4(Net_5),
+        .control_4(Net_71),
         .control_5(Net_6),
         .control_6(Net_7),
         .control_7(Net_8),
@@ -483,7 +493,7 @@ module top ;
     defparam LEDS.BitValue = 15;
     defparam LEDS.BusDisplay = 0;
     defparam LEDS.ExtrReset = 0;
-    defparam LEDS.NumOutputs = 5;
+    defparam LEDS.NumOutputs = 4;
 
     UART_v2_50_0 UART_PC (
         .clock(1'b0),
@@ -1679,7 +1689,7 @@ module top ;
 		  .input_buffer_sel(2'b00))
 		buzzer
 		 (.oe(tmpOE__buzzer_net),
-		  .y({Net_5}),
+		  .y({Net_188}),
 		  .fb({tmpFB_0__buzzer_net[0:0]}),
 		  .io({tmpIO_0__buzzer_net[0:0]}),
 		  .siovref(tmpSIOVREF__buzzer_net),
@@ -1692,6 +1702,30 @@ module top ;
 		  .out_reset({1'b0}));
 
 	assign tmpOE__buzzer_net = (`CYDEV_CHIP_MEMBER_USED == `CYDEV_CHIP_MEMBER_3A && `CYDEV_CHIP_REVISION_USED < `CYDEV_CHIP_REVISION_3A_ES3) ? ~{1'b1} : {1'b1};
+
+    CyControlReg_v1_80 INDICADORES (
+        .clock(1'b0),
+        .control_0(Net_188),
+        .control_1(Net_63),
+        .control_2(Net_64),
+        .control_3(Net_65),
+        .control_4(Net_66),
+        .control_5(Net_67),
+        .control_6(Net_68),
+        .control_7(Net_69),
+        .reset(1'b0));
+    defparam INDICADORES.Bit0Mode = 0;
+    defparam INDICADORES.Bit1Mode = 0;
+    defparam INDICADORES.Bit2Mode = 0;
+    defparam INDICADORES.Bit3Mode = 0;
+    defparam INDICADORES.Bit4Mode = 0;
+    defparam INDICADORES.Bit5Mode = 0;
+    defparam INDICADORES.Bit6Mode = 0;
+    defparam INDICADORES.Bit7Mode = 0;
+    defparam INDICADORES.BitValue = 0;
+    defparam INDICADORES.BusDisplay = 0;
+    defparam INDICADORES.ExtrReset = 0;
+    defparam INDICADORES.NumOutputs = 1;
 
 
 

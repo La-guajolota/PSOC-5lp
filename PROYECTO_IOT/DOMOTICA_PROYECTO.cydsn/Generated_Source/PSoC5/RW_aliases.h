@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name: MOSI.h  
+* File Name: RW.h  
 * Version 2.20
 *
 * Description:
@@ -15,8 +15,8 @@
 * the software package with which this file was provided.
 *******************************************************************************/
 
-#if !defined(CY_PINS_MOSI_ALIASES_H) /* Pins MOSI_ALIASES_H */
-#define CY_PINS_MOSI_ALIASES_H
+#if !defined(CY_PINS_RW_ALIASES_H) /* Pins RW_ALIASES_H */
+#define CY_PINS_RW_ALIASES_H
 
 #include "cytypes.h"
 #include "cyfitter.h"
@@ -25,12 +25,12 @@
 /***************************************
 *              Constants        
 ***************************************/
-#define MOSI_0			(MOSI__0__PC)
-#define MOSI_0_INTR	((uint16)((uint16)0x0001u << MOSI__0__SHIFT))
+#define RW_0			(RW__0__PC)
+#define RW_0_INTR	((uint16)((uint16)0x0001u << RW__0__SHIFT))
 
-#define MOSI_INTR_ALL	 ((uint16)(MOSI_0_INTR))
+#define RW_INTR_ALL	 ((uint16)(RW_0_INTR))
 
-#endif /* End Pins MOSI_ALIASES_H */
+#endif /* End Pins RW_ALIASES_H */
 
 
 /* [] END OF FILE */

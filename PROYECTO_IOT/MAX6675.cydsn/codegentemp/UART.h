@@ -28,7 +28,7 @@
 * Conditional Compilation Parameters
 ***************************************/
 
-#define UART_RX_ENABLED                     (0u)
+#define UART_RX_ENABLED                     (1u)
 #define UART_TX_ENABLED                     (1u)
 #define UART_HD_ENABLED                     (0u)
 #define UART_RX_INTERRUPT_ENABLED           (1u)
@@ -46,7 +46,7 @@
 #define UART_FLOW_CONTROL                   (0u)
 #define UART_CLK_FREQ                       (0u)
 #define UART_TX_BUFFER_SIZE                 (16u)
-#define UART_RX_BUFFER_SIZE                 (16u)
+#define UART_RX_BUFFER_SIZE                 (5u)
 
 /* Check to see if required defines such as CY_PSOC5LP are available */
 /* They are defined starting with cy_boot v3.0 */
@@ -359,7 +359,7 @@ extern uint8 UART_initVar;
 #endif /* (UART_RXHW_ADDRESS_ENABLED) */
 
 #define UART_INIT_RX_INTERRUPTS_MASK \
-                                  (uint8)((0 << UART_RX_STS_FIFO_NOTEMPTY_SHIFT) \
+                                  (uint8)((1 << UART_RX_STS_FIFO_NOTEMPTY_SHIFT) \
                                         | (0 << UART_RX_STS_MRKSPC_SHIFT) \
                                         | (0 << UART_RX_STS_ADDR_MATCH_SHIFT) \
                                         | (0 << UART_RX_STS_PAR_ERROR_SHIFT) \
