@@ -26,11 +26,11 @@ struct max6675_data {
 };
 
 // Definimos una estructura que agrupa el sensor y sus datos
-struct Sensor {
+struct max6675 {
     struct max6675_data data;
 };
 
 //Optenemos la palabra que escupe el integrado
-void SENS_max6675(struct Sensor* sensor);
+void SENS_max6675(struct max6675* sensor);
 
 #endif

@@ -1,6 +1,6 @@
 #include "MAX6675_.h"
 
-void SENS_max6675(struct Sensor* sensor){
+void SENS_max6675(struct max6675* sensor){
 
     //LEEMOS LA PALABRA DIRECTAMENTE
     //Por comunicacion ISP

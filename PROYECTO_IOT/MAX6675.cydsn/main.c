@@ -34,7 +34,7 @@ CY_ISR(isr_setpoint){
     buffer_Rx[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido
     i++;
     
-    if(buffer_Rx[i-1] == '*'){ //REBIZAMOS EL BUFFER
+    if(buffer_Rx[i-1] == '*'){ //REBIZAMOS EL BUFFER SETPOINT
         setpoint = 0;                    // Limpiar valor de PWM
                 
         setpoint += (buffer_Rx[i-2] - 0x30) * 1;     // Unidades
@@ -43,6 +43,10 @@ CY_ISR(isr_setpoint){
         
         i=0;   
     }
+    
+    /* Comming soon
+    Recibimiento de Kp Ki y Kd
+    */
 }
 
 
@@ -56,7 +60,7 @@ int main(void)
     UART_Start();
     UART_ClearTxBuffer();
     LCD_ClearDisplay();    
-    struct Sensor thermocupla; //Sensor themocupla MAX6675
+    struct max6675 thermocupla; //Sensor themocupla MAX6675
     
     //Interrrupciones
     isr_setpoint_StartEx(isr_setpoint);// Inicializar interrupción física
@@ -70,7 +74,7 @@ int main(void)
         
         //Sensamos
         SENS_max6675(&thermocupla);
-        CyDelay(750);
+        CyDelay(500);
         
         //Mostramos temp si no hay errror de comunicacion
         if(thermocupla.data.errores){
