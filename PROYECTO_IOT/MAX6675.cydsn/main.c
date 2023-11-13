@@ -74,7 +74,7 @@ int main(void)
         
         //Sensamos
         SENS_max6675(&thermocupla);
-        CyDelay(500);
+        CyDelay(250);
         
         //Mostramos temp si no hay errror de comunicacion
         if(thermocupla.data.errores){
@@ -92,7 +92,7 @@ int main(void)
             //PARA LA LCD
             LCD_Position(0,0);
             LCD_PrintString("TEMP: ");
-            LCD_PrintNumber(thermocupla.data.temperatura);
+            LCD_PrintNumber(thermocupla.data.temperatura>>7);
             LCD_PrintString("degC");
             LCD_Position(1,0);
             LCD_PrintString("SP:   ");
@@ -100,7 +100,7 @@ int main(void)
             LCD_PrintString("degC");
             
             //PARA INTERFAZ LABVIEW
-            sprintf(buffer_Tx, "%d\n\r",thermocupla.data.temperatura);
+            sprintf(buffer_Tx,"%d.%d\n\r",thermocupla.data.temperatura>>7,thermocupla.data.temperatura & 0x7F);
             UART_PutString(buffer_Tx);            
         }
         

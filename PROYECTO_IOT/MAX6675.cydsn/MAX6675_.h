@@ -21,8 +21,10 @@
 // Definimos la estructura para almacenar los datos del sensor    
 struct max6675_data {
 	uint16_t palabra;
-    uint16_t temperatura;
     uint8_t errores;
+    
+    uint16_t temperatura;
+    float temperatura_decimal;
 };
 
 // Definimos una estructura que agrupa el sensor y sus datos

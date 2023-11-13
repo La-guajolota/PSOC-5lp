@@ -28,8 +28,13 @@ void SENS_max6675(struct max6675* sensor){
         sensor->data.temperatura = 0;
     }else{
         //Tomamos la seccion de la temperatura
-        sensor->data.temperatura = map(sensor->data.palabra>>3,0,4095,0,1024);
+        
+        sensor->data.temperatura = ((sensor->data.palabra>>3)/4);
+        sensor->data.temperatura <<=7;//parte entera
+        
+        sensor->data.temperatura |= ((sensor->data.palabra>>3)%4)*25;//decimal
+        
+        sensor->data.temperatura_decimal = (float)(sensor->data.temperatura>>7) + (float)((sensor->data.temperatura & 0x7F)*0.01);
     }
     
 }
-
