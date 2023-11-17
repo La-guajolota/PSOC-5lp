@@ -15,7 +15,7 @@ CY_ISR(DIS){
     DIS_ClearPending();
     
     DISPARADORES_Write(BIT0);
-    CyDelayUs(10);
+    CyDelayUs(20);
     DISPARADORES_Write(~BIT0);
     
 }
