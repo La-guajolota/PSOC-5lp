@@ -2,6 +2,8 @@
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
 #include "..\..\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 
+#define DENOMINADOR 100
+
 //Rutina de sumado
 uint16_t on = 0, acomulador = 0;
 CY_ISR(contador){
@@ -9,11 +11,15 @@ CY_ISR(contador){
     
     acomulador++; //65535 bits máximos
     
+    if(acomulador >= DENOMINADOR){
+        acomulador =0;
+    }
+    
     /*
         Al ser un relevador de estado solido todo integrado,
         no hay problema en no activar con pulsos-disparo
     */
-    if(on<=acomulador){//ON disparos
+    if(on<=acomulador){//ON 
         
         Actuadores_Write(0xFF);
         
@@ -22,6 +28,13 @@ CY_ISR(contador){
         Actuadores_Write(0x00);
     }
         
+}
+
+uint8_t Potencia = 0;
+CY_ISR(actualizar){
+    actualizar_ClearPending();
+    
+    on = map(Potencia,0,100,0,DENOMINADOR);//Se actualiza la proporcion ON/OFF
 }
 
 
@@ -33,11 +46,17 @@ int main(void)
     contador_StartEx(contador);// Inicializar interrupción física
     contador_ClearPending();  // Limpieza de interrupción
     
-    //lcd CONFIG INICIAL
-    LCD_Position(0,0);
-    LCD_PrintString("Potencia:   ON/65535:");
+    actualizar_StartEx(actualizar);
+    actualizar_ClearPending();
+    btns_InterruptEnable();
     
-    uint8_t Potencia = 0, btns;
+    
+    //lcd CONFIG INICIAL
+    LCD_Start();
+    LCD_Position(0,0);
+    LCD_PrintString("Potencia:");
+    
+    uint8_t btns;
     
     for(;;)
     {
@@ -55,13 +74,11 @@ int main(void)
         
         //TRUNCAMOS SI SE SATURA EL ACTUADORS
         Potencia = trunca(Potencia,0,100);
-        
-        on = map(Potencia,0,100,0,65535);//Se actualiza la proporcion ON/OFF
-        
+
         //Atualizamos el angulo de disparo
         LCD_Position(1,0);
-        LCD_PrintNumber(Potencia);
-        LCD_PrintString("* ");
+        LCD_PrintNumber(100-Potencia);
+        LCD_PrintString("%              ");
         
     }
 }
