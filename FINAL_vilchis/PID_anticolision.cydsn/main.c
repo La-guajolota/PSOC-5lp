@@ -71,7 +71,6 @@ int main(void)
     pid_instancia_variables.limMin = 0; //Limites del actuador
     pid_instancia_variables.limMax = 255;
     
-    
     pid_instancia_variables.limMinInt = 0;//Limites del integrador WIND-UP/
     pid_instancia_variables.limMaxInt = 255;
     
