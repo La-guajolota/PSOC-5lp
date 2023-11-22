@@ -49,8 +49,6 @@ CY_ISR(isr_setpoint){
     */
 }
 
-
-
 int main(void)
 {
     CyGlobalIntEnable;
@@ -66,14 +64,20 @@ int main(void)
     isr_setpoint_StartEx(isr_setpoint);// Inicializar interrupción física
     isr_setpoint_ClearPending();  // Limpieza de interrupción
     
-    
     //variables
     char buffer_Tx[8];
     for(;;)
     {
-        
         //Sensamos
         SENS_max6675(&thermocupla);
+        
+        /*
+        //Indicamos que ya se alcanzo una temperatura peligrosa
+        if((thermocupla.data.temperatura>>7) >= 40){
+            
+        }
+        */
+        
         CyDelay(250);
         
         //Mostramos temp si no hay errror de comunicacion
@@ -106,5 +110,3 @@ int main(void)
         
     }
 }
-
-

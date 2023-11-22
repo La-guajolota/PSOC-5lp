@@ -5,7 +5,7 @@
 #define DENOMINADOR 100
 
 //Rutina de sumado
-uint16_t on = 0, acomulador = 0;
+uint16_t on = DENOMINADOR, acomulador = 0;
 CY_ISR(contador){
     contador_ClearPending();// Limpieza de interrupción
     
