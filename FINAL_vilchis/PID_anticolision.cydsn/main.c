@@ -65,7 +65,6 @@ int main(void)
     pid_instancia_variables.Ki = 0.0025;
     pid_instancia_variables.Kd = 0.03;
     
-    
     pid_instancia_variables.tau = 0.25;//filtro pasabaja derivativo
     
     pid_instancia_variables.limMin = 0; //Limites del actuador

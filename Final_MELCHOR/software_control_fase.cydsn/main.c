@@ -3,7 +3,7 @@
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
 
 //Rutina de interrupcion
-uint8_t angulo = 0;//angulo de dispatp
+uint8_t angulo = 180;//angulo de dispatp
 uint8_t flag = 0;
 CY_ISR(actualizar){
     actualizar_ClearPending();
@@ -15,7 +15,7 @@ CY_ISR(DIS){
     DIS_ClearPending();
     
     DISPARADORES_Write(BIT0);
-    CyDelayUs(20);
+    CyDelayUs(10);
     DISPARADORES_Write(~BIT0);
     
 }
