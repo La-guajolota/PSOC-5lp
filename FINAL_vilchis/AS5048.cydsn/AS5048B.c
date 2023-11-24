@@ -83,7 +83,6 @@ static int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data
     return rslt;
 }
 
-
 void AS5048B_REGISTROS(struct AS5048B *registros){
     
     uint8_t reg_data[10];
@@ -102,5 +101,20 @@ void AS5048B_REGISTROS(struct AS5048B *registros){
     registros->registros.magnitud_Hi = reg_data[6];
     registros->registros.magnitud_Lo = reg_data[7];
     registros->registros.angulo_Hi = reg_data[8];
-    registros->registros.angulo_Lo= 50;
+    registros->registros.angulo_Lo= reg_data[9] >> 4;// sE ELIMINAN LOS 4 LBS como un filtrado
 } 
+
+
+void  AS5048B_Cero(struct AS5048B *registros){
+    
+    uint8_t reg_data[2] = {0,0};
+    user_i2c_write(Address_FISICO,OTP_Register_Zero_Position_h,reg_data,1);//Escribimos 0 en OTP zero position registor
+    
+    AS5048B_REGISTROS(registros);//Actualizamos la lectura del estado actual de los registros
+    
+    reg_data[0] = registros->registros.angulo_Hi;
+    reg_data[1] = registros->registros.angulo_Lo;
+    user_i2c_write(Address_FISICO,OTP_Register_Zero_Position_h,reg_data,1);//Escribimos la ultima lectura de angulo al OTP zero register
+    
+}
+

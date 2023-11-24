@@ -20,7 +20,7 @@ int main(void)
     LCD_Position(0,0);
     
     struct AS5048B Encoder;//Creamos instancia del sensor
-    //AS5048B_Cero(&Encoder); //Seteamos el cero mecanico
+    AS5048B_Cero(&Encoder); //Seteamos el cero mecanico
     
     uint16 Angulo;
     char buffer_tx[16];
@@ -28,9 +28,7 @@ int main(void)
     {
         //Leemos sensor
         AS5048B_REGISTROS(&Encoder);
-            
-        //Filtramos
-        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo>>4);
+        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
         
         //Calculamos el angulo en grados
         Angulo = map(Angulo,0,16383,0,360);
