@@ -1,0 +1,679 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"DRIVER_MOTOR.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.POTENCIA,"ax",%progbits
+  20              		.align	2
+  21              		.global	POTENCIA
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	POTENCIA, %function
+  25              	POTENCIA:
+  26              	.LFB63:
+  27              		.file 1 "..\\driver_motor.cydsn\\DRIVER_MOTOR.c"
+   1:..\driver_motor.cydsn/DRIVER_MOTOR.c **** #include "DRIVER_MOTOR.h"
+   2:..\driver_motor.cydsn/DRIVER_MOTOR.c **** 
+   3:..\driver_motor.cydsn/DRIVER_MOTOR.c **** void POTENCIA(uint8_t P){
+  28              		.loc 1 3 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              	.LVL0:
+  33 0000 00B5     		push	{lr}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 14, -4
+  36 0002 83B0     		sub	sp, sp, #12
+  37              		.cfi_def_cfa_offset 16
+   4:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     
+   5:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     uint16_t out;
+   6:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     
+   7:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     //Clipping de la potencia del motor
+   8:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     if(P>254){
+  38              		.loc 1 8 0
+  39 0004 FF28     		cmp	r0, #255
+  40 0006 00D1     		bne	.L2
+   9:..\driver_motor.cydsn/DRIVER_MOTOR.c ****         P=100;
+  41              		.loc 1 9 0
+  42 0008 6420     		movs	r0, #100
+  43              	.LVL1:
+  44              	.L2:
+  10:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     }
+  11:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     if(P<=0){
+  12:..\driver_motor.cydsn/DRIVER_MOTOR.c ****         P=0;
+  13:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     }
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 2
+
+
+  14:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     
+  15:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     //1ms - 2.3ms
+  16:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     out = map(P,0,254,3000,6900);
+  45              		.loc 1 16 0
+  46 000a 41F6F423 		movw	r3, #6900
+  47 000e 0093     		str	r3, [sp]
+  48 0010 40F6B833 		movw	r3, #3000
+  49 0014 FE22     		movs	r2, #254
+  50 0016 0021     		movs	r1, #0
+  51 0018 FFF7FEFF 		bl	map
+  52              	.LVL2:
+  17:..\driver_motor.cydsn/DRIVER_MOTOR.c ****    
+  18:..\driver_motor.cydsn/DRIVER_MOTOR.c ****     MOTOR_WriteCompare(out);//Actualizamos la potencia del motor
+  53              		.loc 1 18 0
+  54 001c 80B2     		uxth	r0, r0
+  55 001e FFF7FEFF 		bl	MOTOR_WriteCompare
+  56              	.LVL3:
+  19:..\driver_motor.cydsn/DRIVER_MOTOR.c **** }...
+  57              		.loc 1 19 0
+  58 0022 03B0     		add	sp, sp, #12
+  59              		.cfi_def_cfa_offset 4
+  60              		@ sp needed
+  61 0024 5DF804FB 		ldr	pc, [sp], #4
+  62              		.cfi_endproc
+  63              	.LFE63:
+  64              		.size	POTENCIA, .-POTENCIA
+  65              		.text
+  66              	.Letext0:
+  67              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+  68              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+  69              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+  70              		.file 5 "D:\\GITHUB\\Librerias_PSOC\\Libreria_PSOC\\LIB_psoc.h"
+  71              		.file 6 "Generated_Source\\PSoC5/MOTOR.h"
+  72              		.section	.debug_info,"",%progbits
+  73              	.Ldebug_info0:
+  74 0000 57010000 		.4byte	0x157
+  75 0004 0400     		.2byte	0x4
+  76 0006 00000000 		.4byte	.Ldebug_abbrev0
+  77 000a 04       		.byte	0x4
+  78 000b 01       		.uleb128 0x1
+  79 000c 2E000000 		.4byte	.LASF21
+  80 0010 0C       		.byte	0xc
+  81 0011 D5010000 		.4byte	.LASF22
+  82 0015 31010000 		.4byte	.LASF23
+  83 0019 00000000 		.4byte	.Ldebug_ranges0+0
+  84 001d 00000000 		.4byte	0
+  85 0021 00000000 		.4byte	.Ldebug_line0
+  86 0025 02       		.uleb128 0x2
+  87 0026 01       		.byte	0x1
+  88 0027 06       		.byte	0x6
+  89 0028 9A010000 		.4byte	.LASF0
+  90 002c 03       		.uleb128 0x3
+  91 002d E5000000 		.4byte	.LASF3
+  92 0031 02       		.byte	0x2
+  93 0032 1D       		.byte	0x1d
+  94 0033 37000000 		.4byte	0x37
+  95 0037 02       		.uleb128 0x2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 3
+
+
+  96 0038 01       		.byte	0x1
+  97 0039 08       		.byte	0x8
+  98 003a 15010000 		.4byte	.LASF1
+  99 003e 02       		.uleb128 0x2
+ 100 003f 02       		.byte	0x2
+ 101 0040 05       		.byte	0x5
+ 102 0041 CB010000 		.4byte	.LASF2
+ 103 0045 03       		.uleb128 0x3
+ 104 0046 02010000 		.4byte	.LASF4
+ 105 004a 02       		.byte	0x2
+ 106 004b 2B       		.byte	0x2b
+ 107 004c 50000000 		.4byte	0x50
+ 108 0050 02       		.uleb128 0x2
+ 109 0051 02       		.byte	0x2
+ 110 0052 07       		.byte	0x7
+ 111 0053 0E000000 		.4byte	.LASF5
+ 112 0057 03       		.uleb128 0x3
+ 113 0058 B2010000 		.4byte	.LASF6
+ 114 005c 02       		.byte	0x2
+ 115 005d 3F       		.byte	0x3f
+ 116 005e 62000000 		.4byte	0x62
+ 117 0062 02       		.uleb128 0x2
+ 118 0063 04       		.byte	0x4
+ 119 0064 05       		.byte	0x5
+ 120 0065 28010000 		.4byte	.LASF7
+ 121 0069 02       		.uleb128 0x2
+ 122 006a 04       		.byte	0x4
+ 123 006b 07       		.byte	0x7
+ 124 006c BC000000 		.4byte	.LASF8
+ 125 0070 02       		.uleb128 0x2
+ 126 0071 08       		.byte	0x8
+ 127 0072 05       		.byte	0x5
+ 128 0073 00000000 		.4byte	.LASF9
+ 129 0077 02       		.uleb128 0x2
+ 130 0078 08       		.byte	0x8
+ 131 0079 07       		.byte	0x7
+ 132 007a CE000000 		.4byte	.LASF10
+ 133 007e 04       		.uleb128 0x4
+ 134 007f 04       		.byte	0x4
+ 135 0080 05       		.byte	0x5
+ 136 0081 696E7400 		.ascii	"int\000"
+ 137 0085 02       		.uleb128 0x2
+ 138 0086 04       		.byte	0x4
+ 139 0087 07       		.byte	0x7
+ 140 0088 21000000 		.4byte	.LASF11
+ 141 008c 03       		.uleb128 0x3
+ 142 008d 0D010000 		.4byte	.LASF12
+ 143 0091 03       		.byte	0x3
+ 144 0092 18       		.byte	0x18
+ 145 0093 2C000000 		.4byte	0x2c
+ 146 0097 03       		.uleb128 0x3
+ 147 0098 BC010000 		.4byte	.LASF13
+ 148 009c 03       		.byte	0x3
+ 149 009d 24       		.byte	0x24
+ 150 009e 45000000 		.4byte	0x45
+ 151 00a2 03       		.uleb128 0x3
+ 152 00a3 FA010000 		.4byte	.LASF14
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 4
+
+
+ 153 00a7 03       		.byte	0x3
+ 154 00a8 2C       		.byte	0x2c
+ 155 00a9 57000000 		.4byte	0x57
+ 156 00ad 02       		.uleb128 0x2
+ 157 00ae 04       		.byte	0x4
+ 158 00af 04       		.byte	0x4
+ 159 00b0 C5010000 		.4byte	.LASF15
+ 160 00b4 02       		.uleb128 0x2
+ 161 00b5 08       		.byte	0x8
+ 162 00b6 04       		.byte	0x4
+ 163 00b7 7D010000 		.4byte	.LASF16
+ 164 00bb 02       		.uleb128 0x2
+ 165 00bc 01       		.byte	0x1
+ 166 00bd 08       		.byte	0x8
+ 167 00be 23010000 		.4byte	.LASF17
+ 168 00c2 02       		.uleb128 0x2
+ 169 00c3 08       		.byte	0x8
+ 170 00c4 04       		.byte	0x4
+ 171 00c5 A6010000 		.4byte	.LASF18
+ 172 00c9 02       		.uleb128 0x2
+ 173 00ca 04       		.byte	0x4
+ 174 00cb 07       		.byte	0x7
+ 175 00cc 02020000 		.4byte	.LASF19
+ 176 00d0 05       		.uleb128 0x5
+ 177 00d1 84010000 		.4byte	.LASF24
+ 178 00d5 01       		.byte	0x1
+ 179 00d6 03       		.byte	0x3
+ 180 00d7 00000000 		.4byte	.LFB63
+ 181 00db 28000000 		.4byte	.LFE63-.LFB63
+ 182 00df 01       		.uleb128 0x1
+ 183 00e0 9C       		.byte	0x9c
+ 184 00e1 33010000 		.4byte	0x133
+ 185 00e5 06       		.uleb128 0x6
+ 186 00e6 5000     		.ascii	"P\000"
+ 187 00e8 01       		.byte	0x1
+ 188 00e9 03       		.byte	0x3
+ 189 00ea 8C000000 		.4byte	0x8c
+ 190 00ee 00000000 		.4byte	.LLST0
+ 191 00f2 07       		.uleb128 0x7
+ 192 00f3 6F757400 		.ascii	"out\000"
+ 193 00f7 01       		.byte	0x1
+ 194 00f8 05       		.byte	0x5
+ 195 00f9 97000000 		.4byte	0x97
+ 196 00fd 1E000000 		.4byte	.LLST1
+ 197 0101 08       		.uleb128 0x8
+ 198 0102 1C000000 		.4byte	.LVL2
+ 199 0106 44010000 		.4byte	0x144
+ 200 010a 29010000 		.4byte	0x129
+ 201 010e 09       		.uleb128 0x9
+ 202 010f 01       		.uleb128 0x1
+ 203 0110 51       		.byte	0x51
+ 204 0111 01       		.uleb128 0x1
+ 205 0112 30       		.byte	0x30
+ 206 0113 09       		.uleb128 0x9
+ 207 0114 01       		.uleb128 0x1
+ 208 0115 52       		.byte	0x52
+ 209 0116 02       		.uleb128 0x2
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 5
+
+
+ 210 0117 08       		.byte	0x8
+ 211 0118 FE       		.byte	0xfe
+ 212 0119 09       		.uleb128 0x9
+ 213 011a 01       		.uleb128 0x1
+ 214 011b 53       		.byte	0x53
+ 215 011c 03       		.uleb128 0x3
+ 216 011d 0A       		.byte	0xa
+ 217 011e B80B     		.2byte	0xbb8
+ 218 0120 09       		.uleb128 0x9
+ 219 0121 02       		.uleb128 0x2
+ 220 0122 7D       		.byte	0x7d
+ 221 0123 00       		.sleb128 0
+ 222 0124 03       		.uleb128 0x3
+ 223 0125 0A       		.byte	0xa
+ 224 0126 F41A     		.2byte	0x1af4
+ 225 0128 00       		.byte	0
+ 226 0129 0A       		.uleb128 0xa
+ 227 012a 22000000 		.4byte	.LVL3
+ 228 012e 4F010000 		.4byte	0x14f
+ 229 0132 00       		.byte	0
+ 230 0133 0B       		.uleb128 0xb
+ 231 0134 8D010000 		.4byte	.LASF25
+ 232 0138 04       		.byte	0x4
+ 233 0139 1207     		.2byte	0x712
+ 234 013b 3F010000 		.4byte	0x13f
+ 235 013f 0C       		.uleb128 0xc
+ 236 0140 A2000000 		.4byte	0xa2
+ 237 0144 0D       		.uleb128 0xd
+ 238 0145 6D617000 		.ascii	"map\000"
+ 239 0149 6D617000 		.ascii	"map\000"
+ 240 014d 05       		.byte	0x5
+ 241 014e 20       		.byte	0x20
+ 242 014f 0E       		.uleb128 0xe
+ 243 0150 EF000000 		.4byte	.LASF20
+ 244 0154 EF000000 		.4byte	.LASF20
+ 245 0158 06       		.byte	0x6
+ 246 0159 C3       		.byte	0xc3
+ 247 015a 00       		.byte	0
+ 248              		.section	.debug_abbrev,"",%progbits
+ 249              	.Ldebug_abbrev0:
+ 250 0000 01       		.uleb128 0x1
+ 251 0001 11       		.uleb128 0x11
+ 252 0002 01       		.byte	0x1
+ 253 0003 25       		.uleb128 0x25
+ 254 0004 0E       		.uleb128 0xe
+ 255 0005 13       		.uleb128 0x13
+ 256 0006 0B       		.uleb128 0xb
+ 257 0007 03       		.uleb128 0x3
+ 258 0008 0E       		.uleb128 0xe
+ 259 0009 1B       		.uleb128 0x1b
+ 260 000a 0E       		.uleb128 0xe
+ 261 000b 55       		.uleb128 0x55
+ 262 000c 17       		.uleb128 0x17
+ 263 000d 11       		.uleb128 0x11
+ 264 000e 01       		.uleb128 0x1
+ 265 000f 10       		.uleb128 0x10
+ 266 0010 17       		.uleb128 0x17
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 6
+
+
+ 267 0011 00       		.byte	0
+ 268 0012 00       		.byte	0
+ 269 0013 02       		.uleb128 0x2
+ 270 0014 24       		.uleb128 0x24
+ 271 0015 00       		.byte	0
+ 272 0016 0B       		.uleb128 0xb
+ 273 0017 0B       		.uleb128 0xb
+ 274 0018 3E       		.uleb128 0x3e
+ 275 0019 0B       		.uleb128 0xb
+ 276 001a 03       		.uleb128 0x3
+ 277 001b 0E       		.uleb128 0xe
+ 278 001c 00       		.byte	0
+ 279 001d 00       		.byte	0
+ 280 001e 03       		.uleb128 0x3
+ 281 001f 16       		.uleb128 0x16
+ 282 0020 00       		.byte	0
+ 283 0021 03       		.uleb128 0x3
+ 284 0022 0E       		.uleb128 0xe
+ 285 0023 3A       		.uleb128 0x3a
+ 286 0024 0B       		.uleb128 0xb
+ 287 0025 3B       		.uleb128 0x3b
+ 288 0026 0B       		.uleb128 0xb
+ 289 0027 49       		.uleb128 0x49
+ 290 0028 13       		.uleb128 0x13
+ 291 0029 00       		.byte	0
+ 292 002a 00       		.byte	0
+ 293 002b 04       		.uleb128 0x4
+ 294 002c 24       		.uleb128 0x24
+ 295 002d 00       		.byte	0
+ 296 002e 0B       		.uleb128 0xb
+ 297 002f 0B       		.uleb128 0xb
+ 298 0030 3E       		.uleb128 0x3e
+ 299 0031 0B       		.uleb128 0xb
+ 300 0032 03       		.uleb128 0x3
+ 301 0033 08       		.uleb128 0x8
+ 302 0034 00       		.byte	0
+ 303 0035 00       		.byte	0
+ 304 0036 05       		.uleb128 0x5
+ 305 0037 2E       		.uleb128 0x2e
+ 306 0038 01       		.byte	0x1
+ 307 0039 3F       		.uleb128 0x3f
+ 308 003a 19       		.uleb128 0x19
+ 309 003b 03       		.uleb128 0x3
+ 310 003c 0E       		.uleb128 0xe
+ 311 003d 3A       		.uleb128 0x3a
+ 312 003e 0B       		.uleb128 0xb
+ 313 003f 3B       		.uleb128 0x3b
+ 314 0040 0B       		.uleb128 0xb
+ 315 0041 27       		.uleb128 0x27
+ 316 0042 19       		.uleb128 0x19
+ 317 0043 11       		.uleb128 0x11
+ 318 0044 01       		.uleb128 0x1
+ 319 0045 12       		.uleb128 0x12
+ 320 0046 06       		.uleb128 0x6
+ 321 0047 40       		.uleb128 0x40
+ 322 0048 18       		.uleb128 0x18
+ 323 0049 9742     		.uleb128 0x2117
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 7
+
+
+ 324 004b 19       		.uleb128 0x19
+ 325 004c 01       		.uleb128 0x1
+ 326 004d 13       		.uleb128 0x13
+ 327 004e 00       		.byte	0
+ 328 004f 00       		.byte	0
+ 329 0050 06       		.uleb128 0x6
+ 330 0051 05       		.uleb128 0x5
+ 331 0052 00       		.byte	0
+ 332 0053 03       		.uleb128 0x3
+ 333 0054 08       		.uleb128 0x8
+ 334 0055 3A       		.uleb128 0x3a
+ 335 0056 0B       		.uleb128 0xb
+ 336 0057 3B       		.uleb128 0x3b
+ 337 0058 0B       		.uleb128 0xb
+ 338 0059 49       		.uleb128 0x49
+ 339 005a 13       		.uleb128 0x13
+ 340 005b 02       		.uleb128 0x2
+ 341 005c 17       		.uleb128 0x17
+ 342 005d 00       		.byte	0
+ 343 005e 00       		.byte	0
+ 344 005f 07       		.uleb128 0x7
+ 345 0060 34       		.uleb128 0x34
+ 346 0061 00       		.byte	0
+ 347 0062 03       		.uleb128 0x3
+ 348 0063 08       		.uleb128 0x8
+ 349 0064 3A       		.uleb128 0x3a
+ 350 0065 0B       		.uleb128 0xb
+ 351 0066 3B       		.uleb128 0x3b
+ 352 0067 0B       		.uleb128 0xb
+ 353 0068 49       		.uleb128 0x49
+ 354 0069 13       		.uleb128 0x13
+ 355 006a 02       		.uleb128 0x2
+ 356 006b 17       		.uleb128 0x17
+ 357 006c 00       		.byte	0
+ 358 006d 00       		.byte	0
+ 359 006e 08       		.uleb128 0x8
+ 360 006f 898201   		.uleb128 0x4109
+ 361 0072 01       		.byte	0x1
+ 362 0073 11       		.uleb128 0x11
+ 363 0074 01       		.uleb128 0x1
+ 364 0075 31       		.uleb128 0x31
+ 365 0076 13       		.uleb128 0x13
+ 366 0077 01       		.uleb128 0x1
+ 367 0078 13       		.uleb128 0x13
+ 368 0079 00       		.byte	0
+ 369 007a 00       		.byte	0
+ 370 007b 09       		.uleb128 0x9
+ 371 007c 8A8201   		.uleb128 0x410a
+ 372 007f 00       		.byte	0
+ 373 0080 02       		.uleb128 0x2
+ 374 0081 18       		.uleb128 0x18
+ 375 0082 9142     		.uleb128 0x2111
+ 376 0084 18       		.uleb128 0x18
+ 377 0085 00       		.byte	0
+ 378 0086 00       		.byte	0
+ 379 0087 0A       		.uleb128 0xa
+ 380 0088 898201   		.uleb128 0x4109
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 8
+
+
+ 381 008b 00       		.byte	0
+ 382 008c 11       		.uleb128 0x11
+ 383 008d 01       		.uleb128 0x1
+ 384 008e 31       		.uleb128 0x31
+ 385 008f 13       		.uleb128 0x13
+ 386 0090 00       		.byte	0
+ 387 0091 00       		.byte	0
+ 388 0092 0B       		.uleb128 0xb
+ 389 0093 34       		.uleb128 0x34
+ 390 0094 00       		.byte	0
+ 391 0095 03       		.uleb128 0x3
+ 392 0096 0E       		.uleb128 0xe
+ 393 0097 3A       		.uleb128 0x3a
+ 394 0098 0B       		.uleb128 0xb
+ 395 0099 3B       		.uleb128 0x3b
+ 396 009a 05       		.uleb128 0x5
+ 397 009b 49       		.uleb128 0x49
+ 398 009c 13       		.uleb128 0x13
+ 399 009d 3F       		.uleb128 0x3f
+ 400 009e 19       		.uleb128 0x19
+ 401 009f 3C       		.uleb128 0x3c
+ 402 00a0 19       		.uleb128 0x19
+ 403 00a1 00       		.byte	0
+ 404 00a2 00       		.byte	0
+ 405 00a3 0C       		.uleb128 0xc
+ 406 00a4 35       		.uleb128 0x35
+ 407 00a5 00       		.byte	0
+ 408 00a6 49       		.uleb128 0x49
+ 409 00a7 13       		.uleb128 0x13
+ 410 00a8 00       		.byte	0
+ 411 00a9 00       		.byte	0
+ 412 00aa 0D       		.uleb128 0xd
+ 413 00ab 2E       		.uleb128 0x2e
+ 414 00ac 00       		.byte	0
+ 415 00ad 3F       		.uleb128 0x3f
+ 416 00ae 19       		.uleb128 0x19
+ 417 00af 3C       		.uleb128 0x3c
+ 418 00b0 19       		.uleb128 0x19
+ 419 00b1 6E       		.uleb128 0x6e
+ 420 00b2 08       		.uleb128 0x8
+ 421 00b3 03       		.uleb128 0x3
+ 422 00b4 08       		.uleb128 0x8
+ 423 00b5 3A       		.uleb128 0x3a
+ 424 00b6 0B       		.uleb128 0xb
+ 425 00b7 3B       		.uleb128 0x3b
+ 426 00b8 0B       		.uleb128 0xb
+ 427 00b9 00       		.byte	0
+ 428 00ba 00       		.byte	0
+ 429 00bb 0E       		.uleb128 0xe
+ 430 00bc 2E       		.uleb128 0x2e
+ 431 00bd 00       		.byte	0
+ 432 00be 3F       		.uleb128 0x3f
+ 433 00bf 19       		.uleb128 0x19
+ 434 00c0 3C       		.uleb128 0x3c
+ 435 00c1 19       		.uleb128 0x19
+ 436 00c2 6E       		.uleb128 0x6e
+ 437 00c3 0E       		.uleb128 0xe
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 9
+
+
+ 438 00c4 03       		.uleb128 0x3
+ 439 00c5 0E       		.uleb128 0xe
+ 440 00c6 3A       		.uleb128 0x3a
+ 441 00c7 0B       		.uleb128 0xb
+ 442 00c8 3B       		.uleb128 0x3b
+ 443 00c9 0B       		.uleb128 0xb
+ 444 00ca 00       		.byte	0
+ 445 00cb 00       		.byte	0
+ 446 00cc 00       		.byte	0
+ 447              		.section	.debug_loc,"",%progbits
+ 448              	.Ldebug_loc0:
+ 449              	.LLST0:
+ 450 0000 00000000 		.4byte	.LVL0
+ 451 0004 0A000000 		.4byte	.LVL1
+ 452 0008 0100     		.2byte	0x1
+ 453 000a 50       		.byte	0x50
+ 454 000b 0A000000 		.4byte	.LVL1
+ 455 000f 1B000000 		.4byte	.LVL2-1
+ 456 0013 0100     		.2byte	0x1
+ 457 0015 50       		.byte	0x50
+ 458 0016 00000000 		.4byte	0
+ 459 001a 00000000 		.4byte	0
+ 460              	.LLST1:
+ 461 001e 1C000000 		.4byte	.LVL2
+ 462 0022 21000000 		.4byte	.LVL3-1
+ 463 0026 0100     		.2byte	0x1
+ 464 0028 50       		.byte	0x50
+ 465 0029 00000000 		.4byte	0
+ 466 002d 00000000 		.4byte	0
+ 467              		.section	.debug_aranges,"",%progbits
+ 468 0000 1C000000 		.4byte	0x1c
+ 469 0004 0200     		.2byte	0x2
+ 470 0006 00000000 		.4byte	.Ldebug_info0
+ 471 000a 04       		.byte	0x4
+ 472 000b 00       		.byte	0
+ 473 000c 0000     		.2byte	0
+ 474 000e 0000     		.2byte	0
+ 475 0010 00000000 		.4byte	.LFB63
+ 476 0014 28000000 		.4byte	.LFE63-.LFB63
+ 477 0018 00000000 		.4byte	0
+ 478 001c 00000000 		.4byte	0
+ 479              		.section	.debug_ranges,"",%progbits
+ 480              	.Ldebug_ranges0:
+ 481 0000 00000000 		.4byte	.LFB63
+ 482 0004 28000000 		.4byte	.LFE63
+ 483 0008 00000000 		.4byte	0
+ 484 000c 00000000 		.4byte	0
+ 485              		.section	.debug_line,"",%progbits
+ 486              	.Ldebug_line0:
+ 487 0000 B5010000 		.section	.debug_str,"MS",%progbits,1
+ 487      02009D01 
+ 487      00000201 
+ 487      FB0E0D00 
+ 487      01010101 
+ 488              	.LASF9:
+ 489 0000 6C6F6E67 		.ascii	"long long int\000"
+ 489      206C6F6E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 10
+
+
+ 489      6720696E 
+ 489      7400
+ 490              	.LASF5:
+ 491 000e 73686F72 		.ascii	"short unsigned int\000"
+ 491      7420756E 
+ 491      7369676E 
+ 491      65642069 
+ 491      6E7400
+ 492              	.LASF11:
+ 493 0021 756E7369 		.ascii	"unsigned int\000"
+ 493      676E6564 
+ 493      20696E74 
+ 493      00
+ 494              	.LASF21:
+ 495 002e 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 495      43313120 
+ 495      352E342E 
+ 495      31203230 
+ 495      31363036 
+ 496 0061 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 496      20726576 
+ 496      6973696F 
+ 496      6E203233 
+ 496      37373135 
+ 497 0094 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 497      66756E63 
+ 497      74696F6E 
+ 497      2D736563 
+ 497      74696F6E 
+ 498              	.LASF8:
+ 499 00bc 6C6F6E67 		.ascii	"long unsigned int\000"
+ 499      20756E73 
+ 499      69676E65 
+ 499      6420696E 
+ 499      7400
+ 500              	.LASF10:
+ 501 00ce 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 501      206C6F6E 
+ 501      6720756E 
+ 501      7369676E 
+ 501      65642069 
+ 502              	.LASF3:
+ 503 00e5 5F5F7569 		.ascii	"__uint8_t\000"
+ 503      6E74385F 
+ 503      7400
+ 504              	.LASF20:
+ 505 00ef 4D4F544F 		.ascii	"MOTOR_WriteCompare\000"
+ 505      525F5772 
+ 505      69746543 
+ 505      6F6D7061 
+ 505      726500
+ 506              	.LASF4:
+ 507 0102 5F5F7569 		.ascii	"__uint16_t\000"
+ 507      6E743136 
+ 507      5F7400
+ 508              	.LASF12:
+ 509 010d 75696E74 		.ascii	"uint8_t\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 11
+
+
+ 509      385F7400 
+ 510              	.LASF1:
+ 511 0115 756E7369 		.ascii	"unsigned char\000"
+ 511      676E6564 
+ 511      20636861 
+ 511      7200
+ 512              	.LASF17:
+ 513 0123 63686172 		.ascii	"char\000"
+ 513      00
+ 514              	.LASF7:
+ 515 0128 6C6F6E67 		.ascii	"long int\000"
+ 515      20696E74 
+ 515      00
+ 516              	.LASF23:
+ 517 0131 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\PSoC Creator"
+ 517      73657273 
+ 517      5C616472 
+ 517      69615C4F 
+ 517      6E654472 
+ 518 015f 5C46494E 		.ascii	"\\FINAL_vilchis\\proyecto.cydsn\000"
+ 518      414C5F76 
+ 518      696C6368 
+ 518      69735C70 
+ 518      726F7965 
+ 519              	.LASF16:
+ 520 017d 646F7562 		.ascii	"double\000"
+ 520      6C6500
+ 521              	.LASF24:
+ 522 0184 504F5445 		.ascii	"POTENCIA\000"
+ 522      4E434941 
+ 522      00
+ 523              	.LASF25:
+ 524 018d 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 524      52784275 
+ 524      66666572 
+ 524      00
+ 525              	.LASF0:
+ 526 019a 7369676E 		.ascii	"signed char\000"
+ 526      65642063 
+ 526      68617200 
+ 527              	.LASF18:
+ 528 01a6 6C6F6E67 		.ascii	"long double\000"
+ 528      20646F75 
+ 528      626C6500 
+ 529              	.LASF6:
+ 530 01b2 5F5F696E 		.ascii	"__int32_t\000"
+ 530      7433325F 
+ 530      7400
+ 531              	.LASF13:
+ 532 01bc 75696E74 		.ascii	"uint16_t\000"
+ 532      31365F74 
+ 532      00
+ 533              	.LASF15:
+ 534 01c5 666C6F61 		.ascii	"float\000"
+ 534      7400
+ 535              	.LASF2:
+ 536 01cb 73686F72 		.ascii	"short int\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccsuie8h.s 			page 12
+
+
+ 536      7420696E 
+ 536      7400
+ 537              	.LASF22:
+ 538 01d5 2E2E5C64 		.ascii	"..\\driver_motor.cydsn\\DRIVER_MOTOR.c\000"
+ 538      72697665 
+ 538      725F6D6F 
+ 538      746F722E 
+ 538      63796473 
+ 539              	.LASF14:
+ 540 01fa 696E7433 		.ascii	"int32_t\000"
+ 540      325F7400 
+ 541              	.LASF19:
+ 542 0202 73697A65 		.ascii	"sizetype\000"
+ 542      74797065 
+ 542      00
+ 543              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

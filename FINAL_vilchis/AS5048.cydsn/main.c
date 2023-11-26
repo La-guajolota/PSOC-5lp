@@ -31,7 +31,7 @@ int main(void)
         Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
         
         //Calculamos el angulo en grados
-        Angulo = map(Angulo,0,16383,0,360);
+        Angulo = map(Angulo,0,1023,0,360);
         
         //Imprimimos resultado
         sprintf(buffer_tx,"Angulo: %d\n\r",Angulo);
