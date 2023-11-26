@@ -1,0 +1,2442 @@
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"MPU6050.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.user_i2c_write,"ax",%progbits
+  20              		.align	2
+  21              		.thumb
+  22              		.thumb_func
+  23              		.type	user_i2c_write, %function
+  24              	user_i2c_write:
+  25              	.LFB64:
+  26              		.file 1 "MPU6050.c"
+   1:MPU6050.c     **** #include "MPU6050.h"
+   2:MPU6050.c     **** 
+   3:MPU6050.c     **** //Funciones de protocolo I2C
+   4:MPU6050.c     **** static int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
+   5:MPU6050.c     **** 
+   6:MPU6050.c     ****     int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
+   7:MPU6050.c     ****     uint16_t i = 0;
+   8:MPU6050.c     **** 
+   9:MPU6050.c     ****     /*
+  10:MPU6050.c     ****      * The parameter dev_id can be used as a variable to store the I2C address of the device
+  11:MPU6050.c     ****      */
+  12:MPU6050.c     **** 
+  13:MPU6050.c     ****     /*
+  14:MPU6050.c     ****      * Data on the bus should be like
+  15:MPU6050.c     ****      * |------------+---------------------|
+  16:MPU6050.c     ****      * | I2C action | Data                |
+  17:MPU6050.c     ****      * |------------+---------------------|
+  18:MPU6050.c     ****      * | Start      | -                   |
+  19:MPU6050.c     ****      * | Write      | (reg_addr)          |
+  20:MPU6050.c     ****      * | Stop       | -                   |
+  21:MPU6050.c     ****      * | Start      | -                   |
+  22:MPU6050.c     ****      * | Read       | (reg_data[0])       |
+  23:MPU6050.c     ****      * | Read       | (....)              |
+  24:MPU6050.c     ****      * | Read       | (reg_data[len - 1]) |
+  25:MPU6050.c     ****      * | Stop       | -                   |
+  26:MPU6050.c     ****      * |------------+---------------------|
+  27:MPU6050.c     ****      */
+  28:MPU6050.c     **** 
+  29:MPU6050.c     ****     //psoc5
+  30:MPU6050.c     ****     rslt = I2C_MasterSendStart(dev_id,I2C_WRITE_XFER_MODE);//mANDA COMANDO
+  31:MPU6050.c     ****     rslt = I2C_MasterWriteByte(reg_addr);//Envia registro
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 2
+
+
+  32:MPU6050.c     ****     rslt = I2C_MasterSendRestart(dev_id,I2C_READ_XFER_MODE);//Paro para Leer datos
+  33:MPU6050.c     ****     
+  34:MPU6050.c     ****     while(i < (len - 1)) {
+  35:MPU6050.c     ****       
+  36:MPU6050.c     ****         reg_data[i] = I2C_MasterReadByte(I2C_ACK_DATA);//ack
+  37:MPU6050.c     ****         i++;
+  38:MPU6050.c     ****      
+  39:MPU6050.c     ****     }
+  40:MPU6050.c     ****     
+  41:MPU6050.c     ****     reg_data[i] = I2C_MasterReadByte(I2C_NAK_DATA);//nak
+  42:MPU6050.c     ****     rslt = I2C_MasterSendStop();
+  43:MPU6050.c     ****     
+  44:MPU6050.c     ****     return rslt;
+  45:MPU6050.c     **** }
+  46:MPU6050.c     **** 
+  47:MPU6050.c     **** static int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
+  27              		.loc 1 47 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              	.LVL0:
+  32 0000 70B5     		push	{r4, r5, r6, lr}
+  33              		.cfi_def_cfa_offset 16
+  34              		.cfi_offset 4, -16
+  35              		.cfi_offset 5, -12
+  36              		.cfi_offset 6, -8
+  37              		.cfi_offset 14, -4
+  38 0002 0C46     		mov	r4, r1
+  39 0004 1546     		mov	r5, r2
+  40 0006 1E46     		mov	r6, r3
+  41              	.LVL1:
+  48:MPU6050.c     ****     int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
+  49:MPU6050.c     ****     uint16_t i = 0;
+  50:MPU6050.c     **** 
+  51:MPU6050.c     ****     /*
+  52:MPU6050.c     ****      * The parameter dev_id can be used as a variable to store the I2C address of the device
+  53:MPU6050.c     ****      */
+  54:MPU6050.c     **** 
+  55:MPU6050.c     ****     /*
+  56:MPU6050.c     ****      * Data on the bus should be like
+  57:MPU6050.c     ****      * |------------+---------------------|
+  58:MPU6050.c     ****      * | I2C action | Data                |
+  59:MPU6050.c     ****      * |------------+---------------------|
+  60:MPU6050.c     ****      * | Start      | -                   |
+  61:MPU6050.c     ****      * | Write      | (reg_addr)          |
+  62:MPU6050.c     ****      * | Write      | (reg_data[0])       |
+  63:MPU6050.c     ****      * | Write      | (....)              |
+  64:MPU6050.c     ****      * | Write      | (reg_data[len - 1]) |
+  65:MPU6050.c     ****      * | Stop       | -                   |
+  66:MPU6050.c     ****      * |------------+---------------------|
+  67:MPU6050.c     ****      */
+  68:MPU6050.c     ****     
+  69:MPU6050.c     ****     rslt = I2C_MasterSendStart(dev_id, I2C_WRITE_XFER_MODE);//rw =0  Escribimos comando
+  42              		.loc 1 69 0
+  43 0008 0021     		movs	r1, #0
+  44              	.LVL2:
+  45 000a FFF7FEFF 		bl	I2C_MasterSendStart
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 3
+
+
+  46              	.LVL3:
+  70:MPU6050.c     ****     rslt = I2C_MasterWriteByte(reg_addr);//Mandamos dirección de registo para escribir en el
+  47              		.loc 1 70 0
+  48 000e 2046     		mov	r0, r4
+  49 0010 FFF7FEFF 		bl	I2C_MasterWriteByte
+  50              	.LVL4:
+  49:MPU6050.c     **** 
+  51              		.loc 1 49 0
+  52 0014 0024     		movs	r4, #0
+  71:MPU6050.c     ****     
+  72:MPU6050.c     ****     while(i < len) {
+  53              		.loc 1 72 0
+  54 0016 05E0     		b	.L2
+  55              	.LVL5:
+  56              	.L3:
+  73:MPU6050.c     ****         
+  74:MPU6050.c     ****         rslt = I2C_MasterWriteByte(*reg_data);
+  57              		.loc 1 74 0
+  58 0018 15F8010B 		ldrb	r0, [r5], #1	@ zero_extendqisi2
+  59              	.LVL6:
+  60 001c FFF7FEFF 		bl	I2C_MasterWriteByte
+  61              	.LVL7:
+  75:MPU6050.c     ****         i++;
+  62              		.loc 1 75 0
+  63 0020 0134     		adds	r4, r4, #1
+  64              	.LVL8:
+  65 0022 A4B2     		uxth	r4, r4
+  66              	.LVL9:
+  67              	.L2:
+  72:MPU6050.c     ****         
+  68              		.loc 1 72 0
+  69 0024 B442     		cmp	r4, r6
+  70 0026 F7D3     		bcc	.L3
+  76:MPU6050.c     ****         reg_data++;
+  77:MPU6050.c     ****         
+  78:MPU6050.c     ****     }
+  79:MPU6050.c     ****     
+  80:MPU6050.c     ****     rslt = I2C_MasterSendStop();
+  71              		.loc 1 80 0
+  72 0028 FFF7FEFF 		bl	I2C_MasterSendStop
+  73              	.LVL10:
+  81:MPU6050.c     ****     
+  82:MPU6050.c     ****     return rslt;
+  83:MPU6050.c     **** }
+  74              		.loc 1 83 0
+  75 002c 40B2     		sxtb	r0, r0
+  76 002e 70BD     		pop	{r4, r5, r6, pc}
+  77              		.cfi_endproc
+  78              	.LFE64:
+  79              		.size	user_i2c_write, .-user_i2c_write
+  80              		.section	.text.user_i2c_read,"ax",%progbits
+  81              		.align	2
+  82              		.thumb
+  83              		.thumb_func
+  84              		.type	user_i2c_read, %function
+  85              	user_i2c_read:
+  86              	.LFB63:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 4
+
+
+   4:MPU6050.c     **** 
+  87              		.loc 1 4 0
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91              	.LVL11:
+  92 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  93              		.cfi_def_cfa_offset 24
+  94              		.cfi_offset 3, -24
+  95              		.cfi_offset 4, -20
+  96              		.cfi_offset 5, -16
+  97              		.cfi_offset 6, -12
+  98              		.cfi_offset 7, -8
+  99              		.cfi_offset 14, -4
+ 100 0002 0446     		mov	r4, r0
+ 101 0004 0F46     		mov	r7, r1
+ 102 0006 1546     		mov	r5, r2
+ 103 0008 1E46     		mov	r6, r3
+ 104              	.LVL12:
+  30:MPU6050.c     ****     rslt = I2C_MasterWriteByte(reg_addr);//Envia registro
+ 105              		.loc 1 30 0
+ 106 000a 0021     		movs	r1, #0
+ 107              	.LVL13:
+ 108 000c FFF7FEFF 		bl	I2C_MasterSendStart
+ 109              	.LVL14:
+  31:MPU6050.c     ****     rslt = I2C_MasterSendRestart(dev_id,I2C_READ_XFER_MODE);//Paro para Leer datos
+ 110              		.loc 1 31 0
+ 111 0010 3846     		mov	r0, r7
+ 112 0012 FFF7FEFF 		bl	I2C_MasterWriteByte
+ 113              	.LVL15:
+  32:MPU6050.c     ****     
+ 114              		.loc 1 32 0
+ 115 0016 0121     		movs	r1, #1
+ 116 0018 2046     		mov	r0, r4
+ 117 001a FFF7FEFF 		bl	I2C_MasterSendRestart
+ 118              	.LVL16:
+   7:MPU6050.c     **** 
+ 119              		.loc 1 7 0
+ 120 001e 0024     		movs	r4, #0
+  34:MPU6050.c     ****       
+ 121              		.loc 1 34 0
+ 122 0020 05E0     		b	.L6
+ 123              	.LVL17:
+ 124              	.L7:
+  36:MPU6050.c     ****         i++;
+ 125              		.loc 1 36 0
+ 126 0022 0120     		movs	r0, #1
+ 127 0024 FFF7FEFF 		bl	I2C_MasterReadByte
+ 128              	.LVL18:
+ 129 0028 2855     		strb	r0, [r5, r4]
+  37:MPU6050.c     ****      
+ 130              		.loc 1 37 0
+ 131 002a 0134     		adds	r4, r4, #1
+ 132              	.LVL19:
+ 133 002c A4B2     		uxth	r4, r4
+ 134              	.LVL20:
+ 135              	.L6:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 5
+
+
+  34:MPU6050.c     ****       
+ 136              		.loc 1 34 0
+ 137 002e 731E     		subs	r3, r6, #1
+ 138 0030 9C42     		cmp	r4, r3
+ 139 0032 F6DB     		blt	.L7
+  41:MPU6050.c     ****     rslt = I2C_MasterSendStop();
+ 140              		.loc 1 41 0
+ 141 0034 0020     		movs	r0, #0
+ 142 0036 FFF7FEFF 		bl	I2C_MasterReadByte
+ 143              	.LVL21:
+ 144 003a 2855     		strb	r0, [r5, r4]
+  42:MPU6050.c     ****     
+ 145              		.loc 1 42 0
+ 146 003c FFF7FEFF 		bl	I2C_MasterSendStop
+ 147              	.LVL22:
+  45:MPU6050.c     **** 
+ 148              		.loc 1 45 0
+ 149 0040 40B2     		sxtb	r0, r0
+ 150 0042 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 151              		.cfi_endproc
+ 152              	.LFE63:
+ 153              		.size	user_i2c_read, .-user_i2c_read
+ 154              		.section	.text.MPU6050_Start,"ax",%progbits
+ 155              		.align	2
+ 156              		.global	MPU6050_Start
+ 157              		.thumb
+ 158              		.thumb_func
+ 159              		.type	MPU6050_Start, %function
+ 160              	MPU6050_Start:
+ 161              	.LFB65:
+  84:MPU6050.c     **** 
+  85:MPU6050.c     **** void MPU6050_Start(struct MPU6050 *registros){
+ 162              		.loc 1 85 0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 8
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              	.LVL23:
+ 167 0000 30B5     		push	{r4, r5, lr}
+ 168              		.cfi_def_cfa_offset 12
+ 169              		.cfi_offset 4, -12
+ 170              		.cfi_offset 5, -8
+ 171              		.cfi_offset 14, -4
+ 172 0002 83B0     		sub	sp, sp, #12
+ 173              		.cfi_def_cfa_offset 24
+ 174 0004 0546     		mov	r5, r0
+  86:MPU6050.c     ****     
+  87:MPU6050.c     ****     uint8_t data[2] = {0,0};
+ 175              		.loc 1 87 0
+ 176 0006 0024     		movs	r4, #0
+ 177 0008 8DF80440 		strb	r4, [sp, #4]
+ 178 000c 8DF80540 		strb	r4, [sp, #5]
+  88:MPU6050.c     ****     user_i2c_write(Address_FISICO,0x6B,data,1);//power manageent
+ 179              		.loc 1 88 0
+ 180 0010 0123     		movs	r3, #1
+ 181 0012 01AA     		add	r2, sp, #4
+ 182 0014 6B21     		movs	r1, #107
+ 183 0016 6820     		movs	r0, #104
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 6
+
+
+ 184              	.LVL24:
+ 185 0018 FFF7FEFF 		bl	user_i2c_write
+ 186              	.LVL25:
+  89:MPU6050.c     ****     
+  90:MPU6050.c     ****     //Lectura de registros configurados
+  91:MPU6050.c     ****     user_i2c_read(Address_FISICO,0x6B,data+1,0);
+ 187              		.loc 1 91 0
+ 188 001c 2346     		mov	r3, r4
+ 189 001e 0DF10502 		add	r2, sp, #5
+ 190 0022 6B21     		movs	r1, #107
+ 191 0024 6820     		movs	r0, #104
+ 192 0026 FFF7FEFF 		bl	user_i2c_read
+ 193              	.LVL26:
+  92:MPU6050.c     ****     registros->registros.PWR_MGMT_1 = data[1];
+ 194              		.loc 1 92 0
+ 195 002a 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 196 002e EB73     		strb	r3, [r5, #15]
+  93:MPU6050.c     ****     
+  94:MPU6050.c     **** }
+ 197              		.loc 1 94 0
+ 198 0030 03B0     		add	sp, sp, #12
+ 199              		.cfi_def_cfa_offset 12
+ 200              		@ sp needed
+ 201 0032 30BD     		pop	{r4, r5, pc}
+ 202              		.cfi_endproc
+ 203              	.LFE65:
+ 204              		.size	MPU6050_Start, .-MPU6050_Start
+ 205              		.section	.text.MPU6050_CONFIG_ACCEL,"ax",%progbits
+ 206              		.align	2
+ 207              		.global	MPU6050_CONFIG_ACCEL
+ 208              		.thumb
+ 209              		.thumb_func
+ 210              		.type	MPU6050_CONFIG_ACCEL, %function
+ 211              	MPU6050_CONFIG_ACCEL:
+ 212              	.LFB66:
+  95:MPU6050.c     **** 
+  96:MPU6050.c     **** void MPU6050_CONFIG_ACCEL(struct MPU6050 *registros, uint8_t AFS_SEL){
+ 213              		.loc 1 96 0
+ 214              		.cfi_startproc
+ 215              		@ args = 0, pretend = 0, frame = 8
+ 216              		@ frame_needed = 0, uses_anonymous_args = 0
+ 217              	.LVL27:
+ 218 0000 30B5     		push	{r4, r5, lr}
+ 219              		.cfi_def_cfa_offset 12
+ 220              		.cfi_offset 4, -12
+ 221              		.cfi_offset 5, -8
+ 222              		.cfi_offset 14, -4
+ 223 0002 83B0     		sub	sp, sp, #12
+ 224              		.cfi_def_cfa_offset 24
+ 225 0004 0546     		mov	r5, r0
+  97:MPU6050.c     ****     
+  98:MPU6050.c     ****     uint8_t data[2] = {AFS_SEL<<3,0};
+ 226              		.loc 1 98 0
+ 227 0006 C900     		lsls	r1, r1, #3
+ 228              	.LVL28:
+ 229 0008 8DF80410 		strb	r1, [sp, #4]
+ 230 000c 0024     		movs	r4, #0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 7
+
+
+ 231 000e 8DF80540 		strb	r4, [sp, #5]
+  99:MPU6050.c     **** 
+ 100:MPU6050.c     ****     //Escritura de configuraciones
+ 101:MPU6050.c     ****     user_i2c_write(Address_FISICO,accel_config,data,1);//Acualizamos el registro del sensor
+ 232              		.loc 1 101 0
+ 233 0012 0123     		movs	r3, #1
+ 234 0014 01AA     		add	r2, sp, #4
+ 235 0016 1C21     		movs	r1, #28
+ 236 0018 6820     		movs	r0, #104
+ 237              	.LVL29:
+ 238 001a FFF7FEFF 		bl	user_i2c_write
+ 239              	.LVL30:
+ 102:MPU6050.c     ****     
+ 103:MPU6050.c     ****     //Lectura de registros configurados
+ 104:MPU6050.c     ****     user_i2c_read(Address_FISICO,accel_config,data+1,0);//Se lee los registros cambiados
+ 240              		.loc 1 104 0
+ 241 001e 2346     		mov	r3, r4
+ 242 0020 0DF10502 		add	r2, sp, #5
+ 243 0024 1C21     		movs	r1, #28
+ 244 0026 6820     		movs	r0, #104
+ 245 0028 FFF7FEFF 		bl	user_i2c_read
+ 246              	.LVL31:
+ 105:MPU6050.c     ****     registros->registros.ACCEL_CONFIG = data[1];
+ 247              		.loc 1 105 0
+ 248 002c 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ 249 0030 AB73     		strb	r3, [r5, #14]
+ 106:MPU6050.c     ****     
+ 107:MPU6050.c     **** }
+ 250              		.loc 1 107 0
+ 251 0032 03B0     		add	sp, sp, #12
+ 252              		.cfi_def_cfa_offset 12
+ 253              		@ sp needed
+ 254 0034 30BD     		pop	{r4, r5, pc}
+ 255              		.cfi_endproc
+ 256              	.LFE66:
+ 257              		.size	MPU6050_CONFIG_ACCEL, .-MPU6050_CONFIG_ACCEL
+ 258              		.global	__aeabi_i2d
+ 259              		.global	__aeabi_dadd
+ 260              		.global	__aeabi_d2iz
+ 261 0036 00BF     		.section	.text.MPU6050_REGISTROS,"ax",%progbits
+ 262              		.align	2
+ 263              		.global	MPU6050_REGISTROS
+ 264              		.thumb
+ 265              		.thumb_func
+ 266              		.type	MPU6050_REGISTROS, %function
+ 267              	MPU6050_REGISTROS:
+ 268              	.LFB67:
+ 108:MPU6050.c     **** 
+ 109:MPU6050.c     **** void MPU6050_REGISTROS(struct MPU6050 *sensor){
+ 269              		.loc 1 109 0
+ 270              		.cfi_startproc
+ 271              		@ args = 0, pretend = 0, frame = 16
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              	.LVL32:
+ 274 0000 70B5     		push	{r4, r5, r6, lr}
+ 275              		.cfi_def_cfa_offset 16
+ 276              		.cfi_offset 4, -16
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 8
+
+
+ 277              		.cfi_offset 5, -12
+ 278              		.cfi_offset 6, -8
+ 279              		.cfi_offset 14, -4
+ 280 0002 84B0     		sub	sp, sp, #16
+ 281              		.cfi_def_cfa_offset 32
+ 282 0004 0446     		mov	r4, r0
+ 110:MPU6050.c     ****     
+ 111:MPU6050.c     ****     uint8_t reg_data[15];
+ 112:MPU6050.c     ****     
+ 113:MPU6050.c     ****     user_i2c_read(Address_FISICO,ACCEL_XOUT_h,reg_data,13);//Se lee los registros de lo sensado del
+ 283              		.loc 1 113 0
+ 284 0006 0D23     		movs	r3, #13
+ 285 0008 6A46     		mov	r2, sp
+ 286 000a 3B21     		movs	r1, #59
+ 287 000c 6820     		movs	r0, #104
+ 288              	.LVL33:
+ 289 000e FFF7FEFF 		bl	user_i2c_read
+ 290              	.LVL34:
+ 114:MPU6050.c     ****     user_i2c_read(Address_FISICO,who_am_i,reg_data+14,0);
+ 291              		.loc 1 114 0
+ 292 0012 0023     		movs	r3, #0
+ 293 0014 0DF10E02 		add	r2, sp, #14
+ 294 0018 7521     		movs	r1, #117
+ 295 001a 6820     		movs	r0, #104
+ 296 001c FFF7FEFF 		bl	user_i2c_read
+ 297              	.LVL35:
+ 115:MPU6050.c     ****     
+ 116:MPU6050.c     ****     //Acelerometro
+ 117:MPU6050.c     ****     sensor->registros.ACCEL_XOUT_H = reg_data[0];
+ 298              		.loc 1 117 0
+ 299 0020 9DF90060 		ldrsb	r6, [sp]
+ 300 0024 2670     		strb	r6, [r4]
+ 118:MPU6050.c     ****     sensor->registros.ACCEL_XOUT_L = reg_data[1];
+ 301              		.loc 1 118 0
+ 302 0026 9DF90110 		ldrsb	r1, [sp, #1]
+ 303 002a 6170     		strb	r1, [r4, #1]
+ 119:MPU6050.c     ****     sensor->registros.ACCEL_YOUT_H = reg_data[2];
+ 304              		.loc 1 119 0
+ 305 002c 9DF90250 		ldrsb	r5, [sp, #2]
+ 306 0030 A570     		strb	r5, [r4, #2]
+ 120:MPU6050.c     ****     sensor->registros.ACCEL_YOUT_L = reg_data[3];
+ 307              		.loc 1 120 0
+ 308 0032 9DF90320 		ldrsb	r2, [sp, #3]
+ 309 0036 E270     		strb	r2, [r4, #3]
+ 121:MPU6050.c     ****     sensor->registros.ACCEL_ZOUT_H = reg_data[4];
+ 310              		.loc 1 121 0
+ 311 0038 9DF90400 		ldrsb	r0, [sp, #4]
+ 312 003c 2071     		strb	r0, [r4, #4]
+ 122:MPU6050.c     ****     sensor->registros.ACCEL_ZOUT_L = reg_data[5];
+ 313              		.loc 1 122 0
+ 314 003e 9DF90530 		ldrsb	r3, [sp, #5]
+ 315 0042 6371     		strb	r3, [r4, #5]
+ 123:MPU6050.c     ****     
+ 124:MPU6050.c     ****     sensor->DATA_SENSADO.ACCEL_XOUT = ((sensor->registros.ACCEL_XOUT_H << 8) | (sensor->registros.A
+ 316              		.loc 1 124 0
+ 317 0044 41EA0621 		orr	r1, r1, r6, lsl #8
+ 318 0048 6182     		strh	r1, [r4, #18]	@ movhi
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 9
+
+
+ 125:MPU6050.c     ****     sensor->DATA_SENSADO.ACCEL_YOUT = ((sensor->registros.ACCEL_YOUT_H << 8) | (sensor->registros.A
+ 319              		.loc 1 125 0
+ 320 004a 42EA0522 		orr	r2, r2, r5, lsl #8
+ 321 004e A282     		strh	r2, [r4, #20]	@ movhi
+ 126:MPU6050.c     ****     sensor->DATA_SENSADO.ACCEL_ZOUT = ((sensor->registros.ACCEL_ZOUT_H << 8) | (sensor->registros.A
+ 322              		.loc 1 126 0
+ 323 0050 43EA0023 		orr	r3, r3, r0, lsl #8
+ 324 0054 E382     		strh	r3, [r4, #22]	@ movhi
+ 127:MPU6050.c     ****     
+ 128:MPU6050.c     ****     //Temperatura
+ 129:MPU6050.c     ****     sensor->registros.TEMP_OUT_H = reg_data[6];
+ 325              		.loc 1 129 0
+ 326 0056 9DF90600 		ldrsb	r0, [sp, #6]
+ 327 005a A071     		strb	r0, [r4, #6]
+ 130:MPU6050.c     ****     sensor->registros.TEMP_OUT_L = reg_data[7];
+ 328              		.loc 1 130 0
+ 329 005c 9DF90730 		ldrsb	r3, [sp, #7]
+ 330 0060 E371     		strb	r3, [r4, #7]
+ 131:MPU6050.c     ****     
+ 132:MPU6050.c     ****     sensor->DATA_SENSADO.TEMP_OUT = ((sensor->registros.TEMP_OUT_H << 8) | (sensor->registros.TEMP_
+ 331              		.loc 1 132 0
+ 332 0062 43EA0023 		orr	r3, r3, r0, lsl #8
+ 333 0066 1A48     		ldr	r0, .L15+8
+ 334 0068 80FB0320 		smull	r2, r0, r0, r3
+ 335 006c DB17     		asrs	r3, r3, #31
+ 336 006e C3EBE010 		rsb	r0, r3, r0, asr #7
+ 337 0072 FFF7FEFF 		bl	__aeabi_i2d
+ 338              	.LVL36:
+ 339 0076 14A3     		adr	r3, .L15
+ 340 0078 D3E90023 		ldrd	r2, [r3]
+ 341 007c FFF7FEFF 		bl	__aeabi_dadd
+ 342              	.LVL37:
+ 343 0080 FFF7FEFF 		bl	__aeabi_d2iz
+ 344              	.LVL38:
+ 345 0084 2083     		strh	r0, [r4, #24]	@ movhi
+ 133:MPU6050.c     ****     
+ 134:MPU6050.c     ****     //Gyroscopio
+ 135:MPU6050.c     ****     sensor->registros.GYRO_XOUT_H = reg_data[8];
+ 346              		.loc 1 135 0
+ 347 0086 9DF90860 		ldrsb	r6, [sp, #8]
+ 348 008a 2672     		strb	r6, [r4, #8]
+ 136:MPU6050.c     ****     sensor->registros.GYRO_XOUT_L = reg_data[9];
+ 349              		.loc 1 136 0
+ 350 008c 9DF90910 		ldrsb	r1, [sp, #9]
+ 351 0090 6172     		strb	r1, [r4, #9]
+ 137:MPU6050.c     ****     sensor->registros.GYRO_YOUT_H = reg_data[10];
+ 352              		.loc 1 137 0
+ 353 0092 9DF90A50 		ldrsb	r5, [sp, #10]
+ 354 0096 A572     		strb	r5, [r4, #10]
+ 138:MPU6050.c     ****     sensor->registros.GYRO_YOUT_L = reg_data[11];
+ 355              		.loc 1 138 0
+ 356 0098 9DF90B20 		ldrsb	r2, [sp, #11]
+ 357 009c E272     		strb	r2, [r4, #11]
+ 139:MPU6050.c     ****     sensor->registros.GYRO_ZOUT_H = reg_data[12];
+ 358              		.loc 1 139 0
+ 359 009e 9DF90C00 		ldrsb	r0, [sp, #12]
+ 360 00a2 2073     		strb	r0, [r4, #12]
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 10
+
+
+ 140:MPU6050.c     ****     sensor->registros.GYRO_ZOUT_L = reg_data[13];
+ 361              		.loc 1 140 0
+ 362 00a4 9DF90D30 		ldrsb	r3, [sp, #13]
+ 363 00a8 6373     		strb	r3, [r4, #13]
+ 141:MPU6050.c     ****     
+ 142:MPU6050.c     ****     sensor->DATA_SENSADO.GYRO_XOUT = ((sensor->registros.GYRO_XOUT_H << 8) | (sensor->registros.GYR
+ 364              		.loc 1 142 0
+ 365 00aa 41EA0621 		orr	r1, r1, r6, lsl #8
+ 366 00ae 6183     		strh	r1, [r4, #26]	@ movhi
+ 143:MPU6050.c     ****     sensor->DATA_SENSADO.GYRO_YOUT = ((sensor->registros.GYRO_YOUT_H << 8) | (sensor->registros.GYR
+ 367              		.loc 1 143 0
+ 368 00b0 42EA0522 		orr	r2, r2, r5, lsl #8
+ 369 00b4 A283     		strh	r2, [r4, #28]	@ movhi
+ 144:MPU6050.c     ****     sensor->DATA_SENSADO.GYRO_ZOUT = ((sensor->registros.GYRO_ZOUT_H << 8) | (sensor->registros.GYR
+ 370              		.loc 1 144 0
+ 371 00b6 43EA0023 		orr	r3, r3, r0, lsl #8
+ 372 00ba E383     		strh	r3, [r4, #30]	@ movhi
+ 145:MPU6050.c     ****     
+ 146:MPU6050.c     ****     //Who_am_i 
+ 147:MPU6050.c     ****     
+ 148:MPU6050.c     ****     sensor->registros.WHO_AM_I = reg_data[14];
+ 373              		.loc 1 148 0
+ 374 00bc 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 375 00c0 2374     		strb	r3, [r4, #16]
+ 149:MPU6050.c     ****     
+ 150:MPU6050.c     **** } ...
+ 376              		.loc 1 150 0
+ 377 00c2 04B0     		add	sp, sp, #16
+ 378              		.cfi_def_cfa_offset 16
+ 379              		@ sp needed
+ 380 00c4 70BD     		pop	{r4, r5, r6, pc}
+ 381              	.LVL39:
+ 382              	.L16:
+ 383 00c6 00BF     		.align	3
+ 384              	.L15:
+ 385 00c8 A4703D0A 		.word	171798692
+ 386 00cc D7434240 		.word	1078084567
+ 387 00d0 61606060 		.word	1616928865
+ 388              		.cfi_endproc
+ 389              	.LFE67:
+ 390              		.size	MPU6050_REGISTROS, .-MPU6050_REGISTROS
+ 391              		.text
+ 392              	.Letext0:
+ 393              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 394              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 395              		.file 4 "MPU6050.h"
+ 396              		.file 5 "Generated_Source\\PSoC5/I2C.h"
+ 397              		.file 6 "Generated_Source\\PSoC5/core_cm3.h"
+ 398              		.section	.debug_info,"",%progbits
+ 399              	.Ldebug_info0:
+ 400 0000 E6050000 		.4byte	0x5e6
+ 401 0004 0400     		.2byte	0x4
+ 402 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 403 000a 04       		.byte	0x4
+ 404 000b 01       		.uleb128 0x1
+ 405 000c DC010000 		.4byte	.LASF69
+ 406 0010 0C       		.byte	0xc
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 11
+
+
+ 407 0011 9B030000 		.4byte	.LASF70
+ 408 0015 F2020000 		.4byte	.LASF71
+ 409 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 410 001d 00000000 		.4byte	0
+ 411 0021 00000000 		.4byte	.Ldebug_line0
+ 412 0025 02       		.uleb128 0x2
+ 413 0026 D3010000 		.4byte	.LASF0
+ 414 002a 02       		.byte	0x2
+ 415 002b 1B       		.byte	0x1b
+ 416 002c 30000000 		.4byte	0x30
+ 417 0030 03       		.uleb128 0x3
+ 418 0031 01       		.byte	0x1
+ 419 0032 06       		.byte	0x6
+ 420 0033 73010000 		.4byte	.LASF2
+ 421 0037 02       		.uleb128 0x2
+ 422 0038 05010000 		.4byte	.LASF1
+ 423 003c 02       		.byte	0x2
+ 424 003d 1D       		.byte	0x1d
+ 425 003e 42000000 		.4byte	0x42
+ 426 0042 03       		.uleb128 0x3
+ 427 0043 01       		.byte	0x1
+ 428 0044 08       		.byte	0x8
+ 429 0045 49010000 		.4byte	.LASF3
+ 430 0049 02       		.uleb128 0x2
+ 431 004a 1F000000 		.4byte	.LASF4
+ 432 004e 02       		.byte	0x2
+ 433 004f 29       		.byte	0x29
+ 434 0050 54000000 		.4byte	0x54
+ 435 0054 03       		.uleb128 0x3
+ 436 0055 02       		.byte	0x2
+ 437 0056 05       		.byte	0x5
+ 438 0057 45000000 		.4byte	.LASF5
+ 439 005b 02       		.uleb128 0x2
+ 440 005c 7D000000 		.4byte	.LASF6
+ 441 0060 02       		.byte	0x2
+ 442 0061 2B       		.byte	0x2b
+ 443 0062 66000000 		.4byte	0x66
+ 444 0066 03       		.uleb128 0x3
+ 445 0067 02       		.byte	0x2
+ 446 0068 07       		.byte	0x7
+ 447 0069 C0010000 		.4byte	.LASF7
+ 448 006d 02       		.uleb128 0x2
+ 449 006e A5030000 		.4byte	.LASF8
+ 450 0072 02       		.byte	0x2
+ 451 0073 3F       		.byte	0x3f
+ 452 0074 78000000 		.4byte	0x78
+ 453 0078 03       		.uleb128 0x3
+ 454 0079 04       		.byte	0x4
+ 455 007a 05       		.byte	0x5
+ 456 007b FC000000 		.4byte	.LASF9
+ 457 007f 03       		.uleb128 0x3
+ 458 0080 04       		.byte	0x4
+ 459 0081 07       		.byte	0x7
+ 460 0082 5F030000 		.4byte	.LASF10
+ 461 0086 03       		.uleb128 0x3
+ 462 0087 08       		.byte	0x8
+ 463 0088 05       		.byte	0x5
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 12
+
+
+ 464 0089 EE000000 		.4byte	.LASF11
+ 465 008d 03       		.uleb128 0x3
+ 466 008e 08       		.byte	0x8
+ 467 008f 07       		.byte	0x7
+ 468 0090 7F010000 		.4byte	.LASF12
+ 469 0094 04       		.uleb128 0x4
+ 470 0095 04       		.byte	0x4
+ 471 0096 05       		.byte	0x5
+ 472 0097 696E7400 		.ascii	"int\000"
+ 473 009b 03       		.uleb128 0x3
+ 474 009c 04       		.byte	0x4
+ 475 009d 07       		.byte	0x7
+ 476 009e 96010000 		.4byte	.LASF13
+ 477 00a2 02       		.uleb128 0x2
+ 478 00a3 30000000 		.4byte	.LASF14
+ 479 00a7 03       		.byte	0x3
+ 480 00a8 14       		.byte	0x14
+ 481 00a9 25000000 		.4byte	0x25
+ 482 00ad 02       		.uleb128 0x2
+ 483 00ae 23010000 		.4byte	.LASF15
+ 484 00b2 03       		.byte	0x3
+ 485 00b3 18       		.byte	0x18
+ 486 00b4 37000000 		.4byte	0x37
+ 487 00b8 02       		.uleb128 0x2
+ 488 00b9 99020000 		.4byte	.LASF16
+ 489 00bd 03       		.byte	0x3
+ 490 00be 20       		.byte	0x20
+ 491 00bf 49000000 		.4byte	0x49
+ 492 00c3 02       		.uleb128 0x2
+ 493 00c4 A3010000 		.4byte	.LASF17
+ 494 00c8 03       		.byte	0x3
+ 495 00c9 24       		.byte	0x24
+ 496 00ca 5B000000 		.4byte	0x5b
+ 497 00ce 02       		.uleb128 0x2
+ 498 00cf 84020000 		.4byte	.LASF18
+ 499 00d3 03       		.byte	0x3
+ 500 00d4 2C       		.byte	0x2c
+ 501 00d5 6D000000 		.4byte	0x6d
+ 502 00d9 03       		.uleb128 0x3
+ 503 00da 04       		.byte	0x4
+ 504 00db 04       		.byte	0x4
+ 505 00dc E8000000 		.4byte	.LASF19
+ 506 00e0 03       		.uleb128 0x3
+ 507 00e1 08       		.byte	0x8
+ 508 00e2 04       		.byte	0x4
+ 509 00e3 71030000 		.4byte	.LASF20
+ 510 00e7 03       		.uleb128 0x3
+ 511 00e8 01       		.byte	0x1
+ 512 00e9 08       		.byte	0x8
+ 513 00ea 6A020000 		.4byte	.LASF21
+ 514 00ee 03       		.uleb128 0x3
+ 515 00ef 08       		.byte	0x8
+ 516 00f0 04       		.byte	0x4
+ 517 00f1 A1020000 		.4byte	.LASF22
+ 518 00f5 03       		.uleb128 0x3
+ 519 00f6 04       		.byte	0x4
+ 520 00f7 07       		.byte	0x7
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 13
+
+
+ 521 00f8 5B000000 		.4byte	.LASF23
+ 522 00fc 05       		.uleb128 0x5
+ 523 00fd 11       		.byte	0x11
+ 524 00fe 04       		.byte	0x4
+ 525 00ff 0D       		.byte	0xd
+ 526 0100 D1010000 		.4byte	0x1d1
+ 527 0104 06       		.uleb128 0x6
+ 528 0105 77020000 		.4byte	.LASF24
+ 529 0109 04       		.byte	0x4
+ 530 010a 10       		.byte	0x10
+ 531 010b A2000000 		.4byte	0xa2
+ 532 010f 00       		.byte	0
+ 533 0110 06       		.uleb128 0x6
+ 534 0111 8C020000 		.4byte	.LASF25
+ 535 0115 04       		.byte	0x4
+ 536 0116 11       		.byte	0x11
+ 537 0117 A2000000 		.4byte	0xa2
+ 538 011b 01       		.byte	0x1
+ 539 011c 06       		.uleb128 0x6
+ 540 011d 3D030000 		.4byte	.LASF26
+ 541 0121 04       		.byte	0x4
+ 542 0122 12       		.byte	0x12
+ 543 0123 A2000000 		.4byte	0xa2
+ 544 0127 02       		.byte	0x2
+ 545 0128 06       		.uleb128 0x6
+ 546 0129 78030000 		.4byte	.LASF27
+ 547 012d 04       		.byte	0x4
+ 548 012e 13       		.byte	0x13
+ 549 012f A2000000 		.4byte	0xa2
+ 550 0133 03       		.byte	0x3
+ 551 0134 06       		.uleb128 0x6
+ 552 0135 70000000 		.4byte	.LASF28
+ 553 0139 04       		.byte	0x4
+ 554 013a 14       		.byte	0x14
+ 555 013b A2000000 		.4byte	0xa2
+ 556 013f 04       		.byte	0x4
+ 557 0140 06       		.uleb128 0x6
+ 558 0141 88000000 		.4byte	.LASF29
+ 559 0145 04       		.byte	0x4
+ 560 0146 15       		.byte	0x15
+ 561 0147 A2000000 		.4byte	0xa2
+ 562 014b 05       		.byte	0x5
+ 563 014c 06       		.uleb128 0x6
+ 564 014d AF030000 		.4byte	.LASF30
+ 565 0151 04       		.byte	0x4
+ 566 0152 18       		.byte	0x18
+ 567 0153 A2000000 		.4byte	0xa2
+ 568 0157 06       		.byte	0x6
+ 569 0158 06       		.uleb128 0x6
+ 570 0159 D1030000 		.4byte	.LASF31
+ 571 015d 04       		.byte	0x4
+ 572 015e 19       		.byte	0x19
+ 573 015f A2000000 		.4byte	0xa2
+ 574 0163 07       		.byte	0x7
+ 575 0164 06       		.uleb128 0x6
+ 576 0165 BC000000 		.4byte	.LASF32
+ 577 0169 04       		.byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 14
+
+
+ 578 016a 1C       		.byte	0x1c
+ 579 016b A2000000 		.4byte	0xa2
+ 580 016f 08       		.byte	0x8
+ 581 0170 06       		.uleb128 0x6
+ 582 0171 DC000000 		.4byte	.LASF33
+ 583 0175 04       		.byte	0x4
+ 584 0176 1D       		.byte	0x1d
+ 585 0177 A2000000 		.4byte	0xa2
+ 586 017b 09       		.byte	0x9
+ 587 017c 06       		.uleb128 0x6
+ 588 017d 4F000000 		.4byte	.LASF34
+ 589 0181 04       		.byte	0x4
+ 590 0182 1E       		.byte	0x1e
+ 591 0183 A2000000 		.4byte	0xa2
+ 592 0187 0A       		.byte	0xa
+ 593 0188 06       		.uleb128 0x6
+ 594 0189 64000000 		.4byte	.LASF35
+ 595 018d 04       		.byte	0x4
+ 596 018e 1F       		.byte	0x1f
+ 597 018f A2000000 		.4byte	0xa2
+ 598 0193 0B       		.byte	0xb
+ 599 0194 06       		.uleb128 0x6
+ 600 0195 C2020000 		.4byte	.LASF36
+ 601 0199 04       		.byte	0x4
+ 602 019a 20       		.byte	0x20
+ 603 019b A2000000 		.4byte	0xa2
+ 604 019f 0C       		.byte	0xc
+ 605 01a0 06       		.uleb128 0x6
+ 606 01a1 E6020000 		.4byte	.LASF37
+ 607 01a5 04       		.byte	0x4
+ 608 01a6 21       		.byte	0x21
+ 609 01a7 A2000000 		.4byte	0xa2
+ 610 01ab 0D       		.byte	0xd
+ 611 01ac 06       		.uleb128 0x6
+ 612 01ad C8000000 		.4byte	.LASF38
+ 613 01b1 04       		.byte	0x4
+ 614 01b2 24       		.byte	0x24
+ 615 01b3 AD000000 		.4byte	0xad
+ 616 01b7 0E       		.byte	0xe
+ 617 01b8 06       		.uleb128 0x6
+ 618 01b9 E6030000 		.4byte	.LASF39
+ 619 01bd 04       		.byte	0x4
+ 620 01be 27       		.byte	0x27
+ 621 01bf AD000000 		.4byte	0xad
+ 622 01c3 0F       		.byte	0xf
+ 623 01c4 06       		.uleb128 0x6
+ 624 01c5 00000000 		.4byte	.LASF40
+ 625 01c9 04       		.byte	0x4
+ 626 01ca 2A       		.byte	0x2a
+ 627 01cb AD000000 		.4byte	0xad
+ 628 01cf 10       		.byte	0x10
+ 629 01d0 00       		.byte	0
+ 630 01d1 02       		.uleb128 0x2
+ 631 01d2 0B040000 		.4byte	.LASF41
+ 632 01d6 04       		.byte	0x4
+ 633 01d7 2C       		.byte	0x2c
+ 634 01d8 FC000000 		.4byte	0xfc
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 15
+
+
+ 635 01dc 05       		.uleb128 0x5
+ 636 01dd 0E       		.byte	0xe
+ 637 01de 04       		.byte	0x4
+ 638 01df 2F       		.byte	0x2f
+ 639 01e0 39020000 		.4byte	0x239
+ 640 01e4 06       		.uleb128 0x6
+ 641 01e5 AD020000 		.4byte	.LASF42
+ 642 01e9 04       		.byte	0x4
+ 643 01ea 32       		.byte	0x32
+ 644 01eb B8000000 		.4byte	0xb8
+ 645 01ef 00       		.byte	0
+ 646 01f0 06       		.uleb128 0x6
+ 647 01f1 35010000 		.4byte	.LASF43
+ 648 01f5 04       		.byte	0x4
+ 649 01f6 33       		.byte	0x33
+ 650 01f7 B8000000 		.4byte	0xb8
+ 651 01fb 02       		.byte	0x2
+ 652 01fc 06       		.uleb128 0x6
+ 653 01fd B1000000 		.4byte	.LASF44
+ 654 0201 04       		.byte	0x4
+ 655 0202 34       		.byte	0x34
+ 656 0203 B8000000 		.4byte	0xb8
+ 657 0207 04       		.byte	0x4
+ 658 0208 06       		.uleb128 0x6
+ 659 0209 57010000 		.4byte	.LASF45
+ 660 020d 04       		.byte	0x4
+ 661 020e 37       		.byte	0x37
+ 662 020f B8000000 		.4byte	0xb8
+ 663 0213 06       		.byte	0x6
+ 664 0214 06       		.uleb128 0x6
+ 665 0215 A7000000 		.4byte	.LASF46
+ 666 0219 04       		.byte	0x4
+ 667 021a 3A       		.byte	0x3a
+ 668 021b B8000000 		.4byte	0xb8
+ 669 021f 08       		.byte	0x8
+ 670 0220 06       		.uleb128 0x6
+ 671 0221 2B010000 		.4byte	.LASF47
+ 672 0225 04       		.byte	0x4
+ 673 0226 3B       		.byte	0x3b
+ 674 0227 B8000000 		.4byte	0xb8
+ 675 022b 0A       		.byte	0xa
+ 676 022c 06       		.uleb128 0x6
+ 677 022d DC020000 		.4byte	.LASF48
+ 678 0231 04       		.byte	0x4
+ 679 0232 3C       		.byte	0x3c
+ 680 0233 B8000000 		.4byte	0xb8
+ 681 0237 0C       		.byte	0xc
+ 682 0238 00       		.byte	0
+ 683 0239 02       		.uleb128 0x2
+ 684 023a 85030000 		.4byte	.LASF49
+ 685 023e 04       		.byte	0x4
+ 686 023f 3E       		.byte	0x3e
+ 687 0240 DC010000 		.4byte	0x1dc
+ 688 0244 07       		.uleb128 0x7
+ 689 0245 BA030000 		.4byte	.LASF72
+ 690 0249 20       		.byte	0x20
+ 691 024a 04       		.byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 16
+
+
+ 692 024b 42       		.byte	0x42
+ 693 024c 69020000 		.4byte	0x269
+ 694 0250 06       		.uleb128 0x6
+ 695 0251 DC030000 		.4byte	.LASF50
+ 696 0255 04       		.byte	0x4
+ 697 0256 43       		.byte	0x43
+ 698 0257 D1010000 		.4byte	0x1d1
+ 699 025b 00       		.byte	0
+ 700 025c 06       		.uleb128 0x6
+ 701 025d FE030000 		.4byte	.LASF51
+ 702 0261 04       		.byte	0x4
+ 703 0262 44       		.byte	0x44
+ 704 0263 39020000 		.4byte	0x239
+ 705 0267 12       		.byte	0x12
+ 706 0268 00       		.byte	0
+ 707 0269 08       		.uleb128 0x8
+ 708 026a C2030000 		.4byte	.LASF56
+ 709 026e 01       		.byte	0x1
+ 710 026f 2F       		.byte	0x2f
+ 711 0270 A2000000 		.4byte	0xa2
+ 712 0274 00000000 		.4byte	.LFB64
+ 713 0278 30000000 		.4byte	.LFE64-.LFB64
+ 714 027c 01       		.uleb128 0x1
+ 715 027d 9C       		.byte	0x9c
+ 716 027e 14030000 		.4byte	0x314
+ 717 0282 09       		.uleb128 0x9
+ 718 0283 29000000 		.4byte	.LASF52
+ 719 0287 01       		.byte	0x1
+ 720 0288 2F       		.byte	0x2f
+ 721 0289 AD000000 		.4byte	0xad
+ 722 028d 00000000 		.4byte	.LLST0
+ 723 0291 09       		.uleb128 0x9
+ 724 0292 40010000 		.4byte	.LASF53
+ 725 0296 01       		.byte	0x1
+ 726 0297 2F       		.byte	0x2f
+ 727 0298 AD000000 		.4byte	0xad
+ 728 029c 21000000 		.4byte	.LLST1
+ 729 02a0 09       		.uleb128 0x9
+ 730 02a1 92030000 		.4byte	.LASF54
+ 731 02a5 01       		.byte	0x1
+ 732 02a6 2F       		.byte	0x2f
+ 733 02a7 14030000 		.4byte	0x314
+ 734 02ab 42000000 		.4byte	.LLST2
+ 735 02af 0A       		.uleb128 0xa
+ 736 02b0 6C656E00 		.ascii	"len\000"
+ 737 02b4 01       		.byte	0x1
+ 738 02b5 2F       		.byte	0x2f
+ 739 02b6 C3000000 		.4byte	0xc3
+ 740 02ba 78000000 		.4byte	.LLST3
+ 741 02be 0B       		.uleb128 0xb
+ 742 02bf B8020000 		.4byte	.LASF55
+ 743 02c3 01       		.byte	0x1
+ 744 02c4 30       		.byte	0x30
+ 745 02c5 A2000000 		.4byte	0xa2
+ 746 02c9 99000000 		.4byte	.LLST4
+ 747 02cd 0C       		.uleb128 0xc
+ 748 02ce 6900     		.ascii	"i\000"
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 17
+
+
+ 749 02d0 01       		.byte	0x1
+ 750 02d1 31       		.byte	0x31
+ 751 02d2 C3000000 		.4byte	0xc3
+ 752 02d6 B8000000 		.4byte	.LLST5
+ 753 02da 0D       		.uleb128 0xd
+ 754 02db 0E000000 		.4byte	.LVL3
+ 755 02df B2050000 		.4byte	0x5b2
+ 756 02e3 ED020000 		.4byte	0x2ed
+ 757 02e7 0E       		.uleb128 0xe
+ 758 02e8 01       		.uleb128 0x1
+ 759 02e9 51       		.byte	0x51
+ 760 02ea 01       		.uleb128 0x1
+ 761 02eb 30       		.byte	0x30
+ 762 02ec 00       		.byte	0
+ 763 02ed 0D       		.uleb128 0xd
+ 764 02ee 14000000 		.4byte	.LVL4
+ 765 02f2 BD050000 		.4byte	0x5bd
+ 766 02f6 01030000 		.4byte	0x301
+ 767 02fa 0E       		.uleb128 0xe
+ 768 02fb 01       		.uleb128 0x1
+ 769 02fc 50       		.byte	0x50
+ 770 02fd 02       		.uleb128 0x2
+ 771 02fe 74       		.byte	0x74
+ 772 02ff 00       		.sleb128 0
+ 773 0300 00       		.byte	0
+ 774 0301 0F       		.uleb128 0xf
+ 775 0302 20000000 		.4byte	.LVL7
+ 776 0306 BD050000 		.4byte	0x5bd
+ 777 030a 0F       		.uleb128 0xf
+ 778 030b 2C000000 		.4byte	.LVL10
+ 779 030f C8050000 		.4byte	0x5c8
+ 780 0313 00       		.byte	0
+ 781 0314 10       		.uleb128 0x10
+ 782 0315 04       		.byte	0x4
+ 783 0316 AD000000 		.4byte	0xad
+ 784 031a 08       		.uleb128 0x8
+ 785 031b CE020000 		.4byte	.LASF57
+ 786 031f 01       		.byte	0x1
+ 787 0320 04       		.byte	0x4
+ 788 0321 A2000000 		.4byte	0xa2
+ 789 0325 00000000 		.4byte	.LFB63
+ 790 0329 44000000 		.4byte	.LFE63-.LFB63
+ 791 032d 01       		.uleb128 0x1
+ 792 032e 9C       		.byte	0x9c
+ 793 032f 01040000 		.4byte	0x401
+ 794 0333 09       		.uleb128 0x9
+ 795 0334 29000000 		.4byte	.LASF52
+ 796 0338 01       		.byte	0x1
+ 797 0339 04       		.byte	0x4
+ 798 033a AD000000 		.4byte	0xad
+ 799 033e E2000000 		.4byte	.LLST6
+ 800 0342 09       		.uleb128 0x9
+ 801 0343 40010000 		.4byte	.LASF53
+ 802 0347 01       		.byte	0x1
+ 803 0348 04       		.byte	0x4
+ 804 0349 AD000000 		.4byte	0xad
+ 805 034d 03010000 		.4byte	.LLST7
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 18
+
+
+ 806 0351 09       		.uleb128 0x9
+ 807 0352 92030000 		.4byte	.LASF54
+ 808 0356 01       		.byte	0x1
+ 809 0357 04       		.byte	0x4
+ 810 0358 14030000 		.4byte	0x314
+ 811 035c 24010000 		.4byte	.LLST8
+ 812 0360 0A       		.uleb128 0xa
+ 813 0361 6C656E00 		.ascii	"len\000"
+ 814 0365 01       		.byte	0x1
+ 815 0366 04       		.byte	0x4
+ 816 0367 C3000000 		.4byte	0xc3
+ 817 036b 42010000 		.4byte	.LLST9
+ 818 036f 0B       		.uleb128 0xb
+ 819 0370 B8020000 		.4byte	.LASF55
+ 820 0374 01       		.byte	0x1
+ 821 0375 06       		.byte	0x6
+ 822 0376 A2000000 		.4byte	0xa2
+ 823 037a 63010000 		.4byte	.LLST10
+ 824 037e 0C       		.uleb128 0xc
+ 825 037f 6900     		.ascii	"i\000"
+ 826 0381 01       		.byte	0x1
+ 827 0382 07       		.byte	0x7
+ 828 0383 C3000000 		.4byte	0xc3
+ 829 0387 82010000 		.4byte	.LLST11
+ 830 038b 0D       		.uleb128 0xd
+ 831 038c 10000000 		.4byte	.LVL14
+ 832 0390 B2050000 		.4byte	0x5b2
+ 833 0394 A4030000 		.4byte	0x3a4
+ 834 0398 0E       		.uleb128 0xe
+ 835 0399 01       		.uleb128 0x1
+ 836 039a 50       		.byte	0x50
+ 837 039b 02       		.uleb128 0x2
+ 838 039c 74       		.byte	0x74
+ 839 039d 00       		.sleb128 0
+ 840 039e 0E       		.uleb128 0xe
+ 841 039f 01       		.uleb128 0x1
+ 842 03a0 51       		.byte	0x51
+ 843 03a1 01       		.uleb128 0x1
+ 844 03a2 30       		.byte	0x30
+ 845 03a3 00       		.byte	0
+ 846 03a4 0D       		.uleb128 0xd
+ 847 03a5 16000000 		.4byte	.LVL15
+ 848 03a9 BD050000 		.4byte	0x5bd
+ 849 03ad B8030000 		.4byte	0x3b8
+ 850 03b1 0E       		.uleb128 0xe
+ 851 03b2 01       		.uleb128 0x1
+ 852 03b3 50       		.byte	0x50
+ 853 03b4 02       		.uleb128 0x2
+ 854 03b5 77       		.byte	0x77
+ 855 03b6 00       		.sleb128 0
+ 856 03b7 00       		.byte	0
+ 857 03b8 0D       		.uleb128 0xd
+ 858 03b9 1E000000 		.4byte	.LVL16
+ 859 03bd D3050000 		.4byte	0x5d3
+ 860 03c1 D1030000 		.4byte	0x3d1
+ 861 03c5 0E       		.uleb128 0xe
+ 862 03c6 01       		.uleb128 0x1
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 19
+
+
+ 863 03c7 50       		.byte	0x50
+ 864 03c8 02       		.uleb128 0x2
+ 865 03c9 74       		.byte	0x74
+ 866 03ca 00       		.sleb128 0
+ 867 03cb 0E       		.uleb128 0xe
+ 868 03cc 01       		.uleb128 0x1
+ 869 03cd 51       		.byte	0x51
+ 870 03ce 01       		.uleb128 0x1
+ 871 03cf 31       		.byte	0x31
+ 872 03d0 00       		.byte	0
+ 873 03d1 0D       		.uleb128 0xd
+ 874 03d2 28000000 		.4byte	.LVL18
+ 875 03d6 DE050000 		.4byte	0x5de
+ 876 03da E4030000 		.4byte	0x3e4
+ 877 03de 0E       		.uleb128 0xe
+ 878 03df 01       		.uleb128 0x1
+ 879 03e0 50       		.byte	0x50
+ 880 03e1 01       		.uleb128 0x1
+ 881 03e2 31       		.byte	0x31
+ 882 03e3 00       		.byte	0
+ 883 03e4 0D       		.uleb128 0xd
+ 884 03e5 3A000000 		.4byte	.LVL21
+ 885 03e9 DE050000 		.4byte	0x5de
+ 886 03ed F7030000 		.4byte	0x3f7
+ 887 03f1 0E       		.uleb128 0xe
+ 888 03f2 01       		.uleb128 0x1
+ 889 03f3 50       		.byte	0x50
+ 890 03f4 01       		.uleb128 0x1
+ 891 03f5 30       		.byte	0x30
+ 892 03f6 00       		.byte	0
+ 893 03f7 0F       		.uleb128 0xf
+ 894 03f8 40000000 		.4byte	.LVL22
+ 895 03fc C8050000 		.4byte	0x5c8
+ 896 0400 00       		.byte	0
+ 897 0401 11       		.uleb128 0x11
+ 898 0402 37000000 		.4byte	.LASF59
+ 899 0406 01       		.byte	0x1
+ 900 0407 55       		.byte	0x55
+ 901 0408 00000000 		.4byte	.LFB65
+ 902 040c 34000000 		.4byte	.LFE65-.LFB65
+ 903 0410 01       		.uleb128 0x1
+ 904 0411 9C       		.byte	0x9c
+ 905 0412 7B040000 		.4byte	0x47b
+ 906 0416 09       		.uleb128 0x9
+ 907 0417 DC030000 		.4byte	.LASF50
+ 908 041b 01       		.byte	0x1
+ 909 041c 55       		.byte	0x55
+ 910 041d 7B040000 		.4byte	0x47b
+ 911 0421 AC010000 		.4byte	.LLST12
+ 912 0425 12       		.uleb128 0x12
+ 913 0426 BD020000 		.4byte	.LASF58
+ 914 042a 01       		.byte	0x1
+ 915 042b 57       		.byte	0x57
+ 916 042c 81040000 		.4byte	0x481
+ 917 0430 02       		.uleb128 0x2
+ 918 0431 91       		.byte	0x91
+ 919 0432 6C       		.sleb128 -20
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 20
+
+
+ 920 0433 0D       		.uleb128 0xd
+ 921 0434 1C000000 		.4byte	.LVL25
+ 922 0438 69020000 		.4byte	0x269
+ 923 043c 58040000 		.4byte	0x458
+ 924 0440 0E       		.uleb128 0xe
+ 925 0441 01       		.uleb128 0x1
+ 926 0442 50       		.byte	0x50
+ 927 0443 02       		.uleb128 0x2
+ 928 0444 08       		.byte	0x8
+ 929 0445 68       		.byte	0x68
+ 930 0446 0E       		.uleb128 0xe
+ 931 0447 01       		.uleb128 0x1
+ 932 0448 51       		.byte	0x51
+ 933 0449 02       		.uleb128 0x2
+ 934 044a 08       		.byte	0x8
+ 935 044b 6B       		.byte	0x6b
+ 936 044c 0E       		.uleb128 0xe
+ 937 044d 01       		.uleb128 0x1
+ 938 044e 52       		.byte	0x52
+ 939 044f 02       		.uleb128 0x2
+ 940 0450 91       		.byte	0x91
+ 941 0451 6C       		.sleb128 -20
+ 942 0452 0E       		.uleb128 0xe
+ 943 0453 01       		.uleb128 0x1
+ 944 0454 53       		.byte	0x53
+ 945 0455 01       		.uleb128 0x1
+ 946 0456 31       		.byte	0x31
+ 947 0457 00       		.byte	0
+ 948 0458 13       		.uleb128 0x13
+ 949 0459 2A000000 		.4byte	.LVL26
+ 950 045d 1A030000 		.4byte	0x31a
+ 951 0461 0E       		.uleb128 0xe
+ 952 0462 01       		.uleb128 0x1
+ 953 0463 50       		.byte	0x50
+ 954 0464 02       		.uleb128 0x2
+ 955 0465 08       		.byte	0x8
+ 956 0466 68       		.byte	0x68
+ 957 0467 0E       		.uleb128 0xe
+ 958 0468 01       		.uleb128 0x1
+ 959 0469 51       		.byte	0x51
+ 960 046a 02       		.uleb128 0x2
+ 961 046b 08       		.byte	0x8
+ 962 046c 6B       		.byte	0x6b
+ 963 046d 0E       		.uleb128 0xe
+ 964 046e 01       		.uleb128 0x1
+ 965 046f 52       		.byte	0x52
+ 966 0470 02       		.uleb128 0x2
+ 967 0471 91       		.byte	0x91
+ 968 0472 6D       		.sleb128 -19
+ 969 0473 0E       		.uleb128 0xe
+ 970 0474 01       		.uleb128 0x1
+ 971 0475 53       		.byte	0x53
+ 972 0476 02       		.uleb128 0x2
+ 973 0477 74       		.byte	0x74
+ 974 0478 00       		.sleb128 0
+ 975 0479 00       		.byte	0
+ 976 047a 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 21
+
+
+ 977 047b 10       		.uleb128 0x10
+ 978 047c 04       		.byte	0x4
+ 979 047d 44020000 		.4byte	0x244
+ 980 0481 14       		.uleb128 0x14
+ 981 0482 AD000000 		.4byte	0xad
+ 982 0486 91040000 		.4byte	0x491
+ 983 048a 15       		.uleb128 0x15
+ 984 048b F5000000 		.4byte	0xf5
+ 985 048f 01       		.byte	0x1
+ 986 0490 00       		.byte	0
+ 987 0491 11       		.uleb128 0x11
+ 988 0492 4A030000 		.4byte	.LASF60
+ 989 0496 01       		.byte	0x1
+ 990 0497 60       		.byte	0x60
+ 991 0498 00000000 		.4byte	.LFB66
+ 992 049c 36000000 		.4byte	.LFE66-.LFB66
+ 993 04a0 01       		.uleb128 0x1
+ 994 04a1 9C       		.byte	0x9c
+ 995 04a2 18050000 		.4byte	0x518
+ 996 04a6 09       		.uleb128 0x9
+ 997 04a7 DC030000 		.4byte	.LASF50
+ 998 04ab 01       		.byte	0x1
+ 999 04ac 60       		.byte	0x60
+ 1000 04ad 7B040000 		.4byte	0x47b
+ 1001 04b1 CA010000 		.4byte	.LLST13
+ 1002 04b5 09       		.uleb128 0x9
+ 1003 04b6 6F020000 		.4byte	.LASF61
+ 1004 04ba 01       		.byte	0x1
+ 1005 04bb 60       		.byte	0x60
+ 1006 04bc AD000000 		.4byte	0xad
+ 1007 04c0 E8010000 		.4byte	.LLST14
+ 1008 04c4 12       		.uleb128 0x12
+ 1009 04c5 BD020000 		.4byte	.LASF58
+ 1010 04c9 01       		.byte	0x1
+ 1011 04ca 62       		.byte	0x62
+ 1012 04cb 81040000 		.4byte	0x481
+ 1013 04cf 02       		.uleb128 0x2
+ 1014 04d0 91       		.byte	0x91
+ 1015 04d1 6C       		.sleb128 -20
+ 1016 04d2 0D       		.uleb128 0xd
+ 1017 04d3 1E000000 		.4byte	.LVL30
+ 1018 04d7 69020000 		.4byte	0x269
+ 1019 04db F6040000 		.4byte	0x4f6
+ 1020 04df 0E       		.uleb128 0xe
+ 1021 04e0 01       		.uleb128 0x1
+ 1022 04e1 50       		.byte	0x50
+ 1023 04e2 02       		.uleb128 0x2
+ 1024 04e3 08       		.byte	0x8
+ 1025 04e4 68       		.byte	0x68
+ 1026 04e5 0E       		.uleb128 0xe
+ 1027 04e6 01       		.uleb128 0x1
+ 1028 04e7 51       		.byte	0x51
+ 1029 04e8 01       		.uleb128 0x1
+ 1030 04e9 4C       		.byte	0x4c
+ 1031 04ea 0E       		.uleb128 0xe
+ 1032 04eb 01       		.uleb128 0x1
+ 1033 04ec 52       		.byte	0x52
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 22
+
+
+ 1034 04ed 02       		.uleb128 0x2
+ 1035 04ee 91       		.byte	0x91
+ 1036 04ef 6C       		.sleb128 -20
+ 1037 04f0 0E       		.uleb128 0xe
+ 1038 04f1 01       		.uleb128 0x1
+ 1039 04f2 53       		.byte	0x53
+ 1040 04f3 01       		.uleb128 0x1
+ 1041 04f4 31       		.byte	0x31
+ 1042 04f5 00       		.byte	0
+ 1043 04f6 13       		.uleb128 0x13
+ 1044 04f7 2C000000 		.4byte	.LVL31
+ 1045 04fb 1A030000 		.4byte	0x31a
+ 1046 04ff 0E       		.uleb128 0xe
+ 1047 0500 01       		.uleb128 0x1
+ 1048 0501 50       		.byte	0x50
+ 1049 0502 02       		.uleb128 0x2
+ 1050 0503 08       		.byte	0x8
+ 1051 0504 68       		.byte	0x68
+ 1052 0505 0E       		.uleb128 0xe
+ 1053 0506 01       		.uleb128 0x1
+ 1054 0507 51       		.byte	0x51
+ 1055 0508 01       		.uleb128 0x1
+ 1056 0509 4C       		.byte	0x4c
+ 1057 050a 0E       		.uleb128 0xe
+ 1058 050b 01       		.uleb128 0x1
+ 1059 050c 52       		.byte	0x52
+ 1060 050d 02       		.uleb128 0x2
+ 1061 050e 91       		.byte	0x91
+ 1062 050f 6D       		.sleb128 -19
+ 1063 0510 0E       		.uleb128 0xe
+ 1064 0511 01       		.uleb128 0x1
+ 1065 0512 53       		.byte	0x53
+ 1066 0513 02       		.uleb128 0x2
+ 1067 0514 74       		.byte	0x74
+ 1068 0515 00       		.sleb128 0
+ 1069 0516 00       		.byte	0
+ 1070 0517 00       		.byte	0
+ 1071 0518 16       		.uleb128 0x16
+ 1072 0519 95000000 		.4byte	.LASF62
+ 1073 051d 01       		.byte	0x1
+ 1074 051e 6D       		.byte	0x6d
+ 1075 051f 00000000 		.4byte	.LFB67
+ 1076 0523 D4000000 		.4byte	.LFE67-.LFB67
+ 1077 0527 01       		.uleb128 0x1
+ 1078 0528 9C       		.byte	0x9c
+ 1079 0529 91050000 		.4byte	0x591
+ 1080 052d 09       		.uleb128 0x9
+ 1081 052e D5000000 		.4byte	.LASF63
+ 1082 0532 01       		.byte	0x1
+ 1083 0533 6D       		.byte	0x6d
+ 1084 0534 7B040000 		.4byte	0x47b
+ 1085 0538 09020000 		.4byte	.LLST15
+ 1086 053c 12       		.uleb128 0x12
+ 1087 053d 92030000 		.4byte	.LASF54
+ 1088 0541 01       		.byte	0x1
+ 1089 0542 6F       		.byte	0x6f
+ 1090 0543 91050000 		.4byte	0x591
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 23
+
+
+ 1091 0547 02       		.uleb128 0x2
+ 1092 0548 91       		.byte	0x91
+ 1093 0549 60       		.sleb128 -32
+ 1094 054a 0D       		.uleb128 0xd
+ 1095 054b 12000000 		.4byte	.LVL34
+ 1096 054f 1A030000 		.4byte	0x31a
+ 1097 0553 6F050000 		.4byte	0x56f
+ 1098 0557 0E       		.uleb128 0xe
+ 1099 0558 01       		.uleb128 0x1
+ 1100 0559 50       		.byte	0x50
+ 1101 055a 02       		.uleb128 0x2
+ 1102 055b 08       		.byte	0x8
+ 1103 055c 68       		.byte	0x68
+ 1104 055d 0E       		.uleb128 0xe
+ 1105 055e 01       		.uleb128 0x1
+ 1106 055f 51       		.byte	0x51
+ 1107 0560 02       		.uleb128 0x2
+ 1108 0561 08       		.byte	0x8
+ 1109 0562 3B       		.byte	0x3b
+ 1110 0563 0E       		.uleb128 0xe
+ 1111 0564 01       		.uleb128 0x1
+ 1112 0565 52       		.byte	0x52
+ 1113 0566 02       		.uleb128 0x2
+ 1114 0567 7D       		.byte	0x7d
+ 1115 0568 00       		.sleb128 0
+ 1116 0569 0E       		.uleb128 0xe
+ 1117 056a 01       		.uleb128 0x1
+ 1118 056b 53       		.byte	0x53
+ 1119 056c 01       		.uleb128 0x1
+ 1120 056d 3D       		.byte	0x3d
+ 1121 056e 00       		.byte	0
+ 1122 056f 13       		.uleb128 0x13
+ 1123 0570 20000000 		.4byte	.LVL35
+ 1124 0574 1A030000 		.4byte	0x31a
+ 1125 0578 0E       		.uleb128 0xe
+ 1126 0579 01       		.uleb128 0x1
+ 1127 057a 50       		.byte	0x50
+ 1128 057b 02       		.uleb128 0x2
+ 1129 057c 08       		.byte	0x8
+ 1130 057d 68       		.byte	0x68
+ 1131 057e 0E       		.uleb128 0xe
+ 1132 057f 01       		.uleb128 0x1
+ 1133 0580 51       		.byte	0x51
+ 1134 0581 02       		.uleb128 0x2
+ 1135 0582 08       		.byte	0x8
+ 1136 0583 75       		.byte	0x75
+ 1137 0584 0E       		.uleb128 0xe
+ 1138 0585 01       		.uleb128 0x1
+ 1139 0586 52       		.byte	0x52
+ 1140 0587 02       		.uleb128 0x2
+ 1141 0588 91       		.byte	0x91
+ 1142 0589 6E       		.sleb128 -18
+ 1143 058a 0E       		.uleb128 0xe
+ 1144 058b 01       		.uleb128 0x1
+ 1145 058c 53       		.byte	0x53
+ 1146 058d 01       		.uleb128 0x1
+ 1147 058e 30       		.byte	0x30
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 24
+
+
+ 1148 058f 00       		.byte	0
+ 1149 0590 00       		.byte	0
+ 1150 0591 14       		.uleb128 0x14
+ 1151 0592 AD000000 		.4byte	0xad
+ 1152 0596 A1050000 		.4byte	0x5a1
+ 1153 059a 15       		.uleb128 0x15
+ 1154 059b F5000000 		.4byte	0xf5
+ 1155 059f 0E       		.byte	0xe
+ 1156 05a0 00       		.byte	0
+ 1157 05a1 17       		.uleb128 0x17
+ 1158 05a2 F1030000 		.4byte	.LASF73
+ 1159 05a6 06       		.byte	0x6
+ 1160 05a7 1207     		.2byte	0x712
+ 1161 05a9 AD050000 		.4byte	0x5ad
+ 1162 05ad 18       		.uleb128 0x18
+ 1163 05ae CE000000 		.4byte	0xce
+ 1164 05b2 19       		.uleb128 0x19
+ 1165 05b3 AC010000 		.4byte	.LASF64
+ 1166 05b7 AC010000 		.4byte	.LASF64
+ 1167 05bb 05       		.byte	0x5
+ 1168 05bc B1       		.byte	0xb1
+ 1169 05bd 19       		.uleb128 0x19
+ 1170 05be 0F010000 		.4byte	.LASF65
+ 1171 05c2 0F010000 		.4byte	.LASF65
+ 1172 05c6 05       		.byte	0x5
+ 1173 05c7 B6       		.byte	0xb6
+ 1174 05c8 19       		.uleb128 0x19
+ 1175 05c9 1D040000 		.4byte	.LASF66
+ 1176 05cd 1D040000 		.4byte	.LASF66
+ 1177 05d1 05       		.byte	0x5
+ 1178 05d2 B5       		.byte	0xb5
+ 1179 05d3 19       		.uleb128 0x19
+ 1180 05d4 09000000 		.4byte	.LASF67
+ 1181 05d8 09000000 		.4byte	.LASF67
+ 1182 05dc 05       		.byte	0x5
+ 1183 05dd B3       		.byte	0xb3
+ 1184 05de 19       		.uleb128 0x19
+ 1185 05df 60010000 		.4byte	.LASF68
+ 1186 05e3 60010000 		.4byte	.LASF68
+ 1187 05e7 05       		.byte	0x5
+ 1188 05e8 B7       		.byte	0xb7
+ 1189 05e9 00       		.byte	0
+ 1190              		.section	.debug_abbrev,"",%progbits
+ 1191              	.Ldebug_abbrev0:
+ 1192 0000 01       		.uleb128 0x1
+ 1193 0001 11       		.uleb128 0x11
+ 1194 0002 01       		.byte	0x1
+ 1195 0003 25       		.uleb128 0x25
+ 1196 0004 0E       		.uleb128 0xe
+ 1197 0005 13       		.uleb128 0x13
+ 1198 0006 0B       		.uleb128 0xb
+ 1199 0007 03       		.uleb128 0x3
+ 1200 0008 0E       		.uleb128 0xe
+ 1201 0009 1B       		.uleb128 0x1b
+ 1202 000a 0E       		.uleb128 0xe
+ 1203 000b 55       		.uleb128 0x55
+ 1204 000c 17       		.uleb128 0x17
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 25
+
+
+ 1205 000d 11       		.uleb128 0x11
+ 1206 000e 01       		.uleb128 0x1
+ 1207 000f 10       		.uleb128 0x10
+ 1208 0010 17       		.uleb128 0x17
+ 1209 0011 00       		.byte	0
+ 1210 0012 00       		.byte	0
+ 1211 0013 02       		.uleb128 0x2
+ 1212 0014 16       		.uleb128 0x16
+ 1213 0015 00       		.byte	0
+ 1214 0016 03       		.uleb128 0x3
+ 1215 0017 0E       		.uleb128 0xe
+ 1216 0018 3A       		.uleb128 0x3a
+ 1217 0019 0B       		.uleb128 0xb
+ 1218 001a 3B       		.uleb128 0x3b
+ 1219 001b 0B       		.uleb128 0xb
+ 1220 001c 49       		.uleb128 0x49
+ 1221 001d 13       		.uleb128 0x13
+ 1222 001e 00       		.byte	0
+ 1223 001f 00       		.byte	0
+ 1224 0020 03       		.uleb128 0x3
+ 1225 0021 24       		.uleb128 0x24
+ 1226 0022 00       		.byte	0
+ 1227 0023 0B       		.uleb128 0xb
+ 1228 0024 0B       		.uleb128 0xb
+ 1229 0025 3E       		.uleb128 0x3e
+ 1230 0026 0B       		.uleb128 0xb
+ 1231 0027 03       		.uleb128 0x3
+ 1232 0028 0E       		.uleb128 0xe
+ 1233 0029 00       		.byte	0
+ 1234 002a 00       		.byte	0
+ 1235 002b 04       		.uleb128 0x4
+ 1236 002c 24       		.uleb128 0x24
+ 1237 002d 00       		.byte	0
+ 1238 002e 0B       		.uleb128 0xb
+ 1239 002f 0B       		.uleb128 0xb
+ 1240 0030 3E       		.uleb128 0x3e
+ 1241 0031 0B       		.uleb128 0xb
+ 1242 0032 03       		.uleb128 0x3
+ 1243 0033 08       		.uleb128 0x8
+ 1244 0034 00       		.byte	0
+ 1245 0035 00       		.byte	0
+ 1246 0036 05       		.uleb128 0x5
+ 1247 0037 13       		.uleb128 0x13
+ 1248 0038 01       		.byte	0x1
+ 1249 0039 0B       		.uleb128 0xb
+ 1250 003a 0B       		.uleb128 0xb
+ 1251 003b 3A       		.uleb128 0x3a
+ 1252 003c 0B       		.uleb128 0xb
+ 1253 003d 3B       		.uleb128 0x3b
+ 1254 003e 0B       		.uleb128 0xb
+ 1255 003f 01       		.uleb128 0x1
+ 1256 0040 13       		.uleb128 0x13
+ 1257 0041 00       		.byte	0
+ 1258 0042 00       		.byte	0
+ 1259 0043 06       		.uleb128 0x6
+ 1260 0044 0D       		.uleb128 0xd
+ 1261 0045 00       		.byte	0
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 26
+
+
+ 1262 0046 03       		.uleb128 0x3
+ 1263 0047 0E       		.uleb128 0xe
+ 1264 0048 3A       		.uleb128 0x3a
+ 1265 0049 0B       		.uleb128 0xb
+ 1266 004a 3B       		.uleb128 0x3b
+ 1267 004b 0B       		.uleb128 0xb
+ 1268 004c 49       		.uleb128 0x49
+ 1269 004d 13       		.uleb128 0x13
+ 1270 004e 38       		.uleb128 0x38
+ 1271 004f 0B       		.uleb128 0xb
+ 1272 0050 00       		.byte	0
+ 1273 0051 00       		.byte	0
+ 1274 0052 07       		.uleb128 0x7
+ 1275 0053 13       		.uleb128 0x13
+ 1276 0054 01       		.byte	0x1
+ 1277 0055 03       		.uleb128 0x3
+ 1278 0056 0E       		.uleb128 0xe
+ 1279 0057 0B       		.uleb128 0xb
+ 1280 0058 0B       		.uleb128 0xb
+ 1281 0059 3A       		.uleb128 0x3a
+ 1282 005a 0B       		.uleb128 0xb
+ 1283 005b 3B       		.uleb128 0x3b
+ 1284 005c 0B       		.uleb128 0xb
+ 1285 005d 01       		.uleb128 0x1
+ 1286 005e 13       		.uleb128 0x13
+ 1287 005f 00       		.byte	0
+ 1288 0060 00       		.byte	0
+ 1289 0061 08       		.uleb128 0x8
+ 1290 0062 2E       		.uleb128 0x2e
+ 1291 0063 01       		.byte	0x1
+ 1292 0064 03       		.uleb128 0x3
+ 1293 0065 0E       		.uleb128 0xe
+ 1294 0066 3A       		.uleb128 0x3a
+ 1295 0067 0B       		.uleb128 0xb
+ 1296 0068 3B       		.uleb128 0x3b
+ 1297 0069 0B       		.uleb128 0xb
+ 1298 006a 27       		.uleb128 0x27
+ 1299 006b 19       		.uleb128 0x19
+ 1300 006c 49       		.uleb128 0x49
+ 1301 006d 13       		.uleb128 0x13
+ 1302 006e 11       		.uleb128 0x11
+ 1303 006f 01       		.uleb128 0x1
+ 1304 0070 12       		.uleb128 0x12
+ 1305 0071 06       		.uleb128 0x6
+ 1306 0072 40       		.uleb128 0x40
+ 1307 0073 18       		.uleb128 0x18
+ 1308 0074 9742     		.uleb128 0x2117
+ 1309 0076 19       		.uleb128 0x19
+ 1310 0077 01       		.uleb128 0x1
+ 1311 0078 13       		.uleb128 0x13
+ 1312 0079 00       		.byte	0
+ 1313 007a 00       		.byte	0
+ 1314 007b 09       		.uleb128 0x9
+ 1315 007c 05       		.uleb128 0x5
+ 1316 007d 00       		.byte	0
+ 1317 007e 03       		.uleb128 0x3
+ 1318 007f 0E       		.uleb128 0xe
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 27
+
+
+ 1319 0080 3A       		.uleb128 0x3a
+ 1320 0081 0B       		.uleb128 0xb
+ 1321 0082 3B       		.uleb128 0x3b
+ 1322 0083 0B       		.uleb128 0xb
+ 1323 0084 49       		.uleb128 0x49
+ 1324 0085 13       		.uleb128 0x13
+ 1325 0086 02       		.uleb128 0x2
+ 1326 0087 17       		.uleb128 0x17
+ 1327 0088 00       		.byte	0
+ 1328 0089 00       		.byte	0
+ 1329 008a 0A       		.uleb128 0xa
+ 1330 008b 05       		.uleb128 0x5
+ 1331 008c 00       		.byte	0
+ 1332 008d 03       		.uleb128 0x3
+ 1333 008e 08       		.uleb128 0x8
+ 1334 008f 3A       		.uleb128 0x3a
+ 1335 0090 0B       		.uleb128 0xb
+ 1336 0091 3B       		.uleb128 0x3b
+ 1337 0092 0B       		.uleb128 0xb
+ 1338 0093 49       		.uleb128 0x49
+ 1339 0094 13       		.uleb128 0x13
+ 1340 0095 02       		.uleb128 0x2
+ 1341 0096 17       		.uleb128 0x17
+ 1342 0097 00       		.byte	0
+ 1343 0098 00       		.byte	0
+ 1344 0099 0B       		.uleb128 0xb
+ 1345 009a 34       		.uleb128 0x34
+ 1346 009b 00       		.byte	0
+ 1347 009c 03       		.uleb128 0x3
+ 1348 009d 0E       		.uleb128 0xe
+ 1349 009e 3A       		.uleb128 0x3a
+ 1350 009f 0B       		.uleb128 0xb
+ 1351 00a0 3B       		.uleb128 0x3b
+ 1352 00a1 0B       		.uleb128 0xb
+ 1353 00a2 49       		.uleb128 0x49
+ 1354 00a3 13       		.uleb128 0x13
+ 1355 00a4 02       		.uleb128 0x2
+ 1356 00a5 17       		.uleb128 0x17
+ 1357 00a6 00       		.byte	0
+ 1358 00a7 00       		.byte	0
+ 1359 00a8 0C       		.uleb128 0xc
+ 1360 00a9 34       		.uleb128 0x34
+ 1361 00aa 00       		.byte	0
+ 1362 00ab 03       		.uleb128 0x3
+ 1363 00ac 08       		.uleb128 0x8
+ 1364 00ad 3A       		.uleb128 0x3a
+ 1365 00ae 0B       		.uleb128 0xb
+ 1366 00af 3B       		.uleb128 0x3b
+ 1367 00b0 0B       		.uleb128 0xb
+ 1368 00b1 49       		.uleb128 0x49
+ 1369 00b2 13       		.uleb128 0x13
+ 1370 00b3 02       		.uleb128 0x2
+ 1371 00b4 17       		.uleb128 0x17
+ 1372 00b5 00       		.byte	0
+ 1373 00b6 00       		.byte	0
+ 1374 00b7 0D       		.uleb128 0xd
+ 1375 00b8 898201   		.uleb128 0x4109
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 28
+
+
+ 1376 00bb 01       		.byte	0x1
+ 1377 00bc 11       		.uleb128 0x11
+ 1378 00bd 01       		.uleb128 0x1
+ 1379 00be 31       		.uleb128 0x31
+ 1380 00bf 13       		.uleb128 0x13
+ 1381 00c0 01       		.uleb128 0x1
+ 1382 00c1 13       		.uleb128 0x13
+ 1383 00c2 00       		.byte	0
+ 1384 00c3 00       		.byte	0
+ 1385 00c4 0E       		.uleb128 0xe
+ 1386 00c5 8A8201   		.uleb128 0x410a
+ 1387 00c8 00       		.byte	0
+ 1388 00c9 02       		.uleb128 0x2
+ 1389 00ca 18       		.uleb128 0x18
+ 1390 00cb 9142     		.uleb128 0x2111
+ 1391 00cd 18       		.uleb128 0x18
+ 1392 00ce 00       		.byte	0
+ 1393 00cf 00       		.byte	0
+ 1394 00d0 0F       		.uleb128 0xf
+ 1395 00d1 898201   		.uleb128 0x4109
+ 1396 00d4 00       		.byte	0
+ 1397 00d5 11       		.uleb128 0x11
+ 1398 00d6 01       		.uleb128 0x1
+ 1399 00d7 31       		.uleb128 0x31
+ 1400 00d8 13       		.uleb128 0x13
+ 1401 00d9 00       		.byte	0
+ 1402 00da 00       		.byte	0
+ 1403 00db 10       		.uleb128 0x10
+ 1404 00dc 0F       		.uleb128 0xf
+ 1405 00dd 00       		.byte	0
+ 1406 00de 0B       		.uleb128 0xb
+ 1407 00df 0B       		.uleb128 0xb
+ 1408 00e0 49       		.uleb128 0x49
+ 1409 00e1 13       		.uleb128 0x13
+ 1410 00e2 00       		.byte	0
+ 1411 00e3 00       		.byte	0
+ 1412 00e4 11       		.uleb128 0x11
+ 1413 00e5 2E       		.uleb128 0x2e
+ 1414 00e6 01       		.byte	0x1
+ 1415 00e7 3F       		.uleb128 0x3f
+ 1416 00e8 19       		.uleb128 0x19
+ 1417 00e9 03       		.uleb128 0x3
+ 1418 00ea 0E       		.uleb128 0xe
+ 1419 00eb 3A       		.uleb128 0x3a
+ 1420 00ec 0B       		.uleb128 0xb
+ 1421 00ed 3B       		.uleb128 0x3b
+ 1422 00ee 0B       		.uleb128 0xb
+ 1423 00ef 27       		.uleb128 0x27
+ 1424 00f0 19       		.uleb128 0x19
+ 1425 00f1 11       		.uleb128 0x11
+ 1426 00f2 01       		.uleb128 0x1
+ 1427 00f3 12       		.uleb128 0x12
+ 1428 00f4 06       		.uleb128 0x6
+ 1429 00f5 40       		.uleb128 0x40
+ 1430 00f6 18       		.uleb128 0x18
+ 1431 00f7 9742     		.uleb128 0x2117
+ 1432 00f9 19       		.uleb128 0x19
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 29
+
+
+ 1433 00fa 01       		.uleb128 0x1
+ 1434 00fb 13       		.uleb128 0x13
+ 1435 00fc 00       		.byte	0
+ 1436 00fd 00       		.byte	0
+ 1437 00fe 12       		.uleb128 0x12
+ 1438 00ff 34       		.uleb128 0x34
+ 1439 0100 00       		.byte	0
+ 1440 0101 03       		.uleb128 0x3
+ 1441 0102 0E       		.uleb128 0xe
+ 1442 0103 3A       		.uleb128 0x3a
+ 1443 0104 0B       		.uleb128 0xb
+ 1444 0105 3B       		.uleb128 0x3b
+ 1445 0106 0B       		.uleb128 0xb
+ 1446 0107 49       		.uleb128 0x49
+ 1447 0108 13       		.uleb128 0x13
+ 1448 0109 02       		.uleb128 0x2
+ 1449 010a 18       		.uleb128 0x18
+ 1450 010b 00       		.byte	0
+ 1451 010c 00       		.byte	0
+ 1452 010d 13       		.uleb128 0x13
+ 1453 010e 898201   		.uleb128 0x4109
+ 1454 0111 01       		.byte	0x1
+ 1455 0112 11       		.uleb128 0x11
+ 1456 0113 01       		.uleb128 0x1
+ 1457 0114 31       		.uleb128 0x31
+ 1458 0115 13       		.uleb128 0x13
+ 1459 0116 00       		.byte	0
+ 1460 0117 00       		.byte	0
+ 1461 0118 14       		.uleb128 0x14
+ 1462 0119 01       		.uleb128 0x1
+ 1463 011a 01       		.byte	0x1
+ 1464 011b 49       		.uleb128 0x49
+ 1465 011c 13       		.uleb128 0x13
+ 1466 011d 01       		.uleb128 0x1
+ 1467 011e 13       		.uleb128 0x13
+ 1468 011f 00       		.byte	0
+ 1469 0120 00       		.byte	0
+ 1470 0121 15       		.uleb128 0x15
+ 1471 0122 21       		.uleb128 0x21
+ 1472 0123 00       		.byte	0
+ 1473 0124 49       		.uleb128 0x49
+ 1474 0125 13       		.uleb128 0x13
+ 1475 0126 2F       		.uleb128 0x2f
+ 1476 0127 0B       		.uleb128 0xb
+ 1477 0128 00       		.byte	0
+ 1478 0129 00       		.byte	0
+ 1479 012a 16       		.uleb128 0x16
+ 1480 012b 2E       		.uleb128 0x2e
+ 1481 012c 01       		.byte	0x1
+ 1482 012d 3F       		.uleb128 0x3f
+ 1483 012e 19       		.uleb128 0x19
+ 1484 012f 03       		.uleb128 0x3
+ 1485 0130 0E       		.uleb128 0xe
+ 1486 0131 3A       		.uleb128 0x3a
+ 1487 0132 0B       		.uleb128 0xb
+ 1488 0133 3B       		.uleb128 0x3b
+ 1489 0134 0B       		.uleb128 0xb
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 30
+
+
+ 1490 0135 27       		.uleb128 0x27
+ 1491 0136 19       		.uleb128 0x19
+ 1492 0137 11       		.uleb128 0x11
+ 1493 0138 01       		.uleb128 0x1
+ 1494 0139 12       		.uleb128 0x12
+ 1495 013a 06       		.uleb128 0x6
+ 1496 013b 40       		.uleb128 0x40
+ 1497 013c 18       		.uleb128 0x18
+ 1498 013d 9642     		.uleb128 0x2116
+ 1499 013f 19       		.uleb128 0x19
+ 1500 0140 01       		.uleb128 0x1
+ 1501 0141 13       		.uleb128 0x13
+ 1502 0142 00       		.byte	0
+ 1503 0143 00       		.byte	0
+ 1504 0144 17       		.uleb128 0x17
+ 1505 0145 34       		.uleb128 0x34
+ 1506 0146 00       		.byte	0
+ 1507 0147 03       		.uleb128 0x3
+ 1508 0148 0E       		.uleb128 0xe
+ 1509 0149 3A       		.uleb128 0x3a
+ 1510 014a 0B       		.uleb128 0xb
+ 1511 014b 3B       		.uleb128 0x3b
+ 1512 014c 05       		.uleb128 0x5
+ 1513 014d 49       		.uleb128 0x49
+ 1514 014e 13       		.uleb128 0x13
+ 1515 014f 3F       		.uleb128 0x3f
+ 1516 0150 19       		.uleb128 0x19
+ 1517 0151 3C       		.uleb128 0x3c
+ 1518 0152 19       		.uleb128 0x19
+ 1519 0153 00       		.byte	0
+ 1520 0154 00       		.byte	0
+ 1521 0155 18       		.uleb128 0x18
+ 1522 0156 35       		.uleb128 0x35
+ 1523 0157 00       		.byte	0
+ 1524 0158 49       		.uleb128 0x49
+ 1525 0159 13       		.uleb128 0x13
+ 1526 015a 00       		.byte	0
+ 1527 015b 00       		.byte	0
+ 1528 015c 19       		.uleb128 0x19
+ 1529 015d 2E       		.uleb128 0x2e
+ 1530 015e 00       		.byte	0
+ 1531 015f 3F       		.uleb128 0x3f
+ 1532 0160 19       		.uleb128 0x19
+ 1533 0161 3C       		.uleb128 0x3c
+ 1534 0162 19       		.uleb128 0x19
+ 1535 0163 6E       		.uleb128 0x6e
+ 1536 0164 0E       		.uleb128 0xe
+ 1537 0165 03       		.uleb128 0x3
+ 1538 0166 0E       		.uleb128 0xe
+ 1539 0167 3A       		.uleb128 0x3a
+ 1540 0168 0B       		.uleb128 0xb
+ 1541 0169 3B       		.uleb128 0x3b
+ 1542 016a 0B       		.uleb128 0xb
+ 1543 016b 00       		.byte	0
+ 1544 016c 00       		.byte	0
+ 1545 016d 00       		.byte	0
+ 1546              		.section	.debug_loc,"",%progbits
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 31
+
+
+ 1547              	.Ldebug_loc0:
+ 1548              	.LLST0:
+ 1549 0000 00000000 		.4byte	.LVL0
+ 1550 0004 0D000000 		.4byte	.LVL3-1
+ 1551 0008 0100     		.2byte	0x1
+ 1552 000a 50       		.byte	0x50
+ 1553 000b 0D000000 		.4byte	.LVL3-1
+ 1554 000f 30000000 		.4byte	.LFE64
+ 1555 0013 0400     		.2byte	0x4
+ 1556 0015 F3       		.byte	0xf3
+ 1557 0016 01       		.uleb128 0x1
+ 1558 0017 50       		.byte	0x50
+ 1559 0018 9F       		.byte	0x9f
+ 1560 0019 00000000 		.4byte	0
+ 1561 001d 00000000 		.4byte	0
+ 1562              	.LLST1:
+ 1563 0021 00000000 		.4byte	.LVL0
+ 1564 0025 0A000000 		.4byte	.LVL2
+ 1565 0029 0100     		.2byte	0x1
+ 1566 002b 51       		.byte	0x51
+ 1567 002c 0A000000 		.4byte	.LVL2
+ 1568 0030 30000000 		.4byte	.LFE64
+ 1569 0034 0400     		.2byte	0x4
+ 1570 0036 F3       		.byte	0xf3
+ 1571 0037 01       		.uleb128 0x1
+ 1572 0038 51       		.byte	0x51
+ 1573 0039 9F       		.byte	0x9f
+ 1574 003a 00000000 		.4byte	0
+ 1575 003e 00000000 		.4byte	0
+ 1576              	.LLST2:
+ 1577 0042 00000000 		.4byte	.LVL0
+ 1578 0046 0D000000 		.4byte	.LVL3-1
+ 1579 004a 0100     		.2byte	0x1
+ 1580 004c 52       		.byte	0x52
+ 1581 004d 0D000000 		.4byte	.LVL3-1
+ 1582 0051 1C000000 		.4byte	.LVL6
+ 1583 0055 0100     		.2byte	0x1
+ 1584 0057 55       		.byte	0x55
+ 1585 0058 1C000000 		.4byte	.LVL6
+ 1586 005c 24000000 		.4byte	.LVL9
+ 1587 0060 0300     		.2byte	0x3
+ 1588 0062 75       		.byte	0x75
+ 1589 0063 7F       		.sleb128 -1
+ 1590 0064 9F       		.byte	0x9f
+ 1591 0065 24000000 		.4byte	.LVL9
+ 1592 0069 30000000 		.4byte	.LFE64
+ 1593 006d 0100     		.2byte	0x1
+ 1594 006f 55       		.byte	0x55
+ 1595 0070 00000000 		.4byte	0
+ 1596 0074 00000000 		.4byte	0
+ 1597              	.LLST3:
+ 1598 0078 00000000 		.4byte	.LVL0
+ 1599 007c 0D000000 		.4byte	.LVL3-1
+ 1600 0080 0100     		.2byte	0x1
+ 1601 0082 53       		.byte	0x53
+ 1602 0083 0D000000 		.4byte	.LVL3-1
+ 1603 0087 30000000 		.4byte	.LFE64
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 32
+
+
+ 1604 008b 0400     		.2byte	0x4
+ 1605 008d F3       		.byte	0xf3
+ 1606 008e 01       		.uleb128 0x1
+ 1607 008f 53       		.byte	0x53
+ 1608 0090 9F       		.byte	0x9f
+ 1609 0091 00000000 		.4byte	0
+ 1610 0095 00000000 		.4byte	0
+ 1611              	.LLST4:
+ 1612 0099 08000000 		.4byte	.LVL1
+ 1613 009d 0E000000 		.4byte	.LVL3
+ 1614 00a1 0200     		.2byte	0x2
+ 1615 00a3 30       		.byte	0x30
+ 1616 00a4 9F       		.byte	0x9f
+ 1617 00a5 2C000000 		.4byte	.LVL10
+ 1618 00a9 30000000 		.4byte	.LFE64
+ 1619 00ad 0100     		.2byte	0x1
+ 1620 00af 50       		.byte	0x50
+ 1621 00b0 00000000 		.4byte	0
+ 1622 00b4 00000000 		.4byte	0
+ 1623              	.LLST5:
+ 1624 00b8 08000000 		.4byte	.LVL1
+ 1625 00bc 18000000 		.4byte	.LVL5
+ 1626 00c0 0200     		.2byte	0x2
+ 1627 00c2 30       		.byte	0x30
+ 1628 00c3 9F       		.byte	0x9f
+ 1629 00c4 18000000 		.4byte	.LVL5
+ 1630 00c8 22000000 		.4byte	.LVL8
+ 1631 00cc 0100     		.2byte	0x1
+ 1632 00ce 54       		.byte	0x54
+ 1633 00cf 24000000 		.4byte	.LVL9
+ 1634 00d3 30000000 		.4byte	.LFE64
+ 1635 00d7 0100     		.2byte	0x1
+ 1636 00d9 54       		.byte	0x54
+ 1637 00da 00000000 		.4byte	0
+ 1638 00de 00000000 		.4byte	0
+ 1639              	.LLST6:
+ 1640 00e2 00000000 		.4byte	.LVL11
+ 1641 00e6 0F000000 		.4byte	.LVL14-1
+ 1642 00ea 0100     		.2byte	0x1
+ 1643 00ec 50       		.byte	0x50
+ 1644 00ed 0F000000 		.4byte	.LVL14-1
+ 1645 00f1 44000000 		.4byte	.LFE63
+ 1646 00f5 0400     		.2byte	0x4
+ 1647 00f7 F3       		.byte	0xf3
+ 1648 00f8 01       		.uleb128 0x1
+ 1649 00f9 50       		.byte	0x50
+ 1650 00fa 9F       		.byte	0x9f
+ 1651 00fb 00000000 		.4byte	0
+ 1652 00ff 00000000 		.4byte	0
+ 1653              	.LLST7:
+ 1654 0103 00000000 		.4byte	.LVL11
+ 1655 0107 0C000000 		.4byte	.LVL13
+ 1656 010b 0100     		.2byte	0x1
+ 1657 010d 51       		.byte	0x51
+ 1658 010e 0C000000 		.4byte	.LVL13
+ 1659 0112 44000000 		.4byte	.LFE63
+ 1660 0116 0400     		.2byte	0x4
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 33
+
+
+ 1661 0118 F3       		.byte	0xf3
+ 1662 0119 01       		.uleb128 0x1
+ 1663 011a 51       		.byte	0x51
+ 1664 011b 9F       		.byte	0x9f
+ 1665 011c 00000000 		.4byte	0
+ 1666 0120 00000000 		.4byte	0
+ 1667              	.LLST8:
+ 1668 0124 00000000 		.4byte	.LVL11
+ 1669 0128 0F000000 		.4byte	.LVL14-1
+ 1670 012c 0100     		.2byte	0x1
+ 1671 012e 52       		.byte	0x52
+ 1672 012f 0F000000 		.4byte	.LVL14-1
+ 1673 0133 44000000 		.4byte	.LFE63
+ 1674 0137 0100     		.2byte	0x1
+ 1675 0139 55       		.byte	0x55
+ 1676 013a 00000000 		.4byte	0
+ 1677 013e 00000000 		.4byte	0
+ 1678              	.LLST9:
+ 1679 0142 00000000 		.4byte	.LVL11
+ 1680 0146 0F000000 		.4byte	.LVL14-1
+ 1681 014a 0100     		.2byte	0x1
+ 1682 014c 53       		.byte	0x53
+ 1683 014d 0F000000 		.4byte	.LVL14-1
+ 1684 0151 44000000 		.4byte	.LFE63
+ 1685 0155 0400     		.2byte	0x4
+ 1686 0157 F3       		.byte	0xf3
+ 1687 0158 01       		.uleb128 0x1
+ 1688 0159 53       		.byte	0x53
+ 1689 015a 9F       		.byte	0x9f
+ 1690 015b 00000000 		.4byte	0
+ 1691 015f 00000000 		.4byte	0
+ 1692              	.LLST10:
+ 1693 0163 0A000000 		.4byte	.LVL12
+ 1694 0167 10000000 		.4byte	.LVL14
+ 1695 016b 0200     		.2byte	0x2
+ 1696 016d 30       		.byte	0x30
+ 1697 016e 9F       		.byte	0x9f
+ 1698 016f 40000000 		.4byte	.LVL22
+ 1699 0173 44000000 		.4byte	.LFE63
+ 1700 0177 0100     		.2byte	0x1
+ 1701 0179 50       		.byte	0x50
+ 1702 017a 00000000 		.4byte	0
+ 1703 017e 00000000 		.4byte	0
+ 1704              	.LLST11:
+ 1705 0182 0A000000 		.4byte	.LVL12
+ 1706 0186 22000000 		.4byte	.LVL17
+ 1707 018a 0200     		.2byte	0x2
+ 1708 018c 30       		.byte	0x30
+ 1709 018d 9F       		.byte	0x9f
+ 1710 018e 22000000 		.4byte	.LVL17
+ 1711 0192 2C000000 		.4byte	.LVL19
+ 1712 0196 0100     		.2byte	0x1
+ 1713 0198 54       		.byte	0x54
+ 1714 0199 2E000000 		.4byte	.LVL20
+ 1715 019d 44000000 		.4byte	.LFE63
+ 1716 01a1 0100     		.2byte	0x1
+ 1717 01a3 54       		.byte	0x54
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 34
+
+
+ 1718 01a4 00000000 		.4byte	0
+ 1719 01a8 00000000 		.4byte	0
+ 1720              	.LLST12:
+ 1721 01ac 00000000 		.4byte	.LVL23
+ 1722 01b0 18000000 		.4byte	.LVL24
+ 1723 01b4 0100     		.2byte	0x1
+ 1724 01b6 50       		.byte	0x50
+ 1725 01b7 18000000 		.4byte	.LVL24
+ 1726 01bb 34000000 		.4byte	.LFE65
+ 1727 01bf 0100     		.2byte	0x1
+ 1728 01c1 55       		.byte	0x55
+ 1729 01c2 00000000 		.4byte	0
+ 1730 01c6 00000000 		.4byte	0
+ 1731              	.LLST13:
+ 1732 01ca 00000000 		.4byte	.LVL27
+ 1733 01ce 1A000000 		.4byte	.LVL29
+ 1734 01d2 0100     		.2byte	0x1
+ 1735 01d4 50       		.byte	0x50
+ 1736 01d5 1A000000 		.4byte	.LVL29
+ 1737 01d9 36000000 		.4byte	.LFE66
+ 1738 01dd 0100     		.2byte	0x1
+ 1739 01df 55       		.byte	0x55
+ 1740 01e0 00000000 		.4byte	0
+ 1741 01e4 00000000 		.4byte	0
+ 1742              	.LLST14:
+ 1743 01e8 00000000 		.4byte	.LVL27
+ 1744 01ec 08000000 		.4byte	.LVL28
+ 1745 01f0 0100     		.2byte	0x1
+ 1746 01f2 51       		.byte	0x51
+ 1747 01f3 08000000 		.4byte	.LVL28
+ 1748 01f7 36000000 		.4byte	.LFE66
+ 1749 01fb 0400     		.2byte	0x4
+ 1750 01fd F3       		.byte	0xf3
+ 1751 01fe 01       		.uleb128 0x1
+ 1752 01ff 51       		.byte	0x51
+ 1753 0200 9F       		.byte	0x9f
+ 1754 0201 00000000 		.4byte	0
+ 1755 0205 00000000 		.4byte	0
+ 1756              	.LLST15:
+ 1757 0209 00000000 		.4byte	.LVL32
+ 1758 020d 0E000000 		.4byte	.LVL33
+ 1759 0211 0100     		.2byte	0x1
+ 1760 0213 50       		.byte	0x50
+ 1761 0214 0E000000 		.4byte	.LVL33
+ 1762 0218 C6000000 		.4byte	.LVL39
+ 1763 021c 0100     		.2byte	0x1
+ 1764 021e 54       		.byte	0x54
+ 1765 021f C6000000 		.4byte	.LVL39
+ 1766 0223 D4000000 		.4byte	.LFE67
+ 1767 0227 0400     		.2byte	0x4
+ 1768 0229 F3       		.byte	0xf3
+ 1769 022a 01       		.uleb128 0x1
+ 1770 022b 50       		.byte	0x50
+ 1771 022c 9F       		.byte	0x9f
+ 1772 022d 00000000 		.4byte	0
+ 1773 0231 00000000 		.4byte	0
+ 1774              		.section	.debug_aranges,"",%progbits
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 35
+
+
+ 1775 0000 3C000000 		.4byte	0x3c
+ 1776 0004 0200     		.2byte	0x2
+ 1777 0006 00000000 		.4byte	.Ldebug_info0
+ 1778 000a 04       		.byte	0x4
+ 1779 000b 00       		.byte	0
+ 1780 000c 0000     		.2byte	0
+ 1781 000e 0000     		.2byte	0
+ 1782 0010 00000000 		.4byte	.LFB64
+ 1783 0014 30000000 		.4byte	.LFE64-.LFB64
+ 1784 0018 00000000 		.4byte	.LFB63
+ 1785 001c 44000000 		.4byte	.LFE63-.LFB63
+ 1786 0020 00000000 		.4byte	.LFB65
+ 1787 0024 34000000 		.4byte	.LFE65-.LFB65
+ 1788 0028 00000000 		.4byte	.LFB66
+ 1789 002c 36000000 		.4byte	.LFE66-.LFB66
+ 1790 0030 00000000 		.4byte	.LFB67
+ 1791 0034 D4000000 		.4byte	.LFE67-.LFB67
+ 1792 0038 00000000 		.4byte	0
+ 1793 003c 00000000 		.4byte	0
+ 1794              		.section	.debug_ranges,"",%progbits
+ 1795              	.Ldebug_ranges0:
+ 1796 0000 00000000 		.4byte	.LFB64
+ 1797 0004 30000000 		.4byte	.LFE64
+ 1798 0008 00000000 		.4byte	.LFB63
+ 1799 000c 44000000 		.4byte	.LFE63
+ 1800 0010 00000000 		.4byte	.LFB65
+ 1801 0014 34000000 		.4byte	.LFE65
+ 1802 0018 00000000 		.4byte	.LFB66
+ 1803 001c 36000000 		.4byte	.LFE66
+ 1804 0020 00000000 		.4byte	.LFB67
+ 1805 0024 D4000000 		.4byte	.LFE67
+ 1806 0028 00000000 		.4byte	0
+ 1807 002c 00000000 		.4byte	0
+ 1808              		.section	.debug_line,"",%progbits
+ 1809              	.Ldebug_line0:
+ 1810 0000 EE010000 		.section	.debug_str,"MS",%progbits,1
+ 1810      02005801 
+ 1810      00000201 
+ 1810      FB0E0D00 
+ 1810      01010101 
+ 1811              	.LASF40:
+ 1812 0000 57484F5F 		.ascii	"WHO_AM_I\000"
+ 1812      414D5F49 
+ 1812      00
+ 1813              	.LASF67:
+ 1814 0009 4932435F 		.ascii	"I2C_MasterSendRestart\000"
+ 1814      4D617374 
+ 1814      65725365 
+ 1814      6E645265 
+ 1814      73746172 
+ 1815              	.LASF4:
+ 1816 001f 5F5F696E 		.ascii	"__int16_t\000"
+ 1816      7431365F 
+ 1816      7400
+ 1817              	.LASF52:
+ 1818 0029 6465765F 		.ascii	"dev_id\000"
+ 1818      696400
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 36
+
+
+ 1819              	.LASF14:
+ 1820 0030 696E7438 		.ascii	"int8_t\000"
+ 1820      5F7400
+ 1821              	.LASF59:
+ 1822 0037 4D505536 		.ascii	"MPU6050_Start\000"
+ 1822      3035305F 
+ 1822      53746172 
+ 1822      7400
+ 1823              	.LASF5:
+ 1824 0045 73686F72 		.ascii	"short int\000"
+ 1824      7420696E 
+ 1824      7400
+ 1825              	.LASF34:
+ 1826 004f 4759524F 		.ascii	"GYRO_YOUT_H\000"
+ 1826      5F594F55 
+ 1826      545F4800 
+ 1827              	.LASF23:
+ 1828 005b 73697A65 		.ascii	"sizetype\000"
+ 1828      74797065 
+ 1828      00
+ 1829              	.LASF35:
+ 1830 0064 4759524F 		.ascii	"GYRO_YOUT_L\000"
+ 1830      5F594F55 
+ 1830      545F4C00 
+ 1831              	.LASF28:
+ 1832 0070 41434345 		.ascii	"ACCEL_ZOUT_H\000"
+ 1832      4C5F5A4F 
+ 1832      55545F48 
+ 1832      00
+ 1833              	.LASF6:
+ 1834 007d 5F5F7569 		.ascii	"__uint16_t\000"
+ 1834      6E743136 
+ 1834      5F7400
+ 1835              	.LASF29:
+ 1836 0088 41434345 		.ascii	"ACCEL_ZOUT_L\000"
+ 1836      4C5F5A4F 
+ 1836      55545F4C 
+ 1836      00
+ 1837              	.LASF62:
+ 1838 0095 4D505536 		.ascii	"MPU6050_REGISTROS\000"
+ 1838      3035305F 
+ 1838      52454749 
+ 1838      5354524F 
+ 1838      5300
+ 1839              	.LASF46:
+ 1840 00a7 4759524F 		.ascii	"GYRO_XOUT\000"
+ 1840      5F584F55 
+ 1840      5400
+ 1841              	.LASF44:
+ 1842 00b1 41434345 		.ascii	"ACCEL_ZOUT\000"
+ 1842      4C5F5A4F 
+ 1842      555400
+ 1843              	.LASF32:
+ 1844 00bc 4759524F 		.ascii	"GYRO_XOUT_H\000"
+ 1844      5F584F55 
+ 1844      545F4800 
+ 1845              	.LASF38:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 37
+
+
+ 1846 00c8 41434345 		.ascii	"ACCEL_CONFIG\000"
+ 1846      4C5F434F 
+ 1846      4E464947 
+ 1846      00
+ 1847              	.LASF63:
+ 1848 00d5 73656E73 		.ascii	"sensor\000"
+ 1848      6F7200
+ 1849              	.LASF33:
+ 1850 00dc 4759524F 		.ascii	"GYRO_XOUT_L\000"
+ 1850      5F584F55 
+ 1850      545F4C00 
+ 1851              	.LASF19:
+ 1852 00e8 666C6F61 		.ascii	"float\000"
+ 1852      7400
+ 1853              	.LASF11:
+ 1854 00ee 6C6F6E67 		.ascii	"long long int\000"
+ 1854      206C6F6E 
+ 1854      6720696E 
+ 1854      7400
+ 1855              	.LASF9:
+ 1856 00fc 6C6F6E67 		.ascii	"long int\000"
+ 1856      20696E74 
+ 1856      00
+ 1857              	.LASF1:
+ 1858 0105 5F5F7569 		.ascii	"__uint8_t\000"
+ 1858      6E74385F 
+ 1858      7400
+ 1859              	.LASF65:
+ 1860 010f 4932435F 		.ascii	"I2C_MasterWriteByte\000"
+ 1860      4D617374 
+ 1860      65725772 
+ 1860      69746542 
+ 1860      79746500 
+ 1861              	.LASF15:
+ 1862 0123 75696E74 		.ascii	"uint8_t\000"
+ 1862      385F7400 
+ 1863              	.LASF47:
+ 1864 012b 4759524F 		.ascii	"GYRO_YOUT\000"
+ 1864      5F594F55 
+ 1864      5400
+ 1865              	.LASF43:
+ 1866 0135 41434345 		.ascii	"ACCEL_YOUT\000"
+ 1866      4C5F594F 
+ 1866      555400
+ 1867              	.LASF53:
+ 1868 0140 7265675F 		.ascii	"reg_addr\000"
+ 1868      61646472 
+ 1868      00
+ 1869              	.LASF3:
+ 1870 0149 756E7369 		.ascii	"unsigned char\000"
+ 1870      676E6564 
+ 1870      20636861 
+ 1870      7200
+ 1871              	.LASF45:
+ 1872 0157 54454D50 		.ascii	"TEMP_OUT\000"
+ 1872      5F4F5554 
+ 1872      00
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 38
+
+
+ 1873              	.LASF68:
+ 1874 0160 4932435F 		.ascii	"I2C_MasterReadByte\000"
+ 1874      4D617374 
+ 1874      65725265 
+ 1874      61644279 
+ 1874      746500
+ 1875              	.LASF2:
+ 1876 0173 7369676E 		.ascii	"signed char\000"
+ 1876      65642063 
+ 1876      68617200 
+ 1877              	.LASF12:
+ 1878 017f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1878      206C6F6E 
+ 1878      6720756E 
+ 1878      7369676E 
+ 1878      65642069 
+ 1879              	.LASF13:
+ 1880 0196 756E7369 		.ascii	"unsigned int\000"
+ 1880      676E6564 
+ 1880      20696E74 
+ 1880      00
+ 1881              	.LASF17:
+ 1882 01a3 75696E74 		.ascii	"uint16_t\000"
+ 1882      31365F74 
+ 1882      00
+ 1883              	.LASF64:
+ 1884 01ac 4932435F 		.ascii	"I2C_MasterSendStart\000"
+ 1884      4D617374 
+ 1884      65725365 
+ 1884      6E645374 
+ 1884      61727400 
+ 1885              	.LASF7:
+ 1886 01c0 73686F72 		.ascii	"short unsigned int\000"
+ 1886      7420756E 
+ 1886      7369676E 
+ 1886      65642069 
+ 1886      6E7400
+ 1887              	.LASF0:
+ 1888 01d3 5F5F696E 		.ascii	"__int8_t\000"
+ 1888      74385F74 
+ 1888      00
+ 1889              	.LASF69:
+ 1890 01dc 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1890      43313120 
+ 1890      352E342E 
+ 1890      31203230 
+ 1890      31363036 
+ 1891 020f 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1891      20726576 
+ 1891      6973696F 
+ 1891      6E203233 
+ 1891      37373135 
+ 1892 0242 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1892      66756E63 
+ 1892      74696F6E 
+ 1892      2D736563 
+ 1892      74696F6E 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 39
+
+
+ 1893              	.LASF21:
+ 1894 026a 63686172 		.ascii	"char\000"
+ 1894      00
+ 1895              	.LASF61:
+ 1896 026f 4146535F 		.ascii	"AFS_SEL\000"
+ 1896      53454C00 
+ 1897              	.LASF24:
+ 1898 0277 41434345 		.ascii	"ACCEL_XOUT_H\000"
+ 1898      4C5F584F 
+ 1898      55545F48 
+ 1898      00
+ 1899              	.LASF18:
+ 1900 0284 696E7433 		.ascii	"int32_t\000"
+ 1900      325F7400 
+ 1901              	.LASF25:
+ 1902 028c 41434345 		.ascii	"ACCEL_XOUT_L\000"
+ 1902      4C5F584F 
+ 1902      55545F4C 
+ 1902      00
+ 1903              	.LASF16:
+ 1904 0299 696E7431 		.ascii	"int16_t\000"
+ 1904      365F7400 
+ 1905              	.LASF22:
+ 1906 02a1 6C6F6E67 		.ascii	"long double\000"
+ 1906      20646F75 
+ 1906      626C6500 
+ 1907              	.LASF42:
+ 1908 02ad 41434345 		.ascii	"ACCEL_XOUT\000"
+ 1908      4C5F584F 
+ 1908      555400
+ 1909              	.LASF55:
+ 1910 02b8 72736C74 		.ascii	"rslt\000"
+ 1910      00
+ 1911              	.LASF58:
+ 1912 02bd 64617461 		.ascii	"data\000"
+ 1912      00
+ 1913              	.LASF36:
+ 1914 02c2 4759524F 		.ascii	"GYRO_ZOUT_H\000"
+ 1914      5F5A4F55 
+ 1914      545F4800 
+ 1915              	.LASF57:
+ 1916 02ce 75736572 		.ascii	"user_i2c_read\000"
+ 1916      5F693263 
+ 1916      5F726561 
+ 1916      6400
+ 1917              	.LASF48:
+ 1918 02dc 4759524F 		.ascii	"GYRO_ZOUT\000"
+ 1918      5F5A4F55 
+ 1918      5400
+ 1919              	.LASF37:
+ 1920 02e6 4759524F 		.ascii	"GYRO_ZOUT_L\000"
+ 1920      5F5A4F55 
+ 1920      545F4C00 
+ 1921              	.LASF71:
+ 1922 02f2 433A5C55 		.ascii	"C:\\Users\\adria\\OneDrive\\Documents\\PSoC Creator"
+ 1922      73657273 
+ 1922      5C616472 
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 40
+
+
+ 1922      69615C4F 
+ 1922      6E654472 
+ 1923 0320 5C46494E 		.ascii	"\\FINAL_vilchis\\MPU6050.cydsn\000"
+ 1923      414C5F76 
+ 1923      696C6368 
+ 1923      69735C4D 
+ 1923      50553630 
+ 1924              	.LASF26:
+ 1925 033d 41434345 		.ascii	"ACCEL_YOUT_H\000"
+ 1925      4C5F594F 
+ 1925      55545F48 
+ 1925      00
+ 1926              	.LASF60:
+ 1927 034a 4D505536 		.ascii	"MPU6050_CONFIG_ACCEL\000"
+ 1927      3035305F 
+ 1927      434F4E46 
+ 1927      49475F41 
+ 1927      4343454C 
+ 1928              	.LASF10:
+ 1929 035f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1929      20756E73 
+ 1929      69676E65 
+ 1929      6420696E 
+ 1929      7400
+ 1930              	.LASF20:
+ 1931 0371 646F7562 		.ascii	"double\000"
+ 1931      6C6500
+ 1932              	.LASF27:
+ 1933 0378 41434345 		.ascii	"ACCEL_YOUT_L\000"
+ 1933      4C5F594F 
+ 1933      55545F4C 
+ 1933      00
+ 1934              	.LASF49:
+ 1935 0385 4D505536 		.ascii	"MPU6050_DATA\000"
+ 1935      3035305F 
+ 1935      44415441 
+ 1935      00
+ 1936              	.LASF54:
+ 1937 0392 7265675F 		.ascii	"reg_data\000"
+ 1937      64617461 
+ 1937      00
+ 1938              	.LASF70:
+ 1939 039b 4D505536 		.ascii	"MPU6050.c\000"
+ 1939      3035302E 
+ 1939      6300
+ 1940              	.LASF8:
+ 1941 03a5 5F5F696E 		.ascii	"__int32_t\000"
+ 1941      7433325F 
+ 1941      7400
+ 1942              	.LASF30:
+ 1943 03af 54454D50 		.ascii	"TEMP_OUT_H\000"
+ 1943      5F4F5554 
+ 1943      5F4800
+ 1944              	.LASF72:
+ 1945 03ba 4D505536 		.ascii	"MPU6050\000"
+ 1945      30353000 
+ 1946              	.LASF56:
+ARM GAS  C:\Users\adria\AppData\Local\Temp\ccDQVTLO.s 			page 41
+
+
+ 1947 03c2 75736572 		.ascii	"user_i2c_write\000"
+ 1947      5F693263 
+ 1947      5F777269 
+ 1947      746500
+ 1948              	.LASF31:
+ 1949 03d1 54454D50 		.ascii	"TEMP_OUT_L\000"
+ 1949      5F4F5554 
+ 1949      5F4C00
+ 1950              	.LASF50:
+ 1951 03dc 72656769 		.ascii	"registros\000"
+ 1951      7374726F 
+ 1951      7300
+ 1952              	.LASF39:
+ 1953 03e6 5057525F 		.ascii	"PWR_MGMT_1\000"
+ 1953      4D474D54 
+ 1953      5F3100
+ 1954              	.LASF73:
+ 1955 03f1 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1955      52784275 
+ 1955      66666572 
+ 1955      00
+ 1956              	.LASF51:
+ 1957 03fe 44415441 		.ascii	"DATA_SENSADO\000"
+ 1957      5F53454E 
+ 1957      5341444F 
+ 1957      00
+ 1958              	.LASF41:
+ 1959 040b 4D505536 		.ascii	"MPU6050_registros\000"
+ 1959      3035305F 
+ 1959      72656769 
+ 1959      7374726F 
+ 1959      7300
+ 1960              	.LASF66:
+ 1961 041d 4932435F 		.ascii	"I2C_MasterSendStop\000"
+ 1961      4D617374 
+ 1961      65725365 
+ 1961      6E645374 
+ 1961      6F7000
+ 1962              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

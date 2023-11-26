@@ -5,7 +5,7 @@
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
 #include "AS5048B.h"
 
-uint8_t address = 0x41; //Direccion I2C del sensor
+uint8_t address = 0x40; //Direccion I2C del sensor
 uint8_t result = 0;
 
 int main(void)

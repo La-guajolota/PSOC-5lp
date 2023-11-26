@@ -10,7 +10,7 @@
 #include "project.h"
 
 //Direcciones de registros por macros
-#define Address_FISICO 0x41 //Direccion de I2C del periferico
+#define Address_FISICO 0x40 //Direccion de I2C del periferico
 
 #define Pro_control 0x03
 #define Address 0x15
