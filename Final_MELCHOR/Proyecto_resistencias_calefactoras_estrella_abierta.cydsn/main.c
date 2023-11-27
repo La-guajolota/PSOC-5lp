@@ -6,6 +6,7 @@
 #include "..\..\PROYECTO_IOT\MAX6675.cydsn\MAX6675_.h"
 #include "..\..\FINAL_vilchis\PID_anticolision.cydsn\PID.h"
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
+#include "..\..\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 
 //Subrutina de la interrupcion para sampling
 uint8_t sens_flag = ~BIT0;
@@ -76,6 +77,8 @@ int main(void)
     UART_ClearRxBuffer();
     UART_ClearTxBuffer();
     SPIM_Start();//Comunicacion con el sensor
+    LCD_Start();//Pantalla lcd
+    LCD_ClearDisplay();    
     
     /*
         Interrupcciones
@@ -119,7 +122,7 @@ int main(void)
     pid_instancia_variables.limMax = 180;
     
     pid_instancia_variables.limMinInt = 0;//Limites del integrador WIND-UP/
-    pid_instancia_variables.limMaxInt = 190;
+    pid_instancia_variables.limMaxInt = 150;
     
     pid_instancia_variables.T = 1;//Periodo de muestreo en segundos
      
@@ -157,6 +160,11 @@ int main(void)
             //Filtro
             agregarValor(&FILTRO,thermocupla.data.temperatura>>7);
             temperatura = (float)obtenerPromedioMovil(&FILTRO); // SEÑAL FILTRADA
+            
+            //Mostramos en lcd
+            LCD_Position(1,0);
+            LCD_PrintNumber(temperatura);
+            LCD_PrintString(" degC      ");
             
             //Para labwiev
             sprintf(buffer_Tx,"S%ds",(int)temperatura);
@@ -203,6 +211,13 @@ int main(void)
                 for(int i=0;i<16;i++){//limpiamos buffer
                     buffer_Rx[i] = 0;
                 }
+                
+                //Mostramos en lcd
+                LCD_Position(0,0);
+                LCD_PrintString("SP: ");
+                LCD_PrintNumber(setpoint);
+                LCD_PrintString(" degC  ");
+                
                 
             }
             

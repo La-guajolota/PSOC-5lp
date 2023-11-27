@@ -8,31 +8,51 @@ uint8_t flag = 0;
 CY_ISR(actualizar){
     actualizar_ClearPending();
     
-    Timer_WritePeriod(map(angulo,0,180,2,255));
+     Timer_0_WritePeriod(map(angulo,0,180,2,255));
+     Timer_1_WritePeriod(map(angulo,0,180,2,255));
 }
 
-CY_ISR(DIS){
-    DIS_ClearPending();
+/*
+    Rutinas de disparo para control por fase
+*/
+uint8_t Disparadores_reg = 0;
+CY_ISR(DIS_0){
+    DIS_0_ClearPending();
     
-    DISPARADORES_Write(BIT0);
+    Disparadores_reg = DISPARADORES_Read();//Leemos estadoa ctual de los disparos
+    
+    DISPARADORES_Write(Disparadores_reg | BIT0);
     CyDelayUs(10);
-    DISPARADORES_Write(~BIT0);
+    DISPARADORES_Write(Disparadores_reg & (~BIT0));
     
 }
 
+CY_ISR(DIS_1){
+    DIS_1_ClearPending();
+    
+    Disparadores_reg = DISPARADORES_Read();//Leemos estadoa ctual de los disparos
+    
+    DISPARADORES_Write(Disparadores_reg | BIT1);
+    CyDelayUs(10);
+    DISPARADORES_Write(Disparadores_reg & (~BIT1));
+    
+}
 int main(void)
 {
     CyGlobalIntEnable; 
     //pERIFÉRICOS
-    Timer_Start();
+    Timer_0_Start();
+    Timer_1_Start();
     LCD_Start();
     
     //INTERRUPCIONES
     actualizar_StartEx(actualizar);
     actualizar_ClearPending();
     btns_InterruptEnable();
-    DIS_StartEx(DIS);
-    DIS_ClearPending();
+    DIS_0_StartEx(DIS_0);
+    DIS_0_ClearPending();
+    DIS_1_StartEx(DIS_1);
+    DIS_1_ClearPending();
     
     
     //lcd CONFIG INICIAL

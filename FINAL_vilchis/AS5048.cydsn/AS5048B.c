@@ -44,8 +44,7 @@ static int8_t user_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data,
     return rslt;
 }
 
-static int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
-{
+static int8_t user_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len){
     int8_t rslt = 0; /* Return 0 for Success, non-zero for failure */
     uint16_t i = 0;
 
@@ -92,16 +91,18 @@ void AS5048B_REGISTROS(struct AS5048B *registros){
     user_i2c_read(Address_FISICO,Gain_control,reg_data+4,5);//Registros 0xFA al 0xFF 
     
     //Pasamos todos lo consegido al bitfield
-    registros->registros.Programming_Control = reg_data[0];
-    registros->registros.I2C_slave_address = reg_data[1];
+    registros->registros.Programming_Control = reg_data[0];//Primera lecturar
+    
+    registros->registros.I2C_slave_address = reg_data[1];//Segunda lectura
     registros->registros.OTP_Register_Zero_Position_Hi = reg_data[2];
     registros->registros.OTP_Register_Zero_Position_Low_6_LSBs = reg_data[3];
-    registros->registros.Automatic_Gain_Control = reg_data[4];
+    
+    registros->registros.Automatic_Gain_Control = reg_data[4];//Tercera lectura
     registros->registros.diagnostico = reg_data[5];
     registros->registros.magnitud_Hi = reg_data[6];
     registros->registros.magnitud_Lo = reg_data[7];
     registros->registros.angulo_Hi = reg_data[8];
-    registros->registros.angulo_Lo= reg_data[9] >> 4;// sE ELIMINAN LOS 4 LBS como un filtrado
+    registros->registros.angulo_Lo= (reg_data[9] >> 4) << 4 ;// sE ELIMINAN LOS 4 LBS como un filtrado
 } 
 
 

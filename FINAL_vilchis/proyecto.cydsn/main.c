@@ -101,7 +101,7 @@ int main(void)
             ANGULO = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
             
             //Calculamos el angulo en grados
-            ANGULO = map(ANGULO,0,1023,0,360);
+            ANGULO = map(ANGULO,0,16383,0,360);
             
             
             //Para labwiev

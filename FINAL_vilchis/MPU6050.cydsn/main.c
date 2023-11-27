@@ -21,9 +21,8 @@ int main(void)
     
     //Creamos instancia del sensor
     struct MPU6050 acelerometro;
-    MPU6050_Start(&acelerometro);
+    MPU6050_Start(&acelerometro);//Inicializa funcionaminento del ssnsor
     MPU6050_CONFIG_ACCEL(&acelerometro,2);//Configuracion del sensor -+4g
-    
     
     int16 Acc_X,Acc_Y,Acc_Z; //Valores de acelerometro ejex X y Y
     char buffer_tx[16];
