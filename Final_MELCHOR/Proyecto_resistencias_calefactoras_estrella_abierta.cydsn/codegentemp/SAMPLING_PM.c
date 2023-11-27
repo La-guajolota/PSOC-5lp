@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name: SAMPLING_PM.c
+* File Name: Sampling_PM.c
 * Version 2.80
 *
 *  Description:
@@ -16,13 +16,13 @@
 * the software package with which this file was provided.
 ********************************************************************************/
 
-#include "SAMPLING.h"
+#include "Sampling.h"
 
-static SAMPLING_backupStruct SAMPLING_backup;
+static Sampling_backupStruct Sampling_backup;
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SaveConfig
+* Function Name: Sampling_SaveConfig
 ********************************************************************************
 *
 * Summary:
@@ -35,29 +35,29 @@ static SAMPLING_backupStruct SAMPLING_backup;
 *  void
 *
 * Global variables:
-*  SAMPLING_backup:  Variables of this global structure are modified to
+*  Sampling_backup:  Variables of this global structure are modified to
 *  store the values of non retention configuration registers when Sleep() API is
 *  called.
 *
 *******************************************************************************/
-void SAMPLING_SaveConfig(void) 
+void Sampling_SaveConfig(void) 
 {
-    #if (!SAMPLING_UsingFixedFunction)
-        SAMPLING_backup.TimerUdb = SAMPLING_ReadCounter();
-        SAMPLING_backup.InterruptMaskValue = SAMPLING_STATUS_MASK;
-        #if (SAMPLING_UsingHWCaptureCounter)
-            SAMPLING_backup.TimerCaptureCounter = SAMPLING_ReadCaptureCount();
+    #if (!Sampling_UsingFixedFunction)
+        Sampling_backup.TimerUdb = Sampling_ReadCounter();
+        Sampling_backup.InterruptMaskValue = Sampling_STATUS_MASK;
+        #if (Sampling_UsingHWCaptureCounter)
+            Sampling_backup.TimerCaptureCounter = Sampling_ReadCaptureCount();
         #endif /* Back Up capture counter register  */
 
-        #if(!SAMPLING_UDB_CONTROL_REG_REMOVED)
-            SAMPLING_backup.TimerControlRegister = SAMPLING_ReadControlRegister();
+        #if(!Sampling_UDB_CONTROL_REG_REMOVED)
+            Sampling_backup.TimerControlRegister = Sampling_ReadControlRegister();
         #endif /* Backup the enable state of the Timer component */
     #endif /* Backup non retention registers in UDB implementation. All fixed function registers are retention */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_RestoreConfig
+* Function Name: Sampling_RestoreConfig
 ********************************************************************************
 *
 * Summary:
@@ -70,29 +70,29 @@ void SAMPLING_SaveConfig(void)
 *  void
 *
 * Global variables:
-*  SAMPLING_backup:  Variables of this global structure are used to
+*  Sampling_backup:  Variables of this global structure are used to
 *  restore the values of non retention registers on wakeup from sleep mode.
 *
 *******************************************************************************/
-void SAMPLING_RestoreConfig(void) 
+void Sampling_RestoreConfig(void) 
 {   
-    #if (!SAMPLING_UsingFixedFunction)
+    #if (!Sampling_UsingFixedFunction)
 
-        SAMPLING_WriteCounter(SAMPLING_backup.TimerUdb);
-        SAMPLING_STATUS_MASK =SAMPLING_backup.InterruptMaskValue;
-        #if (SAMPLING_UsingHWCaptureCounter)
-            SAMPLING_SetCaptureCount(SAMPLING_backup.TimerCaptureCounter);
+        Sampling_WriteCounter(Sampling_backup.TimerUdb);
+        Sampling_STATUS_MASK =Sampling_backup.InterruptMaskValue;
+        #if (Sampling_UsingHWCaptureCounter)
+            Sampling_SetCaptureCount(Sampling_backup.TimerCaptureCounter);
         #endif /* Restore Capture counter register*/
 
-        #if(!SAMPLING_UDB_CONTROL_REG_REMOVED)
-            SAMPLING_WriteControlRegister(SAMPLING_backup.TimerControlRegister);
+        #if(!Sampling_UDB_CONTROL_REG_REMOVED)
+            Sampling_WriteControlRegister(Sampling_backup.TimerControlRegister);
         #endif /* Restore the enable state of the Timer component */
     #endif /* Restore non retention registers in the UDB implementation only */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Sleep
+* Function Name: Sampling_Sleep
 ********************************************************************************
 *
 * Summary:
@@ -105,32 +105,32 @@ void SAMPLING_RestoreConfig(void)
 *  void
 *
 * Global variables:
-*  SAMPLING_backup.TimerEnableState:  Is modified depending on the
+*  Sampling_backup.TimerEnableState:  Is modified depending on the
 *  enable state of the block before entering sleep mode.
 *
 *******************************************************************************/
-void SAMPLING_Sleep(void) 
+void Sampling_Sleep(void) 
 {
-    #if(!SAMPLING_UDB_CONTROL_REG_REMOVED)
+    #if(!Sampling_UDB_CONTROL_REG_REMOVED)
         /* Save Counter's enable state */
-        if(SAMPLING_CTRL_ENABLE == (SAMPLING_CONTROL & SAMPLING_CTRL_ENABLE))
+        if(Sampling_CTRL_ENABLE == (Sampling_CONTROL & Sampling_CTRL_ENABLE))
         {
             /* Timer is enabled */
-            SAMPLING_backup.TimerEnableState = 1u;
+            Sampling_backup.TimerEnableState = 1u;
         }
         else
         {
             /* Timer is disabled */
-            SAMPLING_backup.TimerEnableState = 0u;
+            Sampling_backup.TimerEnableState = 0u;
         }
     #endif /* Back up enable state from the Timer control register */
-    SAMPLING_Stop();
-    SAMPLING_SaveConfig();
+    Sampling_Stop();
+    Sampling_SaveConfig();
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Wakeup
+* Function Name: Sampling_Wakeup
 ********************************************************************************
 *
 * Summary:
@@ -143,17 +143,17 @@ void SAMPLING_Sleep(void)
 *  void
 *
 * Global variables:
-*  SAMPLING_backup.enableState:  Is used to restore the enable state of
+*  Sampling_backup.enableState:  Is used to restore the enable state of
 *  block on wakeup from sleep mode.
 *
 *******************************************************************************/
-void SAMPLING_Wakeup(void) 
+void Sampling_Wakeup(void) 
 {
-    SAMPLING_RestoreConfig();
-    #if(!SAMPLING_UDB_CONTROL_REG_REMOVED)
-        if(SAMPLING_backup.TimerEnableState == 1u)
+    Sampling_RestoreConfig();
+    #if(!Sampling_UDB_CONTROL_REG_REMOVED)
+        if(Sampling_backup.TimerEnableState == 1u)
         {     /* Enable Timer's operation */
-                SAMPLING_Enable();
+                Sampling_Enable();
         } /* Do nothing if Timer was disabled before */
     #endif /* Remove this code section if Control register is removed */
 }

@@ -1,6 +1,6 @@
 -- ======================================================================
 -- Proyecto_resistencias_calefactoras_estrella_abierta.ctl generated from Proyecto_resistencias_calefactoras_estrella_abierta
--- 11/19/2023 at 11:48
+-- 11/26/2023 at 19:28
 -- This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 -- ======================================================================
 

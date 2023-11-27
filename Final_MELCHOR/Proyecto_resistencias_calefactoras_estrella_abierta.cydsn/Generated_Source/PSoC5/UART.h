@@ -34,7 +34,7 @@
 #define UART_RX_INTERRUPT_ENABLED           (1u)
 #define UART_TX_INTERRUPT_ENABLED           (1u)
 #define UART_INTERNAL_CLOCK_USED            (1u)
-#define UART_RXHW_ADDRESS_ENABLED           (0u)
+#define UART_RXHW_ADDRESS_ENABLED           (1u)
 #define UART_OVER_SAMPLE_COUNT              (8u)
 #define UART_PARITY_TYPE                    (0u)
 #define UART_PARITY_TYPE_SW                 (0u)
@@ -45,8 +45,8 @@
 #define UART_USE23POLLING                   (1u)
 #define UART_FLOW_CONTROL                   (0u)
 #define UART_CLK_FREQ                       (0u)
-#define UART_TX_BUFFER_SIZE                 (16u)
-#define UART_RX_BUFFER_SIZE                 (16u)
+#define UART_TX_BUFFER_SIZE                 (32u)
+#define UART_RX_BUFFER_SIZE                 (32u)
 
 /* Check to see if required defines such as CY_PSOC5LP are available */
 /* They are defined starting with cy_boot v3.0 */
@@ -353,7 +353,7 @@ extern uint8 UART_initVar;
 #define UART_NUMBER_OF_STOP_BITS    (1u)
 
 #if (UART_RXHW_ADDRESS_ENABLED)
-    #define UART_RX_ADDRESS_MODE    (0u)
+    #define UART_RX_ADDRESS_MODE    (3u)
     #define UART_RX_HW_ADDRESS1     (0u)
     #define UART_RX_HW_ADDRESS2     (0u)
 #endif /* (UART_RXHW_ADDRESS_ENABLED) */

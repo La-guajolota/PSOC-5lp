@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name: isr_setpoint.c  
+* File Name: interfaz.c  
 * Version 1.70
 *
 *  Description:
@@ -18,15 +18,15 @@
 
 #include <cydevice_trm.h>
 #include <CyLib.h>
-#include <isr_setpoint.h>
+#include <interfaz.h>
 #include "cyapicallbacks.h"
 
-#if !defined(isr_setpoint__REMOVED) /* Check for removal by optimization */
+#if !defined(interfaz__REMOVED) /* Check for removal by optimization */
 
 /*******************************************************************************
 *  Place your includes, defines and code here 
 ********************************************************************************/
-/* `#START isr_setpoint_intc` */
+/* `#START interfaz_intc` */
 
 /* `#END` */
 
@@ -42,7 +42,7 @@ CY_ISR_PROTO(IntDefaultHandler);
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_Start
+* Function Name: interfaz_Start
 ********************************************************************************
 *
 * Summary:
@@ -58,24 +58,24 @@ CY_ISR_PROTO(IntDefaultHandler);
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_Start(void)
+void interfaz_Start(void)
 {
     /* For all we know the interrupt is active. */
-    isr_setpoint_Disable();
+    interfaz_Disable();
 
-    /* Set the ISR to point to the isr_setpoint Interrupt. */
-    isr_setpoint_SetVector(&isr_setpoint_Interrupt);
+    /* Set the ISR to point to the interfaz Interrupt. */
+    interfaz_SetVector(&interfaz_Interrupt);
 
     /* Set the priority. */
-    isr_setpoint_SetPriority((uint8)isr_setpoint_INTC_PRIOR_NUMBER);
+    interfaz_SetPriority((uint8)interfaz_INTC_PRIOR_NUMBER);
 
     /* Enable it. */
-    isr_setpoint_Enable();
+    interfaz_Enable();
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_StartEx
+* Function Name: interfaz_StartEx
 ********************************************************************************
 *
 * Summary:
@@ -101,24 +101,24 @@ void isr_setpoint_Start(void)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_StartEx(cyisraddress address)
+void interfaz_StartEx(cyisraddress address)
 {
     /* For all we know the interrupt is active. */
-    isr_setpoint_Disable();
+    interfaz_Disable();
 
-    /* Set the ISR to point to the isr_setpoint Interrupt. */
-    isr_setpoint_SetVector(address);
+    /* Set the ISR to point to the interfaz Interrupt. */
+    interfaz_SetVector(address);
 
     /* Set the priority. */
-    isr_setpoint_SetPriority((uint8)isr_setpoint_INTC_PRIOR_NUMBER);
+    interfaz_SetPriority((uint8)interfaz_INTC_PRIOR_NUMBER);
 
     /* Enable it. */
-    isr_setpoint_Enable();
+    interfaz_Enable();
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_Stop
+* Function Name: interfaz_Stop
 ********************************************************************************
 *
 * Summary:
@@ -131,22 +131,22 @@ void isr_setpoint_StartEx(cyisraddress address)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_Stop(void)
+void interfaz_Stop(void)
 {
     /* Disable this interrupt. */
-    isr_setpoint_Disable();
+    interfaz_Disable();
 
     /* Set the ISR to point to the passive one. */
-    isr_setpoint_SetVector(&IntDefaultHandler);
+    interfaz_SetVector(&IntDefaultHandler);
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_Interrupt
+* Function Name: interfaz_Interrupt
 ********************************************************************************
 *
 * Summary:
-*   The default Interrupt Service Routine for isr_setpoint.
+*   The default Interrupt Service Routine for interfaz.
 *
 *   Add custom code between the coments to keep the next version of this file
 *   from over writting your code.
@@ -157,27 +157,27 @@ void isr_setpoint_Stop(void)
 *   None
 *
 *******************************************************************************/
-CY_ISR(isr_setpoint_Interrupt)
+CY_ISR(interfaz_Interrupt)
 {
-    #ifdef isr_setpoint_INTERRUPT_INTERRUPT_CALLBACK
-        isr_setpoint_Interrupt_InterruptCallback();
-    #endif /* isr_setpoint_INTERRUPT_INTERRUPT_CALLBACK */ 
+    #ifdef interfaz_INTERRUPT_INTERRUPT_CALLBACK
+        interfaz_Interrupt_InterruptCallback();
+    #endif /* interfaz_INTERRUPT_INTERRUPT_CALLBACK */ 
 
     /*  Place your Interrupt code here. */
-    /* `#START isr_setpoint_Interrupt` */
+    /* `#START interfaz_Interrupt` */
 
     /* `#END` */
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_SetVector
+* Function Name: interfaz_SetVector
 ********************************************************************************
 *
 * Summary:
-*   Change the ISR vector for the Interrupt. Note calling isr_setpoint_Start
+*   Change the ISR vector for the Interrupt. Note calling interfaz_Start
 *   will override any effect this method would have had. To set the vector 
-*   before the component has been started use isr_setpoint_StartEx instead.
+*   before the component has been started use interfaz_StartEx instead.
 * 
 *   When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
 *   used to provide consistent definition across compilers:
@@ -197,18 +197,18 @@ CY_ISR(isr_setpoint_Interrupt)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_SetVector(cyisraddress address)
+void interfaz_SetVector(cyisraddress address)
 {
     cyisraddress * ramVectorTable;
 
     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
 
-    ramVectorTable[CYINT_IRQ_BASE + (uint32)isr_setpoint__INTC_NUMBER] = address;
+    ramVectorTable[CYINT_IRQ_BASE + (uint32)interfaz__INTC_NUMBER] = address;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_GetVector
+* Function Name: interfaz_GetVector
 ********************************************************************************
 *
 * Summary:
@@ -221,26 +221,26 @@ void isr_setpoint_SetVector(cyisraddress address)
 *   Address of the ISR in the interrupt vector table.
 *
 *******************************************************************************/
-cyisraddress isr_setpoint_GetVector(void)
+cyisraddress interfaz_GetVector(void)
 {
     cyisraddress * ramVectorTable;
 
     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
 
-    return ramVectorTable[CYINT_IRQ_BASE + (uint32)isr_setpoint__INTC_NUMBER];
+    return ramVectorTable[CYINT_IRQ_BASE + (uint32)interfaz__INTC_NUMBER];
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_SetPriority
+* Function Name: interfaz_SetPriority
 ********************************************************************************
 *
 * Summary:
 *   Sets the Priority of the Interrupt. 
 *
-*   Note calling isr_setpoint_Start or isr_setpoint_StartEx will 
+*   Note calling interfaz_Start or interfaz_StartEx will 
 *   override any effect this API would have had. This API should only be called
-*   after isr_setpoint_Start or isr_setpoint_StartEx has been called. 
+*   after interfaz_Start or interfaz_StartEx has been called. 
 *   To set the initial priority for the component, use the Design-Wide Resources
 *   Interrupt Editor.
 *
@@ -255,14 +255,14 @@ cyisraddress isr_setpoint_GetVector(void)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_SetPriority(uint8 priority)
+void interfaz_SetPriority(uint8 priority)
 {
-    *isr_setpoint_INTC_PRIOR = priority << 5;
+    *interfaz_INTC_PRIOR = priority << 5;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_GetPriority
+* Function Name: interfaz_GetPriority
 ********************************************************************************
 *
 * Summary:
@@ -277,19 +277,19 @@ void isr_setpoint_SetPriority(uint8 priority)
 *    PSoC 4: Priority is from 0 to 3.
 *
 *******************************************************************************/
-uint8 isr_setpoint_GetPriority(void)
+uint8 interfaz_GetPriority(void)
 {
     uint8 priority;
 
 
-    priority = *isr_setpoint_INTC_PRIOR >> 5;
+    priority = *interfaz_INTC_PRIOR >> 5;
 
     return priority;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_Enable
+* Function Name: interfaz_Enable
 ********************************************************************************
 *
 * Summary:
@@ -304,15 +304,15 @@ uint8 isr_setpoint_GetPriority(void)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_Enable(void)
+void interfaz_Enable(void)
 {
     /* Enable the general interrupt. */
-    *isr_setpoint_INTC_SET_EN = isr_setpoint__INTC_MASK;
+    *interfaz_INTC_SET_EN = interfaz__INTC_MASK;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_GetState
+* Function Name: interfaz_GetState
 ********************************************************************************
 *
 * Summary:
@@ -325,15 +325,15 @@ void isr_setpoint_Enable(void)
 *   1 if enabled, 0 if disabled.
 *
 *******************************************************************************/
-uint8 isr_setpoint_GetState(void)
+uint8 interfaz_GetState(void)
 {
     /* Get the state of the general interrupt. */
-    return ((*isr_setpoint_INTC_SET_EN & (uint32)isr_setpoint__INTC_MASK) != 0u) ? 1u:0u;
+    return ((*interfaz_INTC_SET_EN & (uint32)interfaz__INTC_MASK) != 0u) ? 1u:0u;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_Disable
+* Function Name: interfaz_Disable
 ********************************************************************************
 *
 * Summary:
@@ -346,15 +346,15 @@ uint8 isr_setpoint_GetState(void)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_Disable(void)
+void interfaz_Disable(void)
 {
     /* Disable the general interrupt. */
-    *isr_setpoint_INTC_CLR_EN = isr_setpoint__INTC_MASK;
+    *interfaz_INTC_CLR_EN = interfaz__INTC_MASK;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_SetPending
+* Function Name: interfaz_SetPending
 ********************************************************************************
 *
 * Summary:
@@ -373,14 +373,14 @@ void isr_setpoint_Disable(void)
 *   interrupts).
 *
 *******************************************************************************/
-void isr_setpoint_SetPending(void)
+void interfaz_SetPending(void)
 {
-    *isr_setpoint_INTC_SET_PD = isr_setpoint__INTC_MASK;
+    *interfaz_INTC_SET_PD = interfaz__INTC_MASK;
 }
 
 
 /*******************************************************************************
-* Function Name: isr_setpoint_ClearPending
+* Function Name: interfaz_ClearPending
 ********************************************************************************
 *
 * Summary:
@@ -398,9 +398,9 @@ void isr_setpoint_SetPending(void)
 *   None
 *
 *******************************************************************************/
-void isr_setpoint_ClearPending(void)
+void interfaz_ClearPending(void)
 {
-    *isr_setpoint_INTC_CLR_PD = isr_setpoint__INTC_MASK;
+    *interfaz_INTC_CLR_PD = interfaz__INTC_MASK;
 }
 
 #endif /* End check for removal by optimization */

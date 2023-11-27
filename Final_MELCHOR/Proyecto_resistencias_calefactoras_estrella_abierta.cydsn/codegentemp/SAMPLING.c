@@ -1,5 +1,5 @@
 /*******************************************************************************
-* File Name: SAMPLING.c
+* File Name: Sampling.c
 * Version 2.80
 *
 * Description:
@@ -21,13 +21,13 @@
 * the software package with which this file was provided.
 ********************************************************************************/
 
-#include "SAMPLING.h"
+#include "Sampling.h"
 
-uint8 SAMPLING_initVar = 0u;
+uint8 Sampling_initVar = 0u;
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Init
+* Function Name: Sampling_Init
 ********************************************************************************
 *
 * Summary:
@@ -40,131 +40,131 @@ uint8 SAMPLING_initVar = 0u;
 *  void
 *
 *******************************************************************************/
-void SAMPLING_Init(void) 
+void Sampling_Init(void) 
 {
-    #if(!SAMPLING_UsingFixedFunction)
+    #if(!Sampling_UsingFixedFunction)
             /* Interrupt State Backup for Critical Region*/
-            uint8 SAMPLING_interruptState;
+            uint8 Sampling_interruptState;
     #endif /* Interrupt state back up for Fixed Function only */
 
-    #if (SAMPLING_UsingFixedFunction)
+    #if (Sampling_UsingFixedFunction)
         /* Clear all bits but the enable bit (if it's already set) for Timer operation */
-        SAMPLING_CONTROL &= SAMPLING_CTRL_ENABLE;
+        Sampling_CONTROL &= Sampling_CTRL_ENABLE;
 
         /* Clear the mode bits for continuous run mode */
         #if (CY_PSOC5A)
-            SAMPLING_CONTROL2 &= ((uint8)(~SAMPLING_CTRL_MODE_MASK));
+            Sampling_CONTROL2 &= ((uint8)(~Sampling_CTRL_MODE_MASK));
         #endif /* Clear bits in CONTROL2 only in PSOC5A */
 
         #if (CY_PSOC3 || CY_PSOC5LP)
-            SAMPLING_CONTROL3 &= ((uint8)(~SAMPLING_CTRL_MODE_MASK));
+            Sampling_CONTROL3 &= ((uint8)(~Sampling_CTRL_MODE_MASK));
         #endif /* CONTROL3 register exists only in PSoC3 OR PSoC5LP */
 
         /* Check if One Shot mode is enabled i.e. RunMode !=0*/
-        #if (SAMPLING_RunModeUsed != 0x0u)
+        #if (Sampling_RunModeUsed != 0x0u)
             /* Set 3rd bit of Control register to enable one shot mode */
-            SAMPLING_CONTROL |= 0x04u;
+            Sampling_CONTROL |= 0x04u;
         #endif /* One Shot enabled only when RunModeUsed is not Continuous*/
 
-        #if (SAMPLING_RunModeUsed == 2)
+        #if (Sampling_RunModeUsed == 2)
             #if (CY_PSOC5A)
                 /* Set last 2 bits of control2 register if one shot(halt on
                 interrupt) is enabled*/
-                SAMPLING_CONTROL2 |= 0x03u;
+                Sampling_CONTROL2 |= 0x03u;
             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL2 for PSoC5A */
 
             #if (CY_PSOC3 || CY_PSOC5LP)
                 /* Set last 2 bits of control3 register if one shot(halt on
                 interrupt) is enabled*/
-                SAMPLING_CONTROL3 |= 0x03u;
+                Sampling_CONTROL3 |= 0x03u;
             #endif /* Set One-Shot Halt on Interrupt bit in CONTROL3 for PSoC3 or PSoC5LP */
 
         #endif /* Remove section if One Shot Halt on Interrupt is not enabled */
 
-        #if (SAMPLING_UsingHWEnable != 0)
+        #if (Sampling_UsingHWEnable != 0)
             #if (CY_PSOC5A)
                 /* Set the default Run Mode of the Timer to Continuous */
-                SAMPLING_CONTROL2 |= SAMPLING_CTRL_MODE_PULSEWIDTH;
+                Sampling_CONTROL2 |= Sampling_CTRL_MODE_PULSEWIDTH;
             #endif /* Set Continuous Run Mode in CONTROL2 for PSoC5A */
 
             #if (CY_PSOC3 || CY_PSOC5LP)
                 /* Clear and Set ROD and COD bits of CFG2 register */
-                SAMPLING_CONTROL3 &= ((uint8)(~SAMPLING_CTRL_RCOD_MASK));
-                SAMPLING_CONTROL3 |= SAMPLING_CTRL_RCOD;
+                Sampling_CONTROL3 &= ((uint8)(~Sampling_CTRL_RCOD_MASK));
+                Sampling_CONTROL3 |= Sampling_CTRL_RCOD;
 
                 /* Clear and Enable the HW enable bit in CFG2 register */
-                SAMPLING_CONTROL3 &= ((uint8)(~SAMPLING_CTRL_ENBL_MASK));
-                SAMPLING_CONTROL3 |= SAMPLING_CTRL_ENBL;
+                Sampling_CONTROL3 &= ((uint8)(~Sampling_CTRL_ENBL_MASK));
+                Sampling_CONTROL3 |= Sampling_CTRL_ENBL;
 
                 /* Set the default Run Mode of the Timer to Continuous */
-                SAMPLING_CONTROL3 |= SAMPLING_CTRL_MODE_CONTINUOUS;
+                Sampling_CONTROL3 |= Sampling_CTRL_MODE_CONTINUOUS;
             #endif /* Set Continuous Run Mode in CONTROL3 for PSoC3ES3 or PSoC5A */
 
         #endif /* Configure Run Mode with hardware enable */
 
         /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
-        SAMPLING_RT1 &= ((uint8)(~SAMPLING_RT1_MASK));
-        SAMPLING_RT1 |= SAMPLING_SYNC;
+        Sampling_RT1 &= ((uint8)(~Sampling_RT1_MASK));
+        Sampling_RT1 |= Sampling_SYNC;
 
         /*Enable DSI Sync all all inputs of the Timer*/
-        SAMPLING_RT1 &= ((uint8)(~SAMPLING_SYNCDSI_MASK));
-        SAMPLING_RT1 |= SAMPLING_SYNCDSI_EN;
+        Sampling_RT1 &= ((uint8)(~Sampling_SYNCDSI_MASK));
+        Sampling_RT1 |= Sampling_SYNCDSI_EN;
 
         /* Set the IRQ to use the status register interrupts */
-        SAMPLING_CONTROL2 |= SAMPLING_CTRL2_IRQ_SEL;
+        Sampling_CONTROL2 |= Sampling_CTRL2_IRQ_SEL;
     #endif /* Configuring registers of fixed function implementation */
 
     /* Set Initial values from Configuration */
-    SAMPLING_WritePeriod(SAMPLING_INIT_PERIOD);
-    SAMPLING_WriteCounter(SAMPLING_INIT_PERIOD);
+    Sampling_WritePeriod(Sampling_INIT_PERIOD);
+    Sampling_WriteCounter(Sampling_INIT_PERIOD);
 
-    #if (SAMPLING_UsingHWCaptureCounter)/* Capture counter is enabled */
-        SAMPLING_CAPTURE_COUNT_CTRL |= SAMPLING_CNTR_ENABLE;
-        SAMPLING_SetCaptureCount(SAMPLING_INIT_CAPTURE_COUNT);
+    #if (Sampling_UsingHWCaptureCounter)/* Capture counter is enabled */
+        Sampling_CAPTURE_COUNT_CTRL |= Sampling_CNTR_ENABLE;
+        Sampling_SetCaptureCount(Sampling_INIT_CAPTURE_COUNT);
     #endif /* Configure capture counter value */
 
-    #if (!SAMPLING_UsingFixedFunction)
-        #if (SAMPLING_SoftwareCaptureMode)
-            SAMPLING_SetCaptureMode(SAMPLING_INIT_CAPTURE_MODE);
+    #if (!Sampling_UsingFixedFunction)
+        #if (Sampling_SoftwareCaptureMode)
+            Sampling_SetCaptureMode(Sampling_INIT_CAPTURE_MODE);
         #endif /* Set Capture Mode for UDB implementation if capture mode is software controlled */
 
-        #if (SAMPLING_SoftwareTriggerMode)
-            #if (!SAMPLING_UDB_CONTROL_REG_REMOVED)
-                if (0u == (SAMPLING_CONTROL & SAMPLING__B_TIMER__TM_SOFTWARE))
+        #if (Sampling_SoftwareTriggerMode)
+            #if (!Sampling_UDB_CONTROL_REG_REMOVED)
+                if (0u == (Sampling_CONTROL & Sampling__B_TIMER__TM_SOFTWARE))
                 {
-                    SAMPLING_SetTriggerMode(SAMPLING_INIT_TRIGGER_MODE);
+                    Sampling_SetTriggerMode(Sampling_INIT_TRIGGER_MODE);
                 }
-            #endif /* (!SAMPLING_UDB_CONTROL_REG_REMOVED) */
+            #endif /* (!Sampling_UDB_CONTROL_REG_REMOVED) */
         #endif /* Set trigger mode for UDB Implementation if trigger mode is software controlled */
 
         /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region critical*/
         /* Enter Critical Region*/
-        SAMPLING_interruptState = CyEnterCriticalSection();
+        Sampling_interruptState = CyEnterCriticalSection();
 
         /* Use the interrupt output of the status register for IRQ output */
-        SAMPLING_STATUS_AUX_CTRL |= SAMPLING_STATUS_ACTL_INT_EN_MASK;
+        Sampling_STATUS_AUX_CTRL |= Sampling_STATUS_ACTL_INT_EN_MASK;
 
         /* Exit Critical Region*/
-        CyExitCriticalSection(SAMPLING_interruptState);
+        CyExitCriticalSection(Sampling_interruptState);
 
-        #if (SAMPLING_EnableTriggerMode)
-            SAMPLING_EnableTrigger();
+        #if (Sampling_EnableTriggerMode)
+            Sampling_EnableTrigger();
         #endif /* Set Trigger enable bit for UDB implementation in the control register*/
 		
 		
-        #if (SAMPLING_InterruptOnCaptureCount && !SAMPLING_UDB_CONTROL_REG_REMOVED)
-            SAMPLING_SetInterruptCount(SAMPLING_INIT_INT_CAPTURE_COUNT);
+        #if (Sampling_InterruptOnCaptureCount && !Sampling_UDB_CONTROL_REG_REMOVED)
+            Sampling_SetInterruptCount(Sampling_INIT_INT_CAPTURE_COUNT);
         #endif /* Set interrupt count in UDB implementation if interrupt count feature is checked.*/
 
-        SAMPLING_ClearFIFO();
+        Sampling_ClearFIFO();
     #endif /* Configure additional features of UDB implementation */
 
-    SAMPLING_SetInterruptMode(SAMPLING_INIT_INTERRUPT_MODE);
+    Sampling_SetInterruptMode(Sampling_INIT_INTERRUPT_MODE);
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Enable
+* Function Name: Sampling_Enable
 ********************************************************************************
 *
 * Summary:
@@ -177,23 +177,23 @@ void SAMPLING_Init(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_Enable(void) 
+void Sampling_Enable(void) 
 {
     /* Globally Enable the Fixed Function Block chosen */
-    #if (SAMPLING_UsingFixedFunction)
-        SAMPLING_GLOBAL_ENABLE |= SAMPLING_BLOCK_EN_MASK;
-        SAMPLING_GLOBAL_STBY_ENABLE |= SAMPLING_BLOCK_STBY_EN_MASK;
+    #if (Sampling_UsingFixedFunction)
+        Sampling_GLOBAL_ENABLE |= Sampling_BLOCK_EN_MASK;
+        Sampling_GLOBAL_STBY_ENABLE |= Sampling_BLOCK_STBY_EN_MASK;
     #endif /* Set Enable bit for enabling Fixed function timer*/
 
     /* Remove assignment if control register is removed */
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED || SAMPLING_UsingFixedFunction)
-        SAMPLING_CONTROL |= SAMPLING_CTRL_ENABLE;
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED || Sampling_UsingFixedFunction)
+        Sampling_CONTROL |= Sampling_CTRL_ENABLE;
     #endif /* Remove assignment if control register is removed */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Start
+* Function Name: Sampling_Start
 ********************************************************************************
 *
 * Summary:
@@ -208,26 +208,26 @@ void SAMPLING_Enable(void)
 *  void
 *
 * Global variables:
-*  SAMPLING_initVar: Is modified when this function is called for the
+*  Sampling_initVar: Is modified when this function is called for the
 *   first time. Is used to ensure that initialization happens only once.
 *
 *******************************************************************************/
-void SAMPLING_Start(void) 
+void Sampling_Start(void) 
 {
-    if(SAMPLING_initVar == 0u)
+    if(Sampling_initVar == 0u)
     {
-        SAMPLING_Init();
+        Sampling_Init();
 
-        SAMPLING_initVar = 1u;   /* Clear this bit for Initialization */
+        Sampling_initVar = 1u;   /* Clear this bit for Initialization */
     }
 
     /* Enable the Timer */
-    SAMPLING_Enable();
+    Sampling_Enable();
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_Stop
+* Function Name: Sampling_Stop
 ********************************************************************************
 *
 * Summary:
@@ -244,23 +244,23 @@ void SAMPLING_Start(void)
 *               has no effect on the operation of the timer.
 *
 *******************************************************************************/
-void SAMPLING_Stop(void) 
+void Sampling_Stop(void) 
 {
     /* Disable Timer */
-    #if(!SAMPLING_UDB_CONTROL_REG_REMOVED || SAMPLING_UsingFixedFunction)
-        SAMPLING_CONTROL &= ((uint8)(~SAMPLING_CTRL_ENABLE));
+    #if(!Sampling_UDB_CONTROL_REG_REMOVED || Sampling_UsingFixedFunction)
+        Sampling_CONTROL &= ((uint8)(~Sampling_CTRL_ENABLE));
     #endif /* Remove assignment if control register is removed */
 
     /* Globally disable the Fixed Function Block chosen */
-    #if (SAMPLING_UsingFixedFunction)
-        SAMPLING_GLOBAL_ENABLE &= ((uint8)(~SAMPLING_BLOCK_EN_MASK));
-        SAMPLING_GLOBAL_STBY_ENABLE &= ((uint8)(~SAMPLING_BLOCK_STBY_EN_MASK));
+    #if (Sampling_UsingFixedFunction)
+        Sampling_GLOBAL_ENABLE &= ((uint8)(~Sampling_BLOCK_EN_MASK));
+        Sampling_GLOBAL_STBY_ENABLE &= ((uint8)(~Sampling_BLOCK_STBY_EN_MASK));
     #endif /* Disable global enable for the Timer Fixed function block to stop the Timer*/
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SetInterruptMode
+* Function Name: Sampling_SetInterruptMode
 ********************************************************************************
 *
 * Summary:
@@ -276,14 +276,14 @@ void SAMPLING_Stop(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_SetInterruptMode(uint8 interruptMode) 
+void Sampling_SetInterruptMode(uint8 interruptMode) 
 {
-    SAMPLING_STATUS_MASK = interruptMode;
+    Sampling_STATUS_MASK = interruptMode;
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SoftwareCapture
+* Function Name: Sampling_SoftwareCapture
 ********************************************************************************
 *
 * Summary:
@@ -299,20 +299,20 @@ void SAMPLING_SetInterruptMode(uint8 interruptMode)
 *  An existing hardware capture could be overwritten.
 *
 *******************************************************************************/
-void SAMPLING_SoftwareCapture(void) 
+void Sampling_SoftwareCapture(void) 
 {
     /* Generate a software capture by reading the counter register */
-    #if(SAMPLING_UsingFixedFunction)
-        (void)CY_GET_REG16(SAMPLING_COUNTER_LSB_PTR);
+    #if(Sampling_UsingFixedFunction)
+        (void)CY_GET_REG16(Sampling_COUNTER_LSB_PTR);
     #else
-        (void)CY_GET_REG8(SAMPLING_COUNTER_LSB_PTR_8BIT);
-    #endif/* (SAMPLING_UsingFixedFunction) */
+        (void)CY_GET_REG8(Sampling_COUNTER_LSB_PTR_8BIT);
+    #endif/* (Sampling_UsingFixedFunction) */
     /* Capture Data is now in the FIFO */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadStatusRegister
+* Function Name: Sampling_ReadStatusRegister
 ********************************************************************************
 *
 * Summary:
@@ -330,17 +330,17 @@ void SAMPLING_SoftwareCapture(void)
 *  Status register bits may be clear on read.
 *
 *******************************************************************************/
-uint8   SAMPLING_ReadStatusRegister(void) 
+uint8   Sampling_ReadStatusRegister(void) 
 {
-    return (SAMPLING_STATUS);
+    return (Sampling_STATUS);
 }
 
 
-#if (!SAMPLING_UDB_CONTROL_REG_REMOVED) /* Remove API if control register is unused */
+#if (!Sampling_UDB_CONTROL_REG_REMOVED) /* Remove API if control register is unused */
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadControlRegister
+* Function Name: Sampling_ReadControlRegister
 ********************************************************************************
 *
 * Summary:
@@ -353,18 +353,18 @@ uint8   SAMPLING_ReadStatusRegister(void)
 *  The contents of the control register
 *
 *******************************************************************************/
-uint8 SAMPLING_ReadControlRegister(void) 
+uint8 Sampling_ReadControlRegister(void) 
 {
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED) 
-        return ((uint8)SAMPLING_CONTROL);
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED) 
+        return ((uint8)Sampling_CONTROL);
     #else
         return (0);
-    #endif /* (!SAMPLING_UDB_CONTROL_REG_REMOVED) */
+    #endif /* (!Sampling_UDB_CONTROL_REG_REMOVED) */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_WriteControlRegister
+* Function Name: Sampling_WriteControlRegister
 ********************************************************************************
 *
 * Summary:
@@ -376,20 +376,20 @@ uint8 SAMPLING_ReadControlRegister(void)
 * Return:
 *
 *******************************************************************************/
-void SAMPLING_WriteControlRegister(uint8 control) 
+void Sampling_WriteControlRegister(uint8 control) 
 {
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED) 
-        SAMPLING_CONTROL = control;
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED) 
+        Sampling_CONTROL = control;
     #else
         control = 0u;
-    #endif /* (!SAMPLING_UDB_CONTROL_REG_REMOVED) */
+    #endif /* (!Sampling_UDB_CONTROL_REG_REMOVED) */
 }
 
 #endif /* Remove API if control register is unused */
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadPeriod
+* Function Name: Sampling_ReadPeriod
 ********************************************************************************
 *
 * Summary:
@@ -402,18 +402,18 @@ void SAMPLING_WriteControlRegister(uint8 control)
 *  The present value of the counter.
 *
 *******************************************************************************/
-uint8 SAMPLING_ReadPeriod(void) 
+uint16 Sampling_ReadPeriod(void) 
 {
-   #if(SAMPLING_UsingFixedFunction)
-       return ((uint8)CY_GET_REG16(SAMPLING_PERIOD_LSB_PTR));
+   #if(Sampling_UsingFixedFunction)
+       return ((uint16)CY_GET_REG16(Sampling_PERIOD_LSB_PTR));
    #else
-       return (CY_GET_REG8(SAMPLING_PERIOD_LSB_PTR));
-   #endif /* (SAMPLING_UsingFixedFunction) */
+       return (CY_GET_REG16(Sampling_PERIOD_LSB_PTR));
+   #endif /* (Sampling_UsingFixedFunction) */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_WritePeriod
+* Function Name: Sampling_WritePeriod
 ********************************************************************************
 *
 * Summary:
@@ -428,19 +428,19 @@ uint8 SAMPLING_ReadPeriod(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_WritePeriod(uint8 period) 
+void Sampling_WritePeriod(uint16 period) 
 {
-    #if(SAMPLING_UsingFixedFunction)
+    #if(Sampling_UsingFixedFunction)
         uint16 period_temp = (uint16)period;
-        CY_SET_REG16(SAMPLING_PERIOD_LSB_PTR, period_temp);
+        CY_SET_REG16(Sampling_PERIOD_LSB_PTR, period_temp);
     #else
-        CY_SET_REG8(SAMPLING_PERIOD_LSB_PTR, period);
+        CY_SET_REG16(Sampling_PERIOD_LSB_PTR, period);
     #endif /*Write Period value with appropriate resolution suffix depending on UDB or fixed function implementation */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadCapture
+* Function Name: Sampling_ReadCapture
 ********************************************************************************
 *
 * Summary:
@@ -453,18 +453,18 @@ void SAMPLING_WritePeriod(uint8 period)
 *  Present Capture value.
 *
 *******************************************************************************/
-uint8 SAMPLING_ReadCapture(void) 
+uint16 Sampling_ReadCapture(void) 
 {
-   #if(SAMPLING_UsingFixedFunction)
-       return ((uint8)CY_GET_REG16(SAMPLING_CAPTURE_LSB_PTR));
+   #if(Sampling_UsingFixedFunction)
+       return ((uint16)CY_GET_REG16(Sampling_CAPTURE_LSB_PTR));
    #else
-       return (CY_GET_REG8(SAMPLING_CAPTURE_LSB_PTR));
-   #endif /* (SAMPLING_UsingFixedFunction) */
+       return (CY_GET_REG16(Sampling_CAPTURE_LSB_PTR));
+   #endif /* (Sampling_UsingFixedFunction) */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_WriteCounter
+* Function Name: Sampling_WriteCounter
 ********************************************************************************
 *
 * Summary:
@@ -477,22 +477,22 @@ uint8 SAMPLING_ReadCapture(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_WriteCounter(uint8 counter) 
+void Sampling_WriteCounter(uint16 counter) 
 {
-   #if(SAMPLING_UsingFixedFunction)
+   #if(Sampling_UsingFixedFunction)
         /* This functionality is removed until a FixedFunction HW update to
          * allow this register to be written
          */
-        CY_SET_REG16(SAMPLING_COUNTER_LSB_PTR, (uint16)counter);
+        CY_SET_REG16(Sampling_COUNTER_LSB_PTR, (uint16)counter);
         
     #else
-        CY_SET_REG8(SAMPLING_COUNTER_LSB_PTR, counter);
+        CY_SET_REG16(Sampling_COUNTER_LSB_PTR, counter);
     #endif /* Set Write Counter only for the UDB implementation (Write Counter not available in fixed function Timer */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadCounter
+* Function Name: Sampling_ReadCounter
 ********************************************************************************
 *
 * Summary:
@@ -505,27 +505,27 @@ void SAMPLING_WriteCounter(uint8 counter)
 *  Present compare value.
 *
 *******************************************************************************/
-uint8 SAMPLING_ReadCounter(void) 
+uint16 Sampling_ReadCounter(void) 
 {
     /* Force capture by reading Accumulator */
     /* Must first do a software capture to be able to read the counter */
     /* It is up to the user code to make sure there isn't already captured data in the FIFO */
-    #if(SAMPLING_UsingFixedFunction)
-        (void)CY_GET_REG16(SAMPLING_COUNTER_LSB_PTR);
+    #if(Sampling_UsingFixedFunction)
+        (void)CY_GET_REG16(Sampling_COUNTER_LSB_PTR);
     #else
-        (void)CY_GET_REG8(SAMPLING_COUNTER_LSB_PTR_8BIT);
-    #endif/* (SAMPLING_UsingFixedFunction) */
+        (void)CY_GET_REG8(Sampling_COUNTER_LSB_PTR_8BIT);
+    #endif/* (Sampling_UsingFixedFunction) */
 
     /* Read the data from the FIFO (or capture register for Fixed Function)*/
-    #if(SAMPLING_UsingFixedFunction)
-        return ((uint8)CY_GET_REG16(SAMPLING_CAPTURE_LSB_PTR));
+    #if(Sampling_UsingFixedFunction)
+        return ((uint16)CY_GET_REG16(Sampling_CAPTURE_LSB_PTR));
     #else
-        return (CY_GET_REG8(SAMPLING_CAPTURE_LSB_PTR));
-    #endif /* (SAMPLING_UsingFixedFunction) */
+        return (CY_GET_REG16(Sampling_CAPTURE_LSB_PTR));
+    #endif /* (Sampling_UsingFixedFunction) */
 }
 
 
-#if(!SAMPLING_UsingFixedFunction) /* UDB Specific Functions */
+#if(!Sampling_UsingFixedFunction) /* UDB Specific Functions */
 
     
 /*******************************************************************************
@@ -534,11 +534,11 @@ uint8 SAMPLING_ReadCounter(void)
  ******************************************************************************/
 
 
-#if (SAMPLING_SoftwareCaptureMode)
+#if (Sampling_SoftwareCaptureMode)
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SetCaptureMode
+* Function Name: Sampling_SetCaptureMode
 ********************************************************************************
 *
 * Summary:
@@ -547,44 +547,44 @@ uint8 SAMPLING_ReadCounter(void)
 * Parameters:
 *  captureMode: This parameter sets the capture mode of the UDB capture feature
 *  The parameter values are defined using the
-*  #define SAMPLING__B_TIMER__CM_NONE 0
-#define SAMPLING__B_TIMER__CM_RISINGEDGE 1
-#define SAMPLING__B_TIMER__CM_FALLINGEDGE 2
-#define SAMPLING__B_TIMER__CM_EITHEREDGE 3
-#define SAMPLING__B_TIMER__CM_SOFTWARE 4
+*  #define Sampling__B_TIMER__CM_NONE 0
+#define Sampling__B_TIMER__CM_RISINGEDGE 1
+#define Sampling__B_TIMER__CM_FALLINGEDGE 2
+#define Sampling__B_TIMER__CM_EITHEREDGE 3
+#define Sampling__B_TIMER__CM_SOFTWARE 4
  identifiers
 *  The following are the possible values of the parameter
-*  SAMPLING__B_TIMER__CM_NONE        - Set Capture mode to None
-*  SAMPLING__B_TIMER__CM_RISINGEDGE  - Rising edge of Capture input
-*  SAMPLING__B_TIMER__CM_FALLINGEDGE - Falling edge of Capture input
-*  SAMPLING__B_TIMER__CM_EITHEREDGE  - Either edge of Capture input
+*  Sampling__B_TIMER__CM_NONE        - Set Capture mode to None
+*  Sampling__B_TIMER__CM_RISINGEDGE  - Rising edge of Capture input
+*  Sampling__B_TIMER__CM_FALLINGEDGE - Falling edge of Capture input
+*  Sampling__B_TIMER__CM_EITHEREDGE  - Either edge of Capture input
 *
 * Return:
 *  void
 *
 *******************************************************************************/
-void SAMPLING_SetCaptureMode(uint8 captureMode) 
+void Sampling_SetCaptureMode(uint8 captureMode) 
 {
     /* This must only set to two bits of the control register associated */
-    captureMode = ((uint8)((uint8)captureMode << SAMPLING_CTRL_CAP_MODE_SHIFT));
-    captureMode &= (SAMPLING_CTRL_CAP_MODE_MASK);
+    captureMode = ((uint8)((uint8)captureMode << Sampling_CTRL_CAP_MODE_SHIFT));
+    captureMode &= (Sampling_CTRL_CAP_MODE_MASK);
 
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED)
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED)
         /* Clear the Current Setting */
-        SAMPLING_CONTROL &= ((uint8)(~SAMPLING_CTRL_CAP_MODE_MASK));
+        Sampling_CONTROL &= ((uint8)(~Sampling_CTRL_CAP_MODE_MASK));
 
         /* Write The New Setting */
-        SAMPLING_CONTROL |= captureMode;
-    #endif /* (!SAMPLING_UDB_CONTROL_REG_REMOVED) */
+        Sampling_CONTROL |= captureMode;
+    #endif /* (!Sampling_UDB_CONTROL_REG_REMOVED) */
 }
 #endif /* Remove API if Capture Mode is not Software Controlled */
 
 
-#if (SAMPLING_SoftwareTriggerMode)
+#if (Sampling_SoftwareTriggerMode)
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SetTriggerMode
+* Function Name: Sampling_SetTriggerMode
 ********************************************************************************
 *
 * Summary:
@@ -592,37 +592,37 @@ void SAMPLING_SetCaptureMode(uint8 captureMode)
 *
 * Parameters:
 *  triggerMode: Pass one of the pre-defined Trigger Modes (except Software)
-    #define SAMPLING__B_TIMER__TM_NONE 0x00u
-    #define SAMPLING__B_TIMER__TM_RISINGEDGE 0x04u
-    #define SAMPLING__B_TIMER__TM_FALLINGEDGE 0x08u
-    #define SAMPLING__B_TIMER__TM_EITHEREDGE 0x0Cu
-    #define SAMPLING__B_TIMER__TM_SOFTWARE 0x10u
+    #define Sampling__B_TIMER__TM_NONE 0x00u
+    #define Sampling__B_TIMER__TM_RISINGEDGE 0x04u
+    #define Sampling__B_TIMER__TM_FALLINGEDGE 0x08u
+    #define Sampling__B_TIMER__TM_EITHEREDGE 0x0Cu
+    #define Sampling__B_TIMER__TM_SOFTWARE 0x10u
 *
 * Return:
 *  void
 *
 *******************************************************************************/
-void SAMPLING_SetTriggerMode(uint8 triggerMode) 
+void Sampling_SetTriggerMode(uint8 triggerMode) 
 {
     /* This must only set to two bits of the control register associated */
-    triggerMode &= SAMPLING_CTRL_TRIG_MODE_MASK;
+    triggerMode &= Sampling_CTRL_TRIG_MODE_MASK;
 
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed */
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed */
     
         /* Clear the Current Setting */
-        SAMPLING_CONTROL &= ((uint8)(~SAMPLING_CTRL_TRIG_MODE_MASK));
+        Sampling_CONTROL &= ((uint8)(~Sampling_CTRL_TRIG_MODE_MASK));
 
         /* Write The New Setting */
-        SAMPLING_CONTROL |= (triggerMode | SAMPLING__B_TIMER__TM_SOFTWARE);
+        Sampling_CONTROL |= (triggerMode | Sampling__B_TIMER__TM_SOFTWARE);
     #endif /* Remove code section if control register is not used */
 }
 #endif /* Remove API if Trigger Mode is not Software Controlled */
 
-#if (SAMPLING_EnableTriggerMode)
+#if (Sampling_EnableTriggerMode)
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_EnableTrigger
+* Function Name: Sampling_EnableTrigger
 ********************************************************************************
 *
 * Summary:
@@ -635,16 +635,16 @@ void SAMPLING_SetTriggerMode(uint8 triggerMode)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_EnableTrigger(void) 
+void Sampling_EnableTrigger(void) 
 {
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed */
-        SAMPLING_CONTROL |= SAMPLING_CTRL_TRIG_EN;
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED)   /* Remove assignment if control register is removed */
+        Sampling_CONTROL |= Sampling_CTRL_TRIG_EN;
     #endif /* Remove code section if control register is not used */
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_DisableTrigger
+* Function Name: Sampling_DisableTrigger
 ********************************************************************************
 *
 * Summary:
@@ -657,19 +657,19 @@ void SAMPLING_EnableTrigger(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_DisableTrigger(void) 
+void Sampling_DisableTrigger(void) 
 {
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED )   /* Remove assignment if control register is removed */
-        SAMPLING_CONTROL &= ((uint8)(~SAMPLING_CTRL_TRIG_EN));
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED )   /* Remove assignment if control register is removed */
+        Sampling_CONTROL &= ((uint8)(~Sampling_CTRL_TRIG_EN));
     #endif /* Remove code section if control register is not used */
 }
 #endif /* Remove API is Trigger Mode is set to None */
 
-#if(SAMPLING_InterruptOnCaptureCount)
+#if(Sampling_InterruptOnCaptureCount)
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SetInterruptCount
+* Function Name: Sampling_SetInterruptCount
 ********************************************************************************
 *
 * Summary:
@@ -685,26 +685,26 @@ void SAMPLING_DisableTrigger(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_SetInterruptCount(uint8 interruptCount) 
+void Sampling_SetInterruptCount(uint8 interruptCount) 
 {
     /* This must only set to two bits of the control register associated */
-    interruptCount &= SAMPLING_CTRL_INTCNT_MASK;
+    interruptCount &= Sampling_CTRL_INTCNT_MASK;
 
-    #if (!SAMPLING_UDB_CONTROL_REG_REMOVED)
+    #if (!Sampling_UDB_CONTROL_REG_REMOVED)
         /* Clear the Current Setting */
-        SAMPLING_CONTROL &= ((uint8)(~SAMPLING_CTRL_INTCNT_MASK));
+        Sampling_CONTROL &= ((uint8)(~Sampling_CTRL_INTCNT_MASK));
         /* Write The New Setting */
-        SAMPLING_CONTROL |= interruptCount;
-    #endif /* (!SAMPLING_UDB_CONTROL_REG_REMOVED) */
+        Sampling_CONTROL |= interruptCount;
+    #endif /* (!Sampling_UDB_CONTROL_REG_REMOVED) */
 }
-#endif /* SAMPLING_InterruptOnCaptureCount */
+#endif /* Sampling_InterruptOnCaptureCount */
 
 
-#if (SAMPLING_UsingHWCaptureCounter)
+#if (Sampling_UsingHWCaptureCounter)
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_SetCaptureCount
+* Function Name: Sampling_SetCaptureCount
 ********************************************************************************
 *
 * Summary:
@@ -719,14 +719,14 @@ void SAMPLING_SetInterruptCount(uint8 interruptCount)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_SetCaptureCount(uint8 captureCount) 
+void Sampling_SetCaptureCount(uint8 captureCount) 
 {
-    SAMPLING_CAP_COUNT = captureCount;
+    Sampling_CAP_COUNT = captureCount;
 }
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ReadCaptureCount
+* Function Name: Sampling_ReadCaptureCount
 ********************************************************************************
 *
 * Summary:
@@ -739,15 +739,15 @@ void SAMPLING_SetCaptureCount(uint8 captureCount)
 *  Returns the Capture Count Setting
 *
 *******************************************************************************/
-uint8 SAMPLING_ReadCaptureCount(void) 
+uint8 Sampling_ReadCaptureCount(void) 
 {
-    return ((uint8)SAMPLING_CAP_COUNT);
+    return ((uint8)Sampling_CAP_COUNT);
 }
-#endif /* SAMPLING_UsingHWCaptureCounter */
+#endif /* Sampling_UsingHWCaptureCounter */
 
 
 /*******************************************************************************
-* Function Name: SAMPLING_ClearFIFO
+* Function Name: Sampling_ClearFIFO
 ********************************************************************************
 *
 * Summary:
@@ -760,11 +760,11 @@ uint8 SAMPLING_ReadCaptureCount(void)
 *  void
 *
 *******************************************************************************/
-void SAMPLING_ClearFIFO(void) 
+void Sampling_ClearFIFO(void) 
 {
-    while(0u != (SAMPLING_ReadStatusRegister() & SAMPLING_STATUS_FIFONEMP))
+    while(0u != (Sampling_ReadStatusRegister() & Sampling_STATUS_FIFONEMP))
     {
-        (void)SAMPLING_ReadCapture();
+        (void)Sampling_ReadCapture();
     }
 }
 
