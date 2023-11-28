@@ -37,7 +37,7 @@ int main(void)
         
         //Filtro
         agregarValor(&FILTRO,Angulo);
-        Angulo = obtenerPromedioMovil(&FILTRO); // SEÑAL FILTRADA
+        Angulo = obtenerPromedioMovil(&FILTRO) >> 4; // SEÑAL FILTRADA
         
         //Calculamos el angulo en grados
         Angulo = map(Angulo,0,16383,0,360);
@@ -45,7 +45,7 @@ int main(void)
         //Imprimimos resultado
         sprintf(buffer_tx,"Angulo: %d\n\r",Angulo);
         UART_PutString(buffer_tx);
-        CyDelay(250);//Delay para no saturar el puerto
+        CyDelay(100);//Delay para no saturar el puerto
         
         // Buscador de direcciones I2C
         /*

@@ -102,7 +102,7 @@ void AS5048B_REGISTROS(struct AS5048B *registros){
     registros->registros.magnitud_Hi = reg_data[6];
     registros->registros.magnitud_Lo = reg_data[7];
     registros->registros.angulo_Hi = reg_data[8];
-    registros->registros.angulo_Lo= (reg_data[9] >> 4) << 4 ;// sE ELIMINAN LOS 4 LBS como un filtrado
+    registros->registros.angulo_Lo= reg_data[9];// sE ELIMINAN LOS 4 LBS como un filtrado
 } 
 
 
