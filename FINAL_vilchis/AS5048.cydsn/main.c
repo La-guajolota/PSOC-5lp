@@ -3,6 +3,7 @@
 
 #include "..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
+#include "..\..\..\psoc\FINAL_vilchis\PID_anticolision.cydsn\filtros.h"
 #include "AS5048B.h"
 
 uint8_t address = 0x40; //Direccion I2C del sensor
@@ -22,6 +23,10 @@ int main(void)
     struct AS5048B Encoder;//Creamos instancia del sensor
     AS5048B_Cero(&Encoder); //Seteamos el cero mecanico
     
+     //INICIALIZAMOS FILTRO PRMEDIADOR
+    PromediadorMovil FILTRO;
+    inicializarPromediadorMovil(&FILTRO);
+    
     uint16 Angulo;
     char buffer_tx[16];
     for(;;)
@@ -30,8 +35,12 @@ int main(void)
         AS5048B_REGISTROS(&Encoder);
         Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
         
+        //Filtro
+        agregarValor(&FILTRO,Angulo);
+        Angulo = obtenerPromedioMovil(&FILTRO); // SEÑAL FILTRADA
+        
         //Calculamos el angulo en grados
-        Angulo = map(Angulo,0,1023,0,360);
+        Angulo = map(Angulo,0,16383,0,360);
         
         //Imprimimos resultado
         sprintf(buffer_tx,"Angulo: %d\n\r",Angulo);

@@ -57,7 +57,7 @@ int main(void)
     
     //lcd CONFIG INICIAL
     LCD_Position(0,0);
-    LCD_PrintString("ANGULO:   Vrms:");
+    LCD_PrintString("ANGULO:");
     
     //REGISTRO DE BOTONES
     uint8_t btns=0;

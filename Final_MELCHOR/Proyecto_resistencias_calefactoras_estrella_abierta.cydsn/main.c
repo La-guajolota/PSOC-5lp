@@ -118,8 +118,8 @@ int main(void)
     
     pid_instancia_variables.tau = 0.25;//filtro pasabaja derivativo
     
-    pid_instancia_variables.limMin = 15; //Limites del actuador
-    pid_instancia_variables.limMax = 180;
+    pid_instancia_variables.limMin = 0; //Limites del actuador
+    pid_instancia_variables.limMax = 165;
     
     pid_instancia_variables.limMinInt = 0;//Limites del integrador WIND-UP/
     pid_instancia_variables.limMaxInt = 150;
@@ -174,7 +174,7 @@ int main(void)
             PIDController_Update(&pid_instancia_variables,setpoint,temperatura); 
             
             //Actualizacion de Actuador_valor_output
-            out = (uint8_t)pid_instancia_variables.out;
+            out = 180 - (uint8_t)pid_instancia_variables.out;
             
             //Modificamos fisicamente los acuadores
             Timer_0_WritePeriod(map(out,0,180,2,255));
