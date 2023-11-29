@@ -22,7 +22,7 @@ CY_ISR(DIS_0){
     Disparadores_reg = DISPARADORES_Read();//Leemos estadoa ctual de los disparos
     
     DISPARADORES_Write(Disparadores_reg | BIT0);
-    CyDelayUs(10);
+    CyDelayUs(9);
     DISPARADORES_Write(Disparadores_reg & (~BIT0));
     
 }
@@ -33,7 +33,7 @@ CY_ISR(DIS_1){
     Disparadores_reg = DISPARADORES_Read();//Leemos estadoa ctual de los disparos
     
     DISPARADORES_Write(Disparadores_reg | BIT1);
-    CyDelayUs(10);
+    CyDelayUs(9);
     DISPARADORES_Write(Disparadores_reg & (~BIT1));
     
 }

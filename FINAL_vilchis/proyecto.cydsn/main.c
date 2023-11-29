@@ -121,7 +121,12 @@ int main(void)
         
         }
         
-        if(interfaz_lab == BIT0){//RUTINA DE ACTUALIZADO DE VARIBLES
+        /*
+        
+            //RUTINA DE ACTUALIZADO DE VARIBLES
+        
+        */
+        if(interfaz_lab == BIT0){
             interfaz_lab = ~BIT0;
             
             buffer_Rx[i] =  UART_GetByte();//Agregamos al arreglo el ascci del caracter recibido

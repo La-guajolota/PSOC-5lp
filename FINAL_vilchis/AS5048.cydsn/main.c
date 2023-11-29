@@ -33,19 +33,21 @@ int main(void)
     {
         //Leemos sensor
         AS5048B_REGISTROS(&Encoder);
-        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
-        
-        //Filtro
-        agregarValor(&FILTRO,Angulo);
-        Angulo = obtenerPromedioMovil(&FILTRO) >> 4; // SEÑAL FILTRADA
+        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo >> 5);
         
         //Calculamos el angulo en grados
-        Angulo = map(Angulo,0,16383,0,360);
+        Angulo = 359 - map(Angulo,0,16384,0,359);
+        
+        if(Angulo > 104){//uNA JALADA PARA CORREGIR PERO JALA ALVRG
+            Angulo = 0;
+        }
         
         //Imprimimos resultado
-        sprintf(buffer_tx,"Angulo: %d\n\r",Angulo);
+        //sprintf(buffer_tx,"Angulo: %d\n\r",Angulo);
+        sprintf(buffer_tx,"S%ds",Angulo);
+        
         UART_PutString(buffer_tx);
-        CyDelay(100);//Delay para no saturar el puerto
+        CyDelay(1);//Delay para no saturar el puerto
         
         // Buscador de direcciones I2C
         /*
