@@ -67,12 +67,12 @@ int main(void)
     pid_instancia_variables.tau = 0.25;//filtro pasabaja derivativo
     
     pid_instancia_variables.limMin = 0; //Limites del actuador
-    pid_instancia_variables.limMax = 254;
+    pid_instancia_variables.limMax = 150;
     
     pid_instancia_variables.limMinInt = 0;//Limites del integrador WIND-UP/
-    pid_instancia_variables.limMaxInt = 90;
+    pid_instancia_variables.limMaxInt = 60;
     
-    pid_instancia_variables.T = 0.0002;//Periodo de muestreo en segundos
+    pid_instancia_variables.T = 0.000002;//Periodo de muestreo en segundos
      
     PIDController_Init(&pid_instancia_variables);//Inicializamos constantes y variables
    
@@ -98,10 +98,14 @@ int main(void)
             //Sensamos
             //Leemos sensor
             AS5048B_REGISTROS(&Encoder);
-            ANGULO = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo);
+            ANGULO = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo >> 5);
             
             //Calculamos el angulo en grados
-            ANGULO = map(ANGULO,0,16383,0,360);
+            ANGULO = 359 - map(ANGULO,0,16384,0,359);
+            
+            if(ANGULO >= 358){//uNA JALADA PARA CORREGIR PERO JALA ALVRG
+                ANGULO = 0;
+            }
             
             
             //Para labwiev

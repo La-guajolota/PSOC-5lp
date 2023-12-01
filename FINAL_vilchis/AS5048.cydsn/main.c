@@ -3,7 +3,6 @@
 
 #include "..\..\..\psoc\lcd_7seg\Workspace01\LCD.cydsn\PSOC_LCD.h"
 #include "D:\GITHUB\Librerias_PSOC\Libreria_PSOC\LIB_psoc.h"
-#include "..\..\..\psoc\FINAL_vilchis\PID_anticolision.cydsn\filtros.h"
 #include "AS5048B.h"
 
 uint8_t address = 0x40; //Direccion I2C del sensor
@@ -23,22 +22,18 @@ int main(void)
     struct AS5048B Encoder;//Creamos instancia del sensor
     AS5048B_Cero(&Encoder); //Seteamos el cero mecanico
     
-     //INICIALIZAMOS FILTRO PRMEDIADOR
-    PromediadorMovil FILTRO;
-    inicializarPromediadorMovil(&FILTRO);
-    
     uint16 Angulo;
     char buffer_tx[16];
     for(;;)
     {
         //Leemos sensor
         AS5048B_REGISTROS(&Encoder);
-        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo >> 5);
+        Angulo = (Encoder.registros.angulo_Hi << 6) | (Encoder.registros.angulo_Lo >> 4);
         
         //Calculamos el angulo en grados
         Angulo = 359 - map(Angulo,0,16384,0,359);
         
-        if(Angulo > 104){//uNA JALADA PARA CORREGIR PERO JALA ALVRG
+        if(Angulo >= 358){//uNA JALADA PARA CORREGIR PERO JALA ALVRG
             Angulo = 0;
         }
         

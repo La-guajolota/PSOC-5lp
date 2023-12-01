@@ -77,7 +77,7 @@ int main(void)
         }
         
         //TRUNCAMOS SI SE SATURA EL ACTUADORS
-        angulo = trunca(angulo,0,180);
+        angulo = trunca(angulo,45,180);
         
         //Atualizamos el angulo de disparo
         LCD_Position(1,0);

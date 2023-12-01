@@ -13,7 +13,7 @@ int main(void)
     for(;;)
     {
         
-         for(uint8_t i=0;i<=254;i++){
+        for(uint8_t i=0;i<=254;i++){
             POTENCIA(i);
             CyDelay(100);
         }

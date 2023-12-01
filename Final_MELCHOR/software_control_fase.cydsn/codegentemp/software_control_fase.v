@@ -1,6 +1,6 @@
 // ======================================================================
 // software_control_fase.v generated from TopDesign.cysch
-// 11/28/2023 at 09:45
+// 11/30/2023 at 11:54
 // This file is auto generated. ANY EDITS YOU MAKE MAY BE LOST WHEN THIS FILE IS REGENERATED!!!
 // ======================================================================
 
@@ -1379,7 +1379,7 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("30c52fa3-0662-4496-8c27-6458f1a16724"),
-		  .drive_mode(3'b101),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
 		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
@@ -1454,7 +1454,7 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("5e23716f-f104-4a4d-8cd3-c31285dba607"),
-		  .drive_mode(3'b101),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
 		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
@@ -1529,9 +1529,9 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("d45fedf2-d470-4397-82a4-07501c553eab"),
-		  .drive_mode(3'b111),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
-		  .init_dr_st(1'b1),
+		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
 		  .input_sync(1'b1),
 		  .input_sync_mode(1'b0),
@@ -1803,7 +1803,7 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("bdf2e441-e274-4f20-98d6-e51748b35b7e"),
-		  .drive_mode(3'b101),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
 		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
@@ -1878,7 +1878,7 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("5a0897ac-0f05-40b3-badb-320f7be2743a"),
-		  .drive_mode(3'b101),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
 		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
@@ -1953,9 +1953,9 @@ module top ;
 
 	cy_psoc3_pins_v1_10
 		#(.id("767b26a7-7fce-4ebd-81e7-8a068189b810"),
-		  .drive_mode(3'b111),
+		  .drive_mode(3'b110),
 		  .ibuf_enabled(1'b1),
-		  .init_dr_st(1'b1),
+		  .init_dr_st(1'b0),
 		  .input_clk_en(0),
 		  .input_sync(1'b1),
 		  .input_sync_mode(1'b0),
